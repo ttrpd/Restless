@@ -1,5 +1,7 @@
 
 import 'package:flutter/material.dart';
+import 'package:restless/neighbor.dart';
+import 'package:restless/neighbor_page.dart';
 
 class NowPlayingMenu extends StatefulWidget
 {
@@ -25,7 +27,7 @@ class NowPlayingMenuState extends State<NowPlayingMenu> {
   {
     return Container(
       width: double.maxFinite,
-      height: 780.0,
+      height: 782.0,
       decoration: BoxDecoration(
         color: Colors.black54,
         boxShadow: [
@@ -78,6 +80,7 @@ class NowPlayingMenuState extends State<NowPlayingMenu> {
                     // rewind //
                     Container(
                       child: FloatingActionButton(
+                        heroTag: 'rewind',
                         elevation: 0.0,
                         backgroundColor: Colors.transparent,
                         child: Icon(
@@ -96,6 +99,7 @@ class NowPlayingMenuState extends State<NowPlayingMenu> {
                     // play/pause //
                     Container(
                       child: FloatingActionButton(
+                        heroTag: 'playpause',
                         backgroundColor: Colors.white,
                         child: Icon(
                           widget.playing?Icons.pause:Icons.play_arrow,
@@ -116,6 +120,7 @@ class NowPlayingMenuState extends State<NowPlayingMenu> {
                     // forward //
                     Container(
                       child: FloatingActionButton(
+                        heroTag: 'forward',
                         elevation: 0.0,
                         backgroundColor: Colors.transparent,
                         child: Icon(
@@ -152,17 +157,160 @@ class NowPlayingMenuState extends State<NowPlayingMenu> {
                 ),
               ),
 
-//              Container(
-//                color: Colors.red,
-//                width: double.maxFinite,
-//                height: 100.0,
-//                child: Center(
-//                  child: FlatButton(
-//                    child: Text('TAGS!'),
-//
-//                  ),
-//                ),
-//              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 40.0, left: 20.0, right: 20.0),
+                child: Divider(
+                  color: Colors.white,
+                ),
+              ),
+
+              Padding(// tags area
+                padding: const EdgeInsets.only(top: 30.0),
+                child: Container(
+                  width: double.maxFinite,
+                  height: 175.0,
+                  child: Column(
+                    children: <Widget>[
+                      Container(
+                        alignment: Alignment.topLeft,
+                        child: FlatButton(
+                          splashColor: Colors.transparent,
+                          child: RichText(
+                            text: TextSpan(
+                              text: 'Tags',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 24.0,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                          onPressed: () {
+                            print('tags!');
+                          },
+                        ),
+                        
+                      ),
+                      Wrap(
+                        spacing: 3.0,
+                        children: <Widget>[
+                          Chip(
+                            label: Text('hello'),
+                          ),
+                          Chip(
+                            label: Text('hi'),
+                          ),
+                          Chip(
+                            label: Text('bonjour'),
+                          ),
+                          Chip(
+                            label: Text('salut'),
+                          ),
+                          Chip(
+                            label: Text('anyonghaseo'),
+                          ),
+                          Chip(
+                            label: Text('aurevoir'),
+                          ),
+                          Chip(
+                            label: Text('bye'),
+                          ),
+                          Chip(
+                            label: Text('see ya'),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+
+
+              //neighbors list
+              Padding(
+                padding: const EdgeInsets.only(top: 20.0),
+                child: Row(
+                  children: <Widget>[
+                    Container(
+                      alignment: Alignment.topLeft,
+                      child: FlatButton(
+                        splashColor: Colors.transparent,
+                        child: RichText(
+                          text: TextSpan(
+                            text: 'Neighbors',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 24.0,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        onPressed: () {
+                          Navigator.of(context).pushNamed('/neighbor_page');
+                          print('neighbors!');
+                        },
+                      ),
+
+                    ),
+
+                    Expanded(child: Container(),),
+
+                    Container(
+                      alignment: Alignment.topRight,
+                      child: FlatButton(
+                        splashColor: Colors.transparent,
+                        child: RichText(
+                          text: TextSpan(
+                            text: 'Sort',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 24.0,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        onPressed: () {
+                          print('sort!');
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              Expanded(
+                child: Container(
+                  child: GridView.count(
+                    crossAxisCount: 2,
+                    children: <Widget>[
+                      Neighbor(path:'lib/assets/art0.jpg'),
+                      Neighbor(path:'lib/assets/art1.jpg'),
+                      Neighbor(path:'lib/assets/art2.jpg'),
+                      Neighbor(path:'lib/assets/art3.jpg'),
+                      Neighbor(path:'lib/assets/art4.jpg'),
+                      Neighbor(path:'lib/assets/art5.jpg'),
+                      Neighbor(path:'lib/assets/art6.jpg'),
+                      Neighbor(path:'lib/assets/art7.jpg'),
+                      Neighbor(path:'lib/assets/art8.jpg'),
+                      Neighbor(path:'lib/assets/art9.jpg'),
+                      Neighbor(path:'lib/assets/art10.jpg'),
+                      Neighbor(path:'lib/assets/art11.jpg'),
+                      Neighbor(path:'lib/assets/art12.jpg'),
+                      Neighbor(path:'lib/assets/art13.jpg'),
+                      Neighbor(path:'lib/assets/art14.jpg'),
+                      Neighbor(path:'lib/assets/art15.jpg'),
+                      Neighbor(path:'lib/assets/art16.jpg'),
+                      Neighbor(path:'lib/assets/art17.jpg'),
+                      Neighbor(path:'lib/assets/art18.jpg'),
+                      Neighbor(path:'lib/assets/art19.jpg'),
+                      Neighbor(path:'lib/assets/art20.jpg'),
+                      Neighbor(path:'lib/assets/art21.jpg'),
+                    ],
+                  ),
+
+                ),
+              )
+
             ],
           ),
         ),

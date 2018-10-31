@@ -45,7 +45,6 @@ class HomePage extends State<Home> with SingleTickerProviderStateMixin
   Widget build(BuildContext context) {
 
     return Scaffold(
-
       body: ScrollConfiguration(
         behavior: MyScrollBehavior(),
         child: Container(
