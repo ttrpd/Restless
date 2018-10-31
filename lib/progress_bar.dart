@@ -20,7 +20,7 @@ class ProgressBar extends StatefulWidget
     this.trackColor = Colors.white30,
     this.progressThickness = 2.0,
     this.progressColor = Colors.white,
-    this.progressPercent = 0.3,
+    this.progressPercent = 0.0,
     this.thumbHeight = -10.0,
     this.thumbWidth = 3.0,
     this.thumbColor = Colors.white
@@ -37,7 +37,7 @@ class ProgressBarState extends State<ProgressBar> {
   Widget build(BuildContext context)
   {
     return CustomPaint(
-      painter: SeekBarPainter(
+      painter: ProgressBarPainter(
         trackThickness: widget.trackThickness,
         trackColor: widget.trackColor,
         progressThickness: widget.progressThickness,
@@ -51,7 +51,7 @@ class ProgressBarState extends State<ProgressBar> {
   }
 }
 
-class SeekBarPainter extends CustomPainter
+class ProgressBarPainter extends CustomPainter
 {
 
   double trackThickness;
@@ -63,7 +63,7 @@ class SeekBarPainter extends CustomPainter
   double thumbWidth;
   Paint thumbPaint;
 
-  SeekBarPainter({
+  ProgressBarPainter({
     @required this.trackThickness,
     @required trackColor,
     @required this.progressThickness,

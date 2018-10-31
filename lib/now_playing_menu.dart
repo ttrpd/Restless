@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:fluttery_audio/fluttery_audio.dart';
 import 'package:restless/neighbor.dart';
 import 'package:restless/neighbor_page.dart';
 import 'package:restless/progress_bar.dart';
@@ -8,12 +9,12 @@ class NowPlayingMenu extends StatefulWidget
 {
 
   bool playing;
-  double trackProgressPercent;
+  double trackProgressPercent = 0.0;
 
   NowPlayingMenu({
     Key key,
     @required this.playing,
-//    @required this.trackProgressPercent,
+    @required this.trackProgressPercent,
   }) : super(key: key);
 
   @override
@@ -23,10 +24,9 @@ class NowPlayingMenu extends StatefulWidget
 }
 
 class NowPlayingMenuState extends State<NowPlayingMenu> {
-  double trackProgressPercent = 0.0;
+//  double trackProgressPercent = 0.0;
   double _volumeSliderValue = 30.0;
-  double _thumbWidth = 3.0;
-  double _thumbHeight = -10.0;
+
   @override
   Widget build(BuildContext context)
   {
@@ -51,41 +51,20 @@ class NowPlayingMenuState extends State<NowPlayingMenu> {
               type: MaterialType.transparency,
               child: Column(
                 children: <Widget>[
-                  GestureDetector(// seekbar
-                    onHorizontalDragStart: (DragStartDetails details)
-                    {
-                      setState(() {
-                        trackProgressPercent =  details.globalPosition.dx / MediaQuery.of(context).size.width;
-                        _thumbHeight *= 2;
-                        _thumbWidth *= 2;
-                      });
+                  AudioComponent(
+                    updateMe: [
+                      WatchableAudioProperties.audioPlayhead,
+                      WatchableAudioProperties.audioSeeking,
+                    ],
+                    playerBuilder: (BuildContext context, AudioPlayer player, Widget child) {
+                      double trackProgress = 0.0;
+
+                      if(player.audioLength != null && player.position != null) {
+                        trackProgress = player.position.inMilliseconds / player.audioLength.inMilliseconds;
+                      }
+
+                      return SeekBar(trackProgressPercent: widget.trackProgressPercent,);
                     },
-                    onHorizontalDragUpdate: (DragUpdateDetails details)
-                    {
-                      setState(() {
-                        if(details.globalPosition.dx <= MediaQuery.of(context).size.width*0.95)
-                          trackProgressPercent =  details.globalPosition.dx / MediaQuery.of(context).size.width;
-                        else
-                          trackProgressPercent = 0.99;
-                      });
-                    },
-                    onHorizontalDragEnd: (DragEndDetails details)
-                    {
-                      setState(() {
-                        _thumbHeight /= 2;
-                        _thumbWidth /= 2;
-                      });
-                    },
-                    child: Container(// Seek bar
-                      width: double.maxFinite,
-                      height: 30.0,
-                      color: Colors.transparent,
-                      child: ProgressBar(
-                        progressPercent: trackProgressPercent,
-                        thumbWidth: _thumbWidth,
-                        thumbHeight: _thumbHeight,
-                      )
-                    ),
                   ),
                   // Track Times //
                   Row(
@@ -140,19 +119,34 @@ class NowPlayingMenuState extends State<NowPlayingMenu> {
 
                         // play/pause //
                         Container(
-                          child: FloatingActionButton(
-                            heroTag: 'playpause',
-                            backgroundColor: Colors.white,
-                            child: Icon(
-                              widget.playing?Icons.pause:Icons.play_arrow,
-                              color: Colors.black,
-                              size: 40.0,
-                            ),
-                            onPressed: () {
-                              //TODO:
-                              setState(() {
-                                widget.playing = !widget.playing;
-                              });
+                          child: AudioComponent(
+                            updateMe: [
+                              WatchableAudioProperties.audioPlayerState
+                            ],
+                            playerBuilder: (BuildContext context, AudioPlayer player, Widget child) {
+                              IconData icon = Icons.play_arrow;
+                              Function onPressed;
+
+                              if(player.state == AudioPlayerState.playing){
+                                icon = Icons.pause;
+                                onPressed = player.pause;
+                              }
+                              else if(player.state == AudioPlayerState.paused
+                              || player.state == AudioPlayerState.completed) {
+                                icon = Icons.play_arrow;
+                                onPressed = player.play;
+                              }
+
+                              return FloatingActionButton(
+                                heroTag: 'playpause',
+                                backgroundColor: Colors.white,
+                                child: Icon(
+                                  icon,
+                                  color: Colors.black,
+                                  size: 40.0,
+                                ),
+                                onPressed: onPressed
+                              );
                             },
                           ),
                         ),
@@ -389,5 +383,81 @@ class NowPlayingMenuState extends State<NowPlayingMenu> {
 
       ],
     );
+  }
+}
+
+class SeekBar extends StatefulWidget
+{
+
+  double trackProgressPercent;
+  double thumbHeight;
+  double thumbWidth;
+
+  SeekBar({
+    Key key,
+    this.thumbWidth = 3.0,
+    this.thumbHeight = -10.0,
+    this.trackProgressPercent = 0.0,
+  }) : super(key: key);
+
+  @override
+  SeekBarState createState() {
+    return new SeekBarState();
+  }
+}
+
+class SeekBarState extends State<SeekBar> {
+  double _trackProgressPercent;
+
+  @override
+  Widget build(BuildContext context)
+  {
+    return GestureDetector(// seekbar
+      onHorizontalDragStart: (DragStartDetails details)
+      {
+        setState(() {
+          _trackProgressPercent =  details.globalPosition.dx / MediaQuery.of(context).size.width;
+          widget.thumbHeight *= 2;
+          widget.thumbWidth *= 2;
+        });
+      },
+      onHorizontalDragUpdate: (DragUpdateDetails details)
+      {
+        setState(() {
+          if(details.globalPosition.dx <= MediaQuery.of(context).size.width)
+            _trackProgressPercent =  details.globalPosition.dx / MediaQuery.of(context).size.width;
+          else
+            widget.trackProgressPercent = 1.0;
+        });
+      },
+      onHorizontalDragEnd: (DragEndDetails details)
+      {
+        setState(() {
+          widget.thumbHeight /= 2;
+          widget.thumbWidth /= 2;
+        });
+      },
+      child: Container(// Seek bar
+          width: MediaQuery.of(context).size.width,
+          height: 30.0,
+          color: Colors.transparent,
+          child: ProgressBar(
+            progressPercent: _trackProgressPercent,
+            thumbWidth: widget.thumbWidth,
+            thumbHeight: widget.thumbHeight,
+          )
+      ),
+    );
+  }
+
+  @override
+  void initState() {
+    widget.trackProgressPercent = widget.trackProgressPercent;
+  }
+
+  @override
+  void didUpdateWidget(SeekBar oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    widget.trackProgressPercent = widget.trackProgressPercent;
   }
 }

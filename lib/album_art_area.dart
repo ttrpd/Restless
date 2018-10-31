@@ -30,7 +30,7 @@ class AlbumArtAreaState extends State<AlbumArtArea> {
             child: Container(
               decoration: BoxDecoration(
                 image: DecorationImage(
-                  image: AssetImage('lib/assets/art8.jpg'),
+                  image: AssetImage('lib/assets/art19.jpg'),
                   fit: BoxFit.cover,
                 ),
               ),
