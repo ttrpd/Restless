@@ -5,11 +5,9 @@ class NowPlayingMenu extends StatefulWidget
 {
 
   bool playing;
-  double volumeSliderValue;
 
   NowPlayingMenu({
     Key key,
-    @required this.volumeSliderValue,
     @required this.playing,
   }) : super(key: key);
 
@@ -20,6 +18,8 @@ class NowPlayingMenu extends StatefulWidget
 }
 
 class NowPlayingMenuState extends State<NowPlayingMenu> {
+  double _volumeSliderValue = 30.0;
+
   @override
   Widget build(BuildContext context)
   {
@@ -138,7 +138,7 @@ class NowPlayingMenuState extends State<NowPlayingMenu> {
               Padding(
                 padding: const EdgeInsets.only(top: 40.0),
                 child: Slider(// volume slider
-                  value: widget.volumeSliderValue,
+                  value: _volumeSliderValue,
                   activeColor: Colors.white,
                   inactiveColor: Colors.white70,
                   min: 0.0,
@@ -146,7 +146,7 @@ class NowPlayingMenuState extends State<NowPlayingMenu> {
                   divisions: 200,
                   onChanged: (double value) {
                     setState(() {
-                      widget.volumeSliderValue = value;
+                      _volumeSliderValue = value;
                     });
                   },
                 ),

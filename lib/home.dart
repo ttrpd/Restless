@@ -38,7 +38,7 @@ class HomePage extends State<Home> with SingleTickerProviderStateMixin
   }
 
   double _blurValue = 0.0;
-  double _sliderValue = 30.0;
+  double _sliderValue = 0.0;
   bool _playing = false;
 
   @override
@@ -82,7 +82,6 @@ class HomePage extends State<Home> with SingleTickerProviderStateMixin
 
                   NowPlayingMenu(
                     playing: _playing,
-                    volumeSliderValue: _sliderValue,
                   ),
                 ],
               ),
