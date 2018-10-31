@@ -1,8 +1,11 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/animation.dart';
-import 'package:restless/temp_controls_area.dart';
 import 'dart:io';
 
+import 'package:restless/album_art_area.dart';
+import 'package:restless/now_playing_menu.dart';
 import 'package:restless/track_info_area.dart';
 
 class Home extends StatefulWidget
@@ -40,7 +43,6 @@ class HomePage extends State<Home> with SingleTickerProviderStateMixin
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
 
     return Scaffold(
 
@@ -52,14 +54,14 @@ class HomePage extends State<Home> with SingleTickerProviderStateMixin
             children: <Widget>[
               Column(
                 children: <Widget>[
-                  TrackInfoArea(blurValue: _blurValue,),
+                  AlbumArtArea(blurValue: _blurValue,),
                 ],
               ),
               ListView(
 
                 physics: ScrollPhysics(),
                 children: <Widget>[
-                  GestureDetector(
+                  GestureDetector(// TrackInfoArea
                     onVerticalDragUpdate: (DragUpdateDetails details) {
                       //TODO: add animation curve based on scroll
                       setState(() {
@@ -75,146 +77,12 @@ class HomePage extends State<Home> with SingleTickerProviderStateMixin
                           _blurValue = 15.0;
                       });
                     },
-                    child: AspectRatio(
-                      aspectRatio: 1.08,
-                      child: Container(
-                        color: Colors.transparent,
-                        width: double.maxFinite,
-
-                      ),
-                    ),
+                    child: TrackInfoArea(blurValue: _blurValue,),
                   ),
-                  Container(
-                    width: double.maxFinite,
-                    height: 800.0,
-                    decoration: BoxDecoration(
-                      color: Colors.black54,
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black,
-                          spreadRadius: 25.0,
-                          blurRadius: 50.0,
-                        ),
-                      ],
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 10.0, bottom: 10.0, left: 10.0, right: 10.0),
-                      child: Material(
-                        type: MaterialType.transparency,
-                        child: Column(
 
-                          children: <Widget>[
-                            Row(// Track times
-                              children: <Widget>[
-                                RichText(
-                                  text: TextSpan(
-                                    text: 'current',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 18.0,
-                                    ),
-                                  ),
-                                ),
-                                Expanded(child: Container(),),
-                                RichText(
-                                  text: TextSpan(
-                                    text: 'end',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 18.0,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-
-                            Padding(
-                              padding: const EdgeInsets.only(top: 40.0),
-                              child: Row(// player controls
-                                children: <Widget>[
-                                  Expanded(child: Container(),),
-
-                                  // rewind
-                                  Container(
-                                    child: FloatingActionButton(
-                                      elevation: 0.0,
-                                      backgroundColor: Colors.transparent,
-                                      child: Icon(
-                                        Icons.fast_rewind,
-                                        color: Colors.white,
-                                        size: 40.0,
-                                      ),
-                                      onPressed: () {
-
-                                      },
-                                    ),
-                                  ),
-
-                                  Expanded(child: Container(),),
-
-                                  // play/pause
-                                  Container(
-                                    child: FloatingActionButton(
-                                      backgroundColor: Colors.white,
-                                      child: Icon(
-                                        _playing?Icons.pause:Icons.play_arrow,
-                                        color: Colors.black,
-                                        size: 40.0,
-                                      ),
-                                      onPressed: () {
-                                        //TODO:
-                                        setState(() {
-                                          _playing = !_playing;
-                                        });
-                                      },
-                                    ),
-                                  ),
-
-                                  Expanded(child: Container(),),
-
-                                  //forward
-                                  Container(
-                                    child: FloatingActionButton(
-                                      elevation: 0.0,
-                                      backgroundColor: Colors.transparent,
-                                      child: Icon(
-                                        Icons.fast_forward,
-                                        color: Colors.white,
-                                        size: 40.0,
-                                      ),
-                                      onPressed: () {
-
-                                      },
-                                    ),
-                                  ),
-
-                                  Expanded(child: Container(),),
-                                ],
-                              ),
-                            ),
-
-                            Padding(
-                              padding: const EdgeInsets.only(top: 40.0),
-                              child: Slider(// volume slider
-                                value: _sliderValue,
-                                activeColor: Colors.white,
-                                inactiveColor: Colors.white70,
-                                min: 0.0,
-                                max: 200.0,
-                                divisions: 200,
-                                onChanged: (double value) {
-                                  setState(() {
-                                    _sliderValue = value;
-                                  });
-                                },
-                              ),
-                            ),
-                            Expanded(child: Container(),),
-
-                          ],
-                        ),
-                      ),
-                    ),
+                  NowPlayingMenu(
+                    playing: _playing,
+                    volumeSliderValue: _sliderValue,
                   ),
                 ],
               ),
