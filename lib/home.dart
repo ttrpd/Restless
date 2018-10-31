@@ -6,6 +6,7 @@ import 'dart:io';
 
 import 'package:restless/album_art_area.dart';
 import 'package:restless/now_playing_menu.dart';
+import 'package:restless/seek_bar.dart';
 import 'package:restless/track_info_area.dart';
 
 class Home extends StatefulWidget
@@ -60,6 +61,7 @@ class HomePage extends State<Home> with SingleTickerProviderStateMixin
 
                 physics: ScrollPhysics(),
                 children: <Widget>[
+
                   GestureDetector(// TrackInfoArea
                     onVerticalDragUpdate: (DragUpdateDetails details) {
                       //TODO: add animation curve based on scroll
