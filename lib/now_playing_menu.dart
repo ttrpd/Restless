@@ -80,28 +80,40 @@ class NowPlayingMenuState extends State<NowPlayingMenu> {
                     },
                   ),
                   // Track Times //
-                  Row(
-                    children: <Widget>[
-                      RichText(
-                        text: TextSpan(
-                          text: currentTime,
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 18.0,
-                          ),
-                        ),
-                      ),
-                      Expanded(child: Container(),),
-                      RichText(
-                        text: TextSpan(
-                          text: endTime,
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 18.0,
-                          ),
-                        ),
-                      ),
+                  AudioComponent(
+                    updateMe: [
+                      WatchableAudioProperties.audioPlayhead,
+                      WatchableAudioProperties.audioSeeking,
                     ],
+                    playerBuilder: (BuildContext context, AudioPlayer player, Widget child) {
+
+                      currentTime = player.position.toString().substring(player.position.toString().indexOf(':')+1,player.position.toString().lastIndexOf('.'));
+                      endTime = player.audioLength.toString().substring(player.audioLength.toString().indexOf(':')+1,player.audioLength.toString().lastIndexOf('.'));
+
+                      return Row(
+                        children: <Widget>[
+                          RichText(
+                            text: TextSpan(
+                              text: currentTime,
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 18.0,
+                              ),
+                            ),
+                          ),
+                          Expanded(child: Container(),),
+                          RichText(
+                            text: TextSpan(
+                              text: endTime,
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 18.0,
+                              ),
+                            ),
+                          ),
+                        ],
+                      );
+                    },
                   ),
 
                   // Player Controls //
