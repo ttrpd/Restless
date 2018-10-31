@@ -2,16 +2,18 @@
 import 'package:flutter/material.dart';
 import 'package:restless/neighbor.dart';
 import 'package:restless/neighbor_page.dart';
-import 'package:restless/seek_bar.dart';
+import 'package:restless/progress_bar.dart';
 
 class NowPlayingMenu extends StatefulWidget
 {
 
   bool playing;
+  double trackProgressPercent;
 
   NowPlayingMenu({
     Key key,
     @required this.playing,
+//    @required this.trackProgressPercent,
   }) : super(key: key);
 
   @override
@@ -21,8 +23,10 @@ class NowPlayingMenu extends StatefulWidget
 }
 
 class NowPlayingMenuState extends State<NowPlayingMenu> {
+  double trackProgressPercent = 0.0;
   double _volumeSliderValue = 30.0;
-
+  double _thumbWidth = 3.0;
+  double _thumbHeight = -10.0;
   @override
   Widget build(BuildContext context)
   {
@@ -46,9 +50,43 @@ class NowPlayingMenuState extends State<NowPlayingMenu> {
             child: Material(
               type: MaterialType.transparency,
               child: Column(
-
                 children: <Widget>[
-
+                  GestureDetector(// seekbar
+                    onHorizontalDragStart: (DragStartDetails details)
+                    {
+                      setState(() {
+                        trackProgressPercent =  details.globalPosition.dx / MediaQuery.of(context).size.width;
+                        _thumbHeight *= 2;
+                        _thumbWidth *= 2;
+                      });
+                    },
+                    onHorizontalDragUpdate: (DragUpdateDetails details)
+                    {
+                      setState(() {
+                        if(details.globalPosition.dx <= MediaQuery.of(context).size.width*0.95)
+                          trackProgressPercent =  details.globalPosition.dx / MediaQuery.of(context).size.width;
+                        else
+                          trackProgressPercent = 0.99;
+                      });
+                    },
+                    onHorizontalDragEnd: (DragEndDetails details)
+                    {
+                      setState(() {
+                        _thumbHeight /= 2;
+                        _thumbWidth /= 2;
+                      });
+                    },
+                    child: Container(// Seek bar
+                      width: double.maxFinite,
+                      height: 30.0,
+                      color: Colors.transparent,
+                      child: ProgressBar(
+                        progressPercent: trackProgressPercent,
+                        thumbWidth: _thumbWidth,
+                        thumbHeight: _thumbHeight,
+                      )
+                    ),
+                  ),
                   // Track Times //
                   Row(
                     children: <Widget>[
@@ -348,11 +386,7 @@ class NowPlayingMenuState extends State<NowPlayingMenu> {
             ),
           ),
         ),
-        Container(// Seek bar
-          width: double.maxFinite,
-          height: 1.0,
-          child: SeekBar(),
-        ),
+
       ],
     );
   }

@@ -6,7 +6,7 @@ import 'dart:io';
 
 import 'package:restless/album_art_area.dart';
 import 'package:restless/now_playing_menu.dart';
-import 'package:restless/seek_bar.dart';
+import 'package:restless/progress_bar.dart';
 import 'package:restless/track_info_area.dart';
 
 class Home extends StatefulWidget
@@ -39,8 +39,10 @@ class HomePage extends State<Home> with SingleTickerProviderStateMixin
   }
 
   double _blurValue = 0.0;
-  double _sliderValue = 0.0;
   bool _playing = false;
+  double trackProgressPercent = 0.0;
+  double _thumbWidth = 3.0;
+  double _thumbHeight = -10.0;
 
   @override
   Widget build(BuildContext context) {
@@ -57,8 +59,8 @@ class HomePage extends State<Home> with SingleTickerProviderStateMixin
                   AlbumArtArea(blurValue: _blurValue,),
                 ],
               ),
-              ListView(
 
+              ListView(// info/control layer
                 physics: ScrollPhysics(),
                 children: <Widget>[
 
@@ -80,7 +82,6 @@ class HomePage extends State<Home> with SingleTickerProviderStateMixin
                     },
                     child: TrackInfoArea(blurValue: _blurValue,),
                   ),
-
                   NowPlayingMenu(
                     playing: _playing,
                   ),

@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 
-class SeekBar extends StatefulWidget
+class ProgressBar extends StatefulWidget
 {
 
   double trackThickness;
@@ -14,7 +14,7 @@ class SeekBar extends StatefulWidget
   double thumbWidth;
   Color thumbColor;
 
-  SeekBar({
+  ProgressBar({
     Key key,
     this.trackThickness = 2.0,
     this.trackColor = Colors.white30,
@@ -27,12 +27,12 @@ class SeekBar extends StatefulWidget
   }) : super(key: key);
 
   @override
-  SeekBarState createState() {
-    return new SeekBarState();
+  ProgressBarState createState() {
+    return new ProgressBarState();
   }
 }
 
-class SeekBarState extends State<SeekBar> {
+class ProgressBarState extends State<ProgressBar> {
   @override
   Widget build(BuildContext context)
   {
@@ -89,13 +89,13 @@ class SeekBarPainter extends CustomPainter
   void paint(Canvas canvas, Size size) {
     // Paint track
     canvas.drawRect(
-      Rect.fromLTWH(0.0, progressThickness, size.width, size.height),
+      Rect.fromLTWH(0.0, size.height / 2, size.width, trackThickness),
       trackPaint
     );
 
     // Paint progress
     canvas.drawRect(
-      Rect.fromLTWH(0.0, size.height, size.width * progressPercent, progressThickness),
+      Rect.fromLTWH(0.0, size.height / 2, (size.width * progressPercent) + (thumbWidth / 2), progressThickness),
       progressPaint
     );
 
@@ -103,7 +103,7 @@ class SeekBarPainter extends CustomPainter
     canvas.drawRect(
       Rect.fromLTWH(
         size.width * progressPercent,
-        progressThickness * 2,
+        (size.height / 2) + progressThickness,
         thumbWidth,
         thumbHeight,
       ),
