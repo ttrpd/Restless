@@ -26,6 +26,8 @@ class NowPlayingMenu extends StatefulWidget
 class NowPlayingMenuState extends State<NowPlayingMenu> {
 //  double trackProgressPercent = 0.0;
   double _volumeSliderValue = 30.0;
+  String currentTime = 'current';
+  String endTime = 'end';
 
   @override
   Widget build(BuildContext context)
@@ -63,7 +65,18 @@ class NowPlayingMenuState extends State<NowPlayingMenu> {
                         trackProgress = player.position.inMilliseconds / player.audioLength.inMilliseconds;
                       }
 
-                      return SeekBar(trackProgressPercent: widget.trackProgressPercent,);
+                      endTime = player.audioLength.toString().substring(player.audioLength.toString().indexOf(':')+1,player.audioLength.toString().lastIndexOf('.'));
+                      currentTime = player.position.toString().substring(player.position.toString().indexOf(':')+1,player.position.toString().lastIndexOf('.'));
+
+                      return SeekBar(
+                        trackProgressPercent: trackProgress,
+                        onSeekRequested: (double seekPercent) {
+                          setState(() {
+                            final seekMils = (player.audioLength.inMilliseconds * seekPercent).round();
+                            player.seek(Duration(milliseconds: seekMils));
+                          });
+                        },
+                      );
                     },
                   ),
                   // Track Times //
@@ -71,7 +84,7 @@ class NowPlayingMenuState extends State<NowPlayingMenu> {
                     children: <Widget>[
                       RichText(
                         text: TextSpan(
-                          text: 'current',
+                          text: currentTime,
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 18.0,
@@ -81,7 +94,7 @@ class NowPlayingMenuState extends State<NowPlayingMenu> {
                       Expanded(child: Container(),),
                       RichText(
                         text: TextSpan(
-                          text: 'end',
+                          text: endTime,
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 18.0,
@@ -388,16 +401,19 @@ class NowPlayingMenuState extends State<NowPlayingMenu> {
 
 class SeekBar extends StatefulWidget
 {
-
+  double seekDestination;
   double trackProgressPercent;
   double thumbHeight;
   double thumbWidth;
+  Function(double) onSeekRequested;
 
   SeekBar({
     Key key,
+    this.seekDestination = 0.0,
     this.thumbWidth = 3.0,
     this.thumbHeight = -10.0,
     this.trackProgressPercent = 0.0,
+    this.onSeekRequested,
   }) : super(key: key);
 
   @override
@@ -407,7 +423,6 @@ class SeekBar extends StatefulWidget
 }
 
 class SeekBarState extends State<SeekBar> {
-  double _trackProgressPercent;
 
   @override
   Widget build(BuildContext context)
@@ -416,7 +431,7 @@ class SeekBarState extends State<SeekBar> {
       onHorizontalDragStart: (DragStartDetails details)
       {
         setState(() {
-          _trackProgressPercent =  details.globalPosition.dx / MediaQuery.of(context).size.width;
+          widget.trackProgressPercent =  details.globalPosition.dx / MediaQuery.of(context).size.width;
           widget.thumbHeight *= 2;
           widget.thumbWidth *= 2;
         });
@@ -425,13 +440,16 @@ class SeekBarState extends State<SeekBar> {
       {
         setState(() {
           if(details.globalPosition.dx <= MediaQuery.of(context).size.width)
-            _trackProgressPercent =  details.globalPosition.dx / MediaQuery.of(context).size.width;
+            widget.trackProgressPercent =  details.globalPosition.dx / MediaQuery.of(context).size.width;
           else
             widget.trackProgressPercent = 1.0;
         });
       },
       onHorizontalDragEnd: (DragEndDetails details)
       {
+        if(widget.onSeekRequested != null) {
+          widget.onSeekRequested(widget.trackProgressPercent);
+        }
         setState(() {
           widget.thumbHeight /= 2;
           widget.thumbWidth /= 2;
@@ -442,7 +460,7 @@ class SeekBarState extends State<SeekBar> {
           height: 30.0,
           color: Colors.transparent,
           child: ProgressBar(
-            progressPercent: _trackProgressPercent,
+            progressPercent: widget.trackProgressPercent,
             thumbWidth: widget.thumbWidth,
             thumbHeight: widget.thumbHeight,
           )

@@ -41,7 +41,7 @@ class HomePage extends State<Home> with SingleTickerProviderStateMixin
 
   double _blurValue = 0.0;
   bool _playing = false;
-  double _trackProgressPercent = 0.5;
+  double _trackProgressPercent = 0.0;
 
   @override
   Widget build(BuildContext context) {
