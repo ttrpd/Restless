@@ -86,6 +86,7 @@ class NowPlayingMenuState extends State<NowPlayingMenu> {
 //                        final seekMils = (player.audioLength.inMilliseconds * seekPercent).round();
                         final seekMils = (endTime.inMilliseconds * seekPercent).round();
                         widget.audioPlayer.seek(Duration(milliseconds: seekMils));
+                        _trackProgressPercent = seekMils / endTime.inMilliseconds;
                       });
                     },
                   ),
@@ -470,12 +471,6 @@ class SeekBarState extends State<SeekBar> {
 
   @override
   void initState() {
-    widget.trackProgressPercent = widget.trackProgressPercent;
-  }
-
-  @override
-  void didUpdateWidget(SeekBar oldWidget) {
-    super.didUpdateWidget(oldWidget);
     widget.trackProgressPercent = widget.trackProgressPercent;
   }
 }
