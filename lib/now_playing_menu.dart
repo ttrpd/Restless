@@ -9,7 +9,7 @@ class NowPlayingMenu extends StatefulWidget
 {
 
   bool playing;
-  double trackProgressPercent = 0.0;
+  double trackProgressPercent = 0.0;//currently unused
   AudioPlayer audioPlayer;
 
   NowPlayingMenu({
@@ -26,25 +26,35 @@ class NowPlayingMenu extends StatefulWidget
 }
 
 class NowPlayingMenuState extends State<NowPlayingMenu> {
-//  double trackProgressPercent = 0.0;
   double _volumeSliderValue = 30.0;
-  String currentTime = 'current';
-  String endTime = 'end';
+  Duration currentTime = Duration(milliseconds: 1);
+  Duration endTime = Duration(milliseconds: 1);
+  double _trackProgressPercent = 0.0;
+  bool _playing = false;
 
 
   @override
   Widget build(BuildContext context)
   {
+
     widget.audioPlayer.durationHandler = (Duration d) {
-      if(endTime == 'end')
+      if(endTime != null)
       setState(() {
-        endTime = d.toString().substring(d.toString().indexOf(':')+1,d.toString().lastIndexOf('.'));
+        endTime = d;
       });
     };
-
+    
     widget.audioPlayer.positionHandler = (Duration d) {
       setState(() {
-        currentTime = d.toString().substring(d.toString().indexOf(':')+1,d.toString().lastIndexOf('.'));
+        currentTime = d;
+      });
+      _trackProgressPercent = currentTime.inMilliseconds / endTime.inMilliseconds;
+    };
+
+    widget.audioPlayer.completionHandler = () {
+      setState(() {
+        _trackProgressPercent = 1.0;
+        _playing = false;
       });
     };
 
@@ -52,7 +62,7 @@ class NowPlayingMenuState extends State<NowPlayingMenu> {
       children: <Widget>[
         Container(
           width: double.maxFinite,
-          height: 782.0,
+          height: 820.0,
           decoration: BoxDecoration(
             color: Colors.black54,
             boxShadow: [
@@ -70,11 +80,12 @@ class NowPlayingMenuState extends State<NowPlayingMenu> {
               child: Column(
                 children: <Widget>[
                   SeekBar(
-                    trackProgressPercent: 0.4,
+                    trackProgressPercent: _trackProgressPercent,
                     onSeekRequested: (double seekPercent) {
                       setState(() {
 //                        final seekMils = (player.audioLength.inMilliseconds * seekPercent).round();
-//                        player.seek(Duration(milliseconds: seekMils));
+                        final seekMils = (endTime.inMilliseconds * seekPercent).round();
+                        widget.audioPlayer.seek(Duration(milliseconds: seekMils));
                       });
                     },
                   ),
@@ -83,7 +94,7 @@ class NowPlayingMenuState extends State<NowPlayingMenu> {
                     children: <Widget>[
                       RichText(
                         text: TextSpan(
-                          text: currentTime,
+                          text: currentTime.toString().substring(currentTime.toString().indexOf(':')+1,currentTime.toString().lastIndexOf('.')),
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 18.0,
@@ -93,7 +104,7 @@ class NowPlayingMenuState extends State<NowPlayingMenu> {
                       Expanded(child: Container(),),
                       RichText(
                         text: TextSpan(
-                          text: endTime,
+                          text: endTime.toString().substring(endTime.toString().indexOf(':')+1,endTime.toString().lastIndexOf('.')),
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 18.0,
@@ -135,18 +146,20 @@ class NowPlayingMenuState extends State<NowPlayingMenu> {
                               heroTag: 'playpause',
                               backgroundColor: Colors.white,
                               child: Icon(
-                                widget.playing?Icons.pause:Icons.play_arrow,
+                                _playing?Icons.pause:Icons.play_arrow,
                                 color: Colors.black,
                                 size: 40.0,
                               ),
                               onPressed: () {
-                                if(widget.playing) {
+                                if(_playing) {
                                   widget.audioPlayer.pause();
                                 }
                                 else {
                                   widget.audioPlayer.resume();
                                 }
-                                widget.playing = !widget.playing;
+                                setState(() {
+                                  _playing = !_playing;
+                                });
                               }
                           ),
                         ),
@@ -194,7 +207,7 @@ class NowPlayingMenuState extends State<NowPlayingMenu> {
                   ),
 
                   Padding(
-                    padding: const EdgeInsets.only(top: 40.0, left: 20.0, right: 20.0),
+                    padding: const EdgeInsets.only(top: 40.0, left: 20.0, right: 20.0, bottom: 0.0),
                     child: Divider(
                       color: Colors.white,
                     ),
