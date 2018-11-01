@@ -1,6 +1,6 @@
 
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttery_audio/fluttery_audio.dart';
 import 'package:restless/neighbor.dart';
 import 'package:restless/neighbor_page.dart';
 import 'package:restless/progress_bar.dart';
@@ -10,11 +10,13 @@ class NowPlayingMenu extends StatefulWidget
 
   bool playing;
   double trackProgressPercent = 0.0;
+  AudioPlayer audioPlayer;
 
   NowPlayingMenu({
     Key key,
     @required this.playing,
     @required this.trackProgressPercent,
+    @required this.audioPlayer,
   }) : super(key: key);
 
   @override
@@ -29,9 +31,23 @@ class NowPlayingMenuState extends State<NowPlayingMenu> {
   String currentTime = 'current';
   String endTime = 'end';
 
+
   @override
   Widget build(BuildContext context)
   {
+    widget.audioPlayer.durationHandler = (Duration d) {
+      if(endTime == 'end')
+      setState(() {
+        endTime = d.toString().substring(d.toString().indexOf(':')+1,d.toString().lastIndexOf('.'));
+      });
+    };
+
+    widget.audioPlayer.positionHandler = (Duration d) {
+      setState(() {
+        currentTime = d.toString().substring(d.toString().indexOf(':')+1,d.toString().lastIndexOf('.'));
+      });
+    };
+
     return Stack(
       children: <Widget>[
         Container(
@@ -53,67 +69,38 @@ class NowPlayingMenuState extends State<NowPlayingMenu> {
               type: MaterialType.transparency,
               child: Column(
                 children: <Widget>[
-                  AudioComponent(
-                    updateMe: [
-                      WatchableAudioProperties.audioPlayhead,
-                      WatchableAudioProperties.audioSeeking,
-                    ],
-                    playerBuilder: (BuildContext context, AudioPlayer player, Widget child) {
-                      double trackProgress = 0.0;
-
-                      if(player.audioLength != null && player.position != null) {
-                        trackProgress = player.position.inMilliseconds / player.audioLength.inMilliseconds;
-                      }
-
-                      endTime = player.audioLength.toString().substring(player.audioLength.toString().indexOf(':')+1,player.audioLength.toString().lastIndexOf('.'));
-                      currentTime = player.position.toString().substring(player.position.toString().indexOf(':')+1,player.position.toString().lastIndexOf('.'));
-
-                      return SeekBar(
-                        trackProgressPercent: trackProgress,
-                        onSeekRequested: (double seekPercent) {
-                          setState(() {
-                            final seekMils = (player.audioLength.inMilliseconds * seekPercent).round();
-                            player.seek(Duration(milliseconds: seekMils));
-                          });
-                        },
-                      );
+                  SeekBar(
+                    trackProgressPercent: 0.4,
+                    onSeekRequested: (double seekPercent) {
+                      setState(() {
+//                        final seekMils = (player.audioLength.inMilliseconds * seekPercent).round();
+//                        player.seek(Duration(milliseconds: seekMils));
+                      });
                     },
                   ),
                   // Track Times //
-                  AudioComponent(
-                    updateMe: [
-                      WatchableAudioProperties.audioPlayhead,
-                      WatchableAudioProperties.audioSeeking,
+                  Row(
+                    children: <Widget>[
+                      RichText(
+                        text: TextSpan(
+                          text: currentTime,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 18.0,
+                          ),
+                        ),
+                      ),
+                      Expanded(child: Container(),),
+                      RichText(
+                        text: TextSpan(
+                          text: endTime,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 18.0,
+                          ),
+                        ),
+                      ),
                     ],
-                    playerBuilder: (BuildContext context, AudioPlayer player, Widget child) {
-
-                      currentTime = player.position.toString().substring(player.position.toString().indexOf(':')+1,player.position.toString().lastIndexOf('.'));
-                      endTime = player.audioLength.toString().substring(player.audioLength.toString().indexOf(':')+1,player.audioLength.toString().lastIndexOf('.'));
-
-                      return Row(
-                        children: <Widget>[
-                          RichText(
-                            text: TextSpan(
-                              text: currentTime,
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 18.0,
-                              ),
-                            ),
-                          ),
-                          Expanded(child: Container(),),
-                          RichText(
-                            text: TextSpan(
-                              text: endTime,
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 18.0,
-                              ),
-                            ),
-                          ),
-                        ],
-                      );
-                    },
                   ),
 
                   // Player Controls //
@@ -144,35 +131,23 @@ class NowPlayingMenuState extends State<NowPlayingMenu> {
 
                         // play/pause //
                         Container(
-                          child: AudioComponent(
-                            updateMe: [
-                              WatchableAudioProperties.audioPlayerState
-                            ],
-                            playerBuilder: (BuildContext context, AudioPlayer player, Widget child) {
-                              IconData icon = Icons.play_arrow;
-                              Function onPressed;
-
-                              if(player.state == AudioPlayerState.playing){
-                                icon = Icons.pause;
-                                onPressed = player.pause;
+                          child: FloatingActionButton(
+                              heroTag: 'playpause',
+                              backgroundColor: Colors.white,
+                              child: Icon(
+                                widget.playing?Icons.pause:Icons.play_arrow,
+                                color: Colors.black,
+                                size: 40.0,
+                              ),
+                              onPressed: () {
+                                if(widget.playing) {
+                                  widget.audioPlayer.pause();
+                                }
+                                else {
+                                  widget.audioPlayer.resume();
+                                }
+                                widget.playing = !widget.playing;
                               }
-                              else if(player.state == AudioPlayerState.paused
-                              || player.state == AudioPlayerState.completed) {
-                                icon = Icons.play_arrow;
-                                onPressed = player.play;
-                              }
-
-                              return FloatingActionButton(
-                                heroTag: 'playpause',
-                                backgroundColor: Colors.white,
-                                child: Icon(
-                                  icon,
-                                  color: Colors.black,
-                                  size: 40.0,
-                                ),
-                                onPressed: onPressed
-                              );
-                            },
                           ),
                         ),
 
