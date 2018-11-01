@@ -83,10 +83,10 @@ class NowPlayingMenuState extends State<NowPlayingMenu> {
                     trackProgressPercent: _trackProgressPercent,
                     onSeekRequested: (double seekPercent) {
                       setState(() {
-//                        final seekMils = (player.audioLength.inMilliseconds * seekPercent).round();
                         final seekMils = (endTime.inMilliseconds * seekPercent).round();
                         widget.audioPlayer.seek(Duration(milliseconds: seekMils));
                         _trackProgressPercent = seekMils / endTime.inMilliseconds;
+                        currentTime = Duration(milliseconds: seekMils);
                       });
                     },
                   ),
@@ -402,15 +402,15 @@ class NowPlayingMenuState extends State<NowPlayingMenu> {
 
 class SeekBar extends StatefulWidget
 {
-  double seekDestination;
+  double seekProgressPercent;
   double trackProgressPercent;
   double thumbHeight;
   double thumbWidth;
+  bool seeking = false;
   Function(double) onSeekRequested;
 
   SeekBar({
     Key key,
-    this.seekDestination = 0.0,
     this.thumbWidth = 3.0,
     this.thumbHeight = -10.0,
     this.trackProgressPercent = 0.0,
@@ -432,26 +432,28 @@ class SeekBarState extends State<SeekBar> {
       onHorizontalDragStart: (DragStartDetails details)
       {
         setState(() {
-          widget.trackProgressPercent =  details.globalPosition.dx / MediaQuery.of(context).size.width;
+          widget.seekProgressPercent =  details.globalPosition.dx / MediaQuery.of(context).size.width;
           widget.thumbHeight *= 2;
           widget.thumbWidth *= 2;
+          widget.seeking = true;
         });
       },
       onHorizontalDragUpdate: (DragUpdateDetails details)
       {
         setState(() {
           if(details.globalPosition.dx <= MediaQuery.of(context).size.width)
-            widget.trackProgressPercent =  details.globalPosition.dx / MediaQuery.of(context).size.width;
+            widget.seekProgressPercent =  details.globalPosition.dx / MediaQuery.of(context).size.width;
           else
-            widget.trackProgressPercent = 1.0;
+            widget.seekProgressPercent = 1.0;
         });
       },
       onHorizontalDragEnd: (DragEndDetails details)
       {
         if(widget.onSeekRequested != null) {
-          widget.onSeekRequested(widget.trackProgressPercent);
+          widget.onSeekRequested(widget.seekProgressPercent);
         }
         setState(() {
+          widget.seeking = false;
           widget.thumbHeight /= 2;
           widget.thumbWidth /= 2;
         });
@@ -461,7 +463,7 @@ class SeekBarState extends State<SeekBar> {
           height: 30.0,
           color: Colors.transparent,
           child: ProgressBar(
-            progressPercent: widget.trackProgressPercent,
+            progressPercent: widget.seeking?widget.seekProgressPercent:widget.trackProgressPercent,
             thumbWidth: widget.thumbWidth,
             thumbHeight: widget.thumbHeight,
           )
@@ -471,6 +473,5 @@ class SeekBarState extends State<SeekBar> {
 
   @override
   void initState() {
-    widget.trackProgressPercent = widget.trackProgressPercent;
   }
 }
