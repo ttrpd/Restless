@@ -433,8 +433,8 @@ class SeekBarState extends State<SeekBar> {
       {
         setState(() {
           widget.seekProgressPercent =  details.globalPosition.dx / MediaQuery.of(context).size.width;
-          widget.thumbHeight *= 2;
-          widget.thumbWidth *= 2;
+          widget.thumbHeight *= 2.0;
+          widget.thumbWidth *= 2.0;
           widget.seeking = true;
         });
       },
@@ -454,8 +454,8 @@ class SeekBarState extends State<SeekBar> {
         }
         setState(() {
           widget.seeking = false;
-          widget.thumbHeight /= 2;
-          widget.thumbWidth /= 2;
+          widget.thumbHeight /= 2.0;
+          widget.thumbWidth /= 2.0;
         });
       },
       child: Container(// Seek bar
