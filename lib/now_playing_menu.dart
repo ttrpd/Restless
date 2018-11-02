@@ -403,14 +403,14 @@ class NowPlayingMenuState extends State<NowPlayingMenu> {
 class SeekBar extends StatefulWidget
 {
   double trackProgressPercent;
-  double thumbHeight;
-  double thumbWidth;
+//  double thumbHeight;
+//  double thumbWidth;
   Function(double) onSeekRequested;
 
   SeekBar({
     Key key,
-    this.thumbWidth = 3.0,
-    this.thumbHeight = -10.0,
+//    this.thumbWidth = 3.0,
+//    this.thumbHeight = -10.0,
     this.trackProgressPercent = 0.0,
     this.onSeekRequested,
   }) : super(key: key);
@@ -422,6 +422,8 @@ class SeekBar extends StatefulWidget
 }
 
 class SeekBarState extends State<SeekBar> {
+  double _thumbWidth = 3.0;
+  double _thumbHeight = -10.0;
   double _seekProgressPercent = 0.0;
   bool _seeking = false;
 
@@ -433,8 +435,8 @@ class SeekBarState extends State<SeekBar> {
       {
         setState(() {
           _seekProgressPercent = (details.globalPosition.dx) / MediaQuery.of(context).size.width;
-          widget.thumbHeight *= 2.0;
-          widget.thumbWidth *= 2.0;
+          _thumbHeight *= 2.0;
+          _thumbWidth *= 2.0;
           _seeking = true;
         });
       },
@@ -455,8 +457,8 @@ class SeekBarState extends State<SeekBar> {
         }
         setState(() {
           _seeking = false;
-          widget.thumbHeight /= 2.0;
-          widget.thumbWidth /= 2.0;
+          _thumbHeight /= 2.0;
+          _thumbWidth /= 2.0;
         });
       },
       child: Container(// Seek bar
@@ -465,8 +467,8 @@ class SeekBarState extends State<SeekBar> {
           color: Colors.transparent,
           child: ProgressBar(
             progressPercent: _seeking?_seekProgressPercent:widget.trackProgressPercent,
-            thumbWidth: widget.thumbWidth,
-            thumbHeight: widget.thumbHeight,
+            thumbWidth: _thumbWidth,
+            thumbHeight: _thumbHeight,
           )
       ),
     );
