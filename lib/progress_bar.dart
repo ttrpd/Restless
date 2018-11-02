@@ -89,13 +89,13 @@ class ProgressBarPainter extends CustomPainter
   void paint(Canvas canvas, Size size) {
     // Paint track
     canvas.drawRect(
-      Rect.fromLTWH(0.0, size.height / 2, size.width, trackThickness),
+      Rect.fromLTWH(0.0, size.height / 2.0, size.width, trackThickness),
       trackPaint
     );
 
     // Paint progress
     canvas.drawRect(
-      Rect.fromLTWH(0.0, size.height / 2, (size.width * progressPercent) + (thumbWidth / 2), progressThickness),
+      Rect.fromLTWH(0.0, size.height / 2.0, (size.width * progressPercent) + (thumbWidth / 2.0), progressThickness),
       progressPaint
     );
 
@@ -103,7 +103,7 @@ class ProgressBarPainter extends CustomPainter
     canvas.drawRect(
       Rect.fromLTWH(
         size.width * progressPercent,
-        (size.height / 2) + progressThickness,
+        (size.height / 2.0) + progressThickness,
         thumbWidth,
         thumbHeight,
       ),

@@ -81,11 +81,11 @@ class NowPlayingMenuState extends State<NowPlayingMenu> {
                 children: <Widget>[
                   SeekBar(
                     trackProgressPercent: _trackProgressPercent,
-                    onSeekRequested: (double seekPercent) {
+                    onSeekRequested: (double seekPercent) {//seekPercent is sometimes null
                       setState(() {
-                        final seekMils = (endTime.inMilliseconds * seekPercent).round();
+                        final seekMils = (endTime.inMilliseconds.toDouble() * seekPercent).round();//source of toDouble called on null error
                         widget.audioPlayer.seek(Duration(milliseconds: seekMils));
-                        _trackProgressPercent = seekMils / endTime.inMilliseconds;
+                        _trackProgressPercent = seekMils.toDouble() / endTime.inMilliseconds.toDouble();
                         currentTime = Duration(milliseconds: seekMils);
                       });
                     },
@@ -402,11 +402,9 @@ class NowPlayingMenuState extends State<NowPlayingMenu> {
 
 class SeekBar extends StatefulWidget
 {
-  double seekProgressPercent;
   double trackProgressPercent;
   double thumbHeight;
   double thumbWidth;
-  bool seeking = false;
   Function(double) onSeekRequested;
 
   SeekBar({
@@ -424,6 +422,8 @@ class SeekBar extends StatefulWidget
 }
 
 class SeekBarState extends State<SeekBar> {
+  double _seekProgressPercent = 0.0;
+  bool _seeking = false;
 
   @override
   Widget build(BuildContext context)
@@ -432,28 +432,29 @@ class SeekBarState extends State<SeekBar> {
       onHorizontalDragStart: (DragStartDetails details)
       {
         setState(() {
-          widget.seekProgressPercent =  details.globalPosition.dx / MediaQuery.of(context).size.width;
+          _seekProgressPercent = (details.globalPosition.dx) / MediaQuery.of(context).size.width;
           widget.thumbHeight *= 2.0;
           widget.thumbWidth *= 2.0;
-          widget.seeking = true;
+          _seeking = true;
         });
       },
       onHorizontalDragUpdate: (DragUpdateDetails details)
       {
         setState(() {
           if(details.globalPosition.dx <= MediaQuery.of(context).size.width)
-            widget.seekProgressPercent =  details.globalPosition.dx / MediaQuery.of(context).size.width;
+            _seekProgressPercent =  (details.globalPosition.dx) / MediaQuery.of(context).size.width;
           else
-            widget.seekProgressPercent = 1.0;
+            _seekProgressPercent = 1.0;
         });
       },
       onHorizontalDragEnd: (DragEndDetails details)
       {
+
         if(widget.onSeekRequested != null) {
-          widget.onSeekRequested(widget.seekProgressPercent);
+          widget.onSeekRequested(_seekProgressPercent);
         }
         setState(() {
-          widget.seeking = false;
+          _seeking = false;
           widget.thumbHeight /= 2.0;
           widget.thumbWidth /= 2.0;
         });
@@ -463,7 +464,7 @@ class SeekBarState extends State<SeekBar> {
           height: 30.0,
           color: Colors.transparent,
           child: ProgressBar(
-            progressPercent: widget.seeking?widget.seekProgressPercent:widget.trackProgressPercent,
+            progressPercent: _seeking?_seekProgressPercent:widget.trackProgressPercent,
             thumbWidth: widget.thumbWidth,
             thumbHeight: widget.thumbHeight,
           )

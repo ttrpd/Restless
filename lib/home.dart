@@ -47,7 +47,7 @@ class HomePage extends State<Home> with SingleTickerProviderStateMixin
 
   @override
   Widget build(BuildContext context) {
-    audioPlayer.setUrl('https://t4.bcbits.com/stream/2ab34fec48976b908635ff77dd779785/mp3-128/626133779?p=0&ts=1541120772&t=2d09ec8bd021019d1037f926741f38f0343c7c40&token=1541120772_d27a56008009961e745778db24d1c265ecacc5c6');
+    audioPlayer.setUrl('https://t4.bcbits.com/stream/5f173c899e20281aacb1c1701b017642/mp3-128/1777450022?p=0&ts=1541258577&t=479afbc4a0e70039fe32a993e16029d4a2633084&token=1541258577_a7748c9018bfb60d84fdf19a29f745ab29b0743c');
     audioPlayer.setReleaseMode(ReleaseMode.STOP);
 //    audioPlayer.play('https://t4.bcbits.com/stream/2ab34fec48976b908635ff77dd779785/mp3-128/626133779?p=0&ts=1541120772&t=2d09ec8bd021019d1037f926741f38f0343c7c40&token=1541120772_d27a56008009961e745778db24d1c265ecacc5c6');
 //    audioPlayer.pause();
