@@ -1,9 +1,11 @@
 
+import 'dart:io';
+
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:restless/neighbor.dart';
-import 'package:restless/neighbor_page.dart';
 import 'package:restless/progress_bar.dart';
+import 'package:path_provider/path_provider.dart';
 
 class NowPlayingMenu extends StatefulWidget
 {
@@ -32,10 +34,28 @@ class NowPlayingMenuState extends State<NowPlayingMenu> {
   double _trackProgressPercent = 0.0;
   bool _playing = false;
 
+  Future<String> localPath() async {
+
+    Directory dir = await getApplicationDocumentsDirectory();
+//    Directory dir = Directory('/storage/emulated/0/Music');
+    return dir.path.toString();
+  }
+
+  String debug = "";
 
   @override
   Widget build(BuildContext context)
   {
+
+    localPath().then( (String value) {
+      setState(() {
+        this.debug = value;
+      });
+    }).catchError((e) {
+      setState(() {
+        this.debug = e.toString();
+      });
+    });
 
     widget.audioPlayer.durationHandler = (Duration d) {
       if(endTime != null)
@@ -134,7 +154,8 @@ class NowPlayingMenuState extends State<NowPlayingMenu> {
                               size: 40.0,
                             ),
                             onPressed: () {
-
+                              print(debug);//for debugging
+                              print(Directory('/storage/emulated/0/Music').listSync().toString());// need to set permissions for this
                             },
                           ),
                         ),
