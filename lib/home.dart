@@ -43,7 +43,7 @@ class HomePage extends State<Home> with SingleTickerProviderStateMixin
   bool _playing = false;
   double _trackProgressPercent = 0.0;
   AudioPlayer audioPlayer = new AudioPlayer();
-  String _path = '/storage/emulated/0/Music/Little Drama/Little Drama .mp3';
+  String _path = '/storage/emulated/0/Music/Little Drama/Little Drama.mp3';
 
 
   @override
