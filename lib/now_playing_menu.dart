@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:restless/neighbor.dart';
 import 'package:restless/progress_bar.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:dart_tags/dart_tags.dart';
 
 class NowPlayingMenu extends StatefulWidget
 {
@@ -77,6 +78,7 @@ class NowPlayingMenuState extends State<NowPlayingMenu> {
         _playing = false;
       });
     };
+
 
     return Stack(
       children: <Widget>[
@@ -155,7 +157,7 @@ class NowPlayingMenuState extends State<NowPlayingMenu> {
                             ),
                             onPressed: () {
                               print(debug);//for debugging
-                              print(Directory('/storage/emulated/0/Music').listSync().toString());// need to set permissions for this
+                              print(Directory('/storage/emulated/0/Music').listSync());// need to set permissions for this
                             },
                           ),
                         ),

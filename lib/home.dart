@@ -1,5 +1,7 @@
 import 'dart:math';
+import 'dart:typed_data';
 
+import 'package:dart_tags/dart_tags.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/animation.dart';
 import 'dart:io';
@@ -40,17 +42,22 @@ class HomePage extends State<Home> with SingleTickerProviderStateMixin
     animationController.forward();
   }
 
+
+
   double _blurValue = 0.0;
   bool _playing = false;
   double _trackProgressPercent = 0.0;
   AudioPlayer audioPlayer = new AudioPlayer();
 
+  String _path = '/storage/emulated/0/Music/Little Drama/Little Drama.mp3';
+
   @override
   Widget build(BuildContext context) {
-    audioPlayer.setUrl('https://t4.bcbits.com/stream/5f173c899e20281aacb1c1701b017642/mp3-128/1777450022?p=0&ts=1541258577&t=479afbc4a0e70039fe32a993e16029d4a2633084&token=1541258577_a7748c9018bfb60d84fdf19a29f745ab29b0743c');
+//    audioPlayer.setUrl('https://t4.bcbits.com/stream/2ab34fec48976b908635ff77dd779785/mp3-128/626133779?p=0&ts=1541373709&t=d98d969edff1d8b7baf05e9901203356cd2d0427&token=1541373709_213e4d81152f633ee17ba2b3e1e534a52c96ecf4');
+    audioPlayer.setUrl(_path, isLocal: true);
     audioPlayer.setReleaseMode(ReleaseMode.STOP);
-//    audioPlayer.play('https://t4.bcbits.com/stream/2ab34fec48976b908635ff77dd779785/mp3-128/626133779?p=0&ts=1541120772&t=2d09ec8bd021019d1037f926741f38f0343c7c40&token=1541120772_d27a56008009961e745778db24d1c265ecacc5c6');
-//    audioPlayer.pause();
+
+
     return Scaffold(
       body: ScrollConfiguration(
         behavior: MyScrollBehavior(),
@@ -60,7 +67,7 @@ class HomePage extends State<Home> with SingleTickerProviderStateMixin
             children: <Widget>[
               Column(
                 children: <Widget>[
-                  AlbumArtArea(blurValue: _blurValue,),
+                  AlbumArtArea(blurValue: _blurValue, path: _path,),
                 ],
               ),
 
