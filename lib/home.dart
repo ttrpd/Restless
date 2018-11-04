@@ -22,42 +22,37 @@ class Home extends StatefulWidget
 class HomePage extends State<Home> with SingleTickerProviderStateMixin
 {
 
-  Animation animation;
-  AnimationController animationController;
-
   @override
   void initState()
   {
-    super.initState();
-    animationController = AnimationController(
-        vsync: this,
-        duration: Duration(milliseconds: 1000),
-    );
-    animation = Tween(begin: 0.0, end: 100.0).animate(animationController)
-      ..addListener((){
-        setState(() {
 
-        });
-      });
-    animationController.forward();
   }
 
 
+
+  Future<List<Tag>> _getAlbumArt(String path) async{
+
+    AttachedPicture pic;
+    TagProcessor tp = TagProcessor();
+    File f = File(path);
+//    tp.getTagsFromByteArray(f.readAsBytes()).then((l) => pic = l.last.tags['APIC']);
+    return  tp.getTagsFromByteArray(f.readAsBytes());
+  }
 
   double _blurValue = 0.0;
   bool _playing = false;
   double _trackProgressPercent = 0.0;
   AudioPlayer audioPlayer = new AudioPlayer();
+  String _path = '/storage/emulated/0/Music/Little Drama/Little Drama .mp3';
 
-  String _path = '/storage/emulated/0/Music/Little Drama/Little Drama.mp3';
 
   @override
   Widget build(BuildContext context) {
-//    audioPlayer.setUrl('https://t4.bcbits.com/stream/2ab34fec48976b908635ff77dd779785/mp3-128/626133779?p=0&ts=1541373709&t=d98d969edff1d8b7baf05e9901203356cd2d0427&token=1541373709_213e4d81152f633ee17ba2b3e1e534a52c96ecf4');
     audioPlayer.setUrl(_path, isLocal: true);
     audioPlayer.setReleaseMode(ReleaseMode.STOP);
 
 
+    print('built');
     return Scaffold(
       body: ScrollConfiguration(
         behavior: MyScrollBehavior(),
@@ -67,7 +62,7 @@ class HomePage extends State<Home> with SingleTickerProviderStateMixin
             children: <Widget>[
               Column(
                 children: <Widget>[
-                  AlbumArtArea(blurValue: _blurValue, path: _path,),
+                  AlbumArtArea(blurValue: _blurValue, img: _getAlbumArt(_path),),//need to move this method call so that id doesn't rerun on build
                 ],
               ),
 
