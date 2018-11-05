@@ -73,7 +73,7 @@ class TrackInfoAreaState extends State<TrackInfoArea> {
                             style: TextStyle(
                                 color: Colors.white,
                                 background: Paint(),
-                                fontSize: 18.0,
+                                fontSize: 20.0,
                                 fontWeight: FontWeight.normal,
                                 letterSpacing: 4.0,
                                 height: 1.0
@@ -92,7 +92,7 @@ class TrackInfoAreaState extends State<TrackInfoArea> {
                                 fontSize: 16.0,
                                 fontWeight: FontWeight.normal,
                                 letterSpacing: 4.0,
-                                height: 1.0
+                                height: 2.0
                             ),
                           ),
                         ),
