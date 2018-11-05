@@ -8,13 +8,19 @@ import 'package:dart_tags/dart_tags.dart';
 class TrackInfoArea extends StatefulWidget
 {
   double blurValue;
-  Future<List<Tag>> tags;
+//  Future<List<Tag>> tags;
+  String name;
+  String album;
+  String artist;
   String path;
 
   TrackInfoArea({
     Key key,
     @required this.blurValue,
-    this.tags,
+//    this.tags,
+    @required this.name,
+    @required this.album,
+    @required this.artist,
     this.path,
   }) : super(key: key);
 
@@ -39,21 +45,7 @@ class TrackInfoAreaState extends State<TrackInfoArea> {
             width: double.maxFinite,
             child: Padding(
               padding: const EdgeInsets.only(top: 20.0, left: 20.0, bottom: 5.0),
-              child: FutureBuilder(
-                future: widget.tags,
-                builder: (BuildContext context, AsyncSnapshot snapshot) {
-                  if(snapshot.data != null) {
-                    print(snapshot.data);
-                    return _buildTrackInfo(
-                      snapshot.data.last.tags['title'] ?? widget.path.substring(widget.path.lastIndexOf('/')+1, widget.path.lastIndexOf('.')),
-                      snapshot.data.last.tags['album'],
-                      snapshot.data.last.tags['TPE2'],
-                    );
-                  } else {
-                    return _buildPlaceholder();
-                  }
-                },
-              ),
+              child: _buildTrackInfo(widget.name, widget.album, widget.artist),
             ),
           ),
         ),

@@ -9,10 +9,12 @@ import 'package:flutter/material.dart';
 class AlbumArtArea extends StatefulWidget {
 
   double blurValue;
-  Future<List<Tag>> img;//make this the future with all the track data
+  ImageProvider img;
+//  Future<List<Tag>> img;//make this the future with all the track data
   AlbumArtArea({
     Key key,
     @required this.blurValue,
+//    @required this.img,
     @required this.img,
   }) : super(key: key);
 
@@ -34,17 +36,7 @@ class AlbumArtAreaState extends State<AlbumArtArea> {
         children: <Widget>[
           AspectRatio(
             aspectRatio: 1.0,
-            child: FutureBuilder(
-              future: widget.img,
-              builder: (BuildContext context, AsyncSnapshot snapshot) {
-                if(snapshot.data != null) {
-                  print(snapshot.data);
-                  return _buildAlbumArt(Image.memory(Uint8List.fromList(snapshot.data.last.tags['APIC'].imageData)).image);
-                } else {
-                  return _buildPlaceholder(albumArt);
-                }
-              },
-            ),
+            child: _buildAlbumArt(widget.img),
 
           ),
         ],
@@ -56,7 +48,7 @@ class AlbumArtAreaState extends State<AlbumArtArea> {
     return Container(
       decoration: BoxDecoration(
         image: DecorationImage(// use FutureBuilder here
-          image: albumArt,
+          image: albumArt ?? AssetImage('lib/assets/art15.jpg'),
           fit: BoxFit.cover,
         ),
       ),

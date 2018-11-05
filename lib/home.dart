@@ -1,4 +1,6 @@
 
+import 'dart:typed_data';
+
 import 'package:dart_tags/dart_tags.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
@@ -11,6 +13,7 @@ import 'package:restless/track_info_area.dart';
 
 class Home extends StatefulWidget
 {
+
   @override
   HomePage createState() => HomePage();
 }
@@ -21,7 +24,7 @@ class HomePage extends State<Home> with SingleTickerProviderStateMixin
   @override
   void initState()
   {
-    imgFuture = _getAlbumArt(_path);
+    _getTrackInfo(_path);
   }
 
 
@@ -35,17 +38,39 @@ class HomePage extends State<Home> with SingleTickerProviderStateMixin
     return  tp.getTagsFromByteArray(f.readAsBytes());
   }
 
+  Future _getTrackInfo(String path) async {
+    TagProcessor tp = TagProcessor();
+    File f = File(path);
+    var img = await tp.getTagsFromByteArray(f.readAsBytes());
+
+    setState(() {
+      track = img.last.tags['title'];
+      album = img.last.tags['album'];
+      artist = img.last.tags['artist'];
+      albumArt = Image.memory(Uint8List.fromList(img.last.tags['APIC'].imageData)).image;
+    });
+    print('done');
+  }
+
+  ImageProvider albumArt;
+  String artist;
+  String album;
+  String track;
+
   double _blurValue = 0.0;
   bool _playing = false;
   double _trackProgressPercent = 0.0;
   AudioPlayer audioPlayer = new AudioPlayer();
-  String _path = '/storage/emulated/0/Music/An Ambulance b∕w Never Know/An Ambulance.mp3';
-  Future<List<Tag>> imgFuture;
+  String _path = '/storage/emulated/0/Music/Little Drama/Little Drama.mp3';
+
+
 
   @override
   Widget build(BuildContext context) {
     audioPlayer.setUrl(_path, isLocal: true);
     audioPlayer.setReleaseMode(ReleaseMode.STOP);
+    Future<List<Tag>> imgFuture;
+    imgFuture = _getAlbumArt(_path);
 
 
     print('built');
@@ -58,7 +83,7 @@ class HomePage extends State<Home> with SingleTickerProviderStateMixin
             children: <Widget>[
               Column(
                 children: <Widget>[
-                  AlbumArtArea(blurValue: _blurValue, img: _getAlbumArt(_path),),//need to move this method call so that id doesn't rerun on build
+                  AlbumArtArea(blurValue: _blurValue, img: albumArt,),//need to move this method call so that id doesn't rerun on build
                 ],
               ),
 
@@ -82,7 +107,7 @@ class HomePage extends State<Home> with SingleTickerProviderStateMixin
                           _blurValue = 15.0;
                       });
                     },
-                    child: TrackInfoArea(blurValue: _blurValue, tags: _getAlbumArt(_path), path: _path),
+                    child: TrackInfoArea(blurValue: _blurValue, name: track, album: album, artist: artist, path: _path),
                   ),
                   NowPlayingMenu(
                     playing: _playing,
