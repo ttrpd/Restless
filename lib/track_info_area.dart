@@ -9,11 +9,13 @@ class TrackInfoArea extends StatefulWidget
 {
   double blurValue;
   Future<List<Tag>> tags;
+  String path;
 
   TrackInfoArea({
     Key key,
     @required this.blurValue,
     this.tags,
+    this.path,
   }) : super(key: key);
 
   @override
@@ -43,7 +45,7 @@ class TrackInfoAreaState extends State<TrackInfoArea> {
                   if(snapshot.data != null) {
                     print(snapshot.data);
                     return _buildTrackInfo(
-                      snapshot.data.last.tags['album'],//should have a name in tag data
+                      snapshot.data.last.tags['title'] ?? widget.path.substring(widget.path.lastIndexOf('/')+1, widget.path.lastIndexOf('.')),
                       snapshot.data.last.tags['album'],
                       snapshot.data.last.tags['TPE2'],
                     );
@@ -126,7 +128,7 @@ class TrackInfoAreaState extends State<TrackInfoArea> {
           text: '',
           children: <TextSpan>[
             TextSpan(
-              text: 'Track Name\n',
+              text: widget.path.substring(widget.path.lastIndexOf('/')+1, widget.path.lastIndexOf('.')),
               style: TextStyle(
                   color: Colors.white,
                   background: Paint(),

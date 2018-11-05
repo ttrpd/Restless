@@ -39,7 +39,7 @@ class HomePage extends State<Home> with SingleTickerProviderStateMixin
   bool _playing = false;
   double _trackProgressPercent = 0.0;
   AudioPlayer audioPlayer = new AudioPlayer();
-  String _path = '/storage/emulated/0/Music/Little Drama/Little Drama.mp3';
+  String _path = '/storage/emulated/0/Music/An Ambulance b∕w Never Know/An Ambulance.mp3';
   Future<List<Tag>> imgFuture;
 
   @override
@@ -82,7 +82,7 @@ class HomePage extends State<Home> with SingleTickerProviderStateMixin
                           _blurValue = 15.0;
                       });
                     },
-                    child: TrackInfoArea(blurValue: _blurValue, tags: _getAlbumArt(_path),),
+                    child: TrackInfoArea(blurValue: _blurValue, tags: _getAlbumArt(_path), path: _path),
                   ),
                   NowPlayingMenu(
                     playing: _playing,
