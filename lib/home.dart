@@ -61,7 +61,7 @@ class HomePage extends State<Home> with SingleTickerProviderStateMixin
   bool _playing = false;
   double _trackProgressPercent = 0.0;
   AudioPlayer audioPlayer = new AudioPlayer();
-  String _path = '/storage/emulated/0/Music/Little Drama/Little Drama.mp3';
+  String _path = '/storage/emulated/0/Music/I Got Cut/I Got Cut.mp3';
 
 
 
@@ -69,6 +69,7 @@ class HomePage extends State<Home> with SingleTickerProviderStateMixin
   Widget build(BuildContext context) {
     audioPlayer.setUrl(_path, isLocal: true);
     audioPlayer.setReleaseMode(ReleaseMode.STOP);
+
     Future<List<Tag>> imgFuture;
     imgFuture = _getAlbumArt(_path);
 

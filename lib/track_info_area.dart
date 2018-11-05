@@ -45,7 +45,61 @@ class TrackInfoAreaState extends State<TrackInfoArea> {
             width: double.maxFinite,
             child: Padding(
               padding: const EdgeInsets.only(top: 20.0, left: 20.0, bottom: 5.0),
-              child: _buildTrackInfo(widget.name, widget.album, widget.artist),
+              child: Align(
+                alignment: Alignment.topLeft,
+                child: Column(
+                    children: <Widget>[
+                      Align(
+                        alignment: Alignment.topLeft,
+                        child: RichText(
+                          text: TextSpan(
+                            text: widget.name ?? widget.path.substring(widget.path.lastIndexOf('/')+1, widget.path.lastIndexOf('.')),
+                            style: TextStyle(
+                                color: Colors.white,
+                                background: Paint(),
+                                fontSize: 32.0,
+                                fontWeight: FontWeight.bold,
+                                letterSpacing: 2.0,
+                                height: 3.0
+                            ),
+                          ),
+                        ),
+                      ),
+                      Align(
+                        alignment: Alignment.topLeft,
+                        child: RichText(
+                          text: TextSpan(
+                            text: widget.album ?? '(Album)',
+                            style: TextStyle(
+                                color: Colors.white,
+                                background: Paint(),
+                                fontSize: 18.0,
+                                fontWeight: FontWeight.normal,
+                                letterSpacing: 4.0,
+                                height: 1.0
+                            ),
+                          ),
+                        ),
+                      ),
+                      Align(
+                        alignment: Alignment.topLeft,
+                        child: RichText(
+                          text: TextSpan(
+                            text: widget.artist ?? '(Artist)',
+                            style: TextStyle(
+                                color: Colors.white,
+                                background: Paint(),
+                                fontSize: 16.0,
+                                fontWeight: FontWeight.normal,
+                                letterSpacing: 4.0,
+                                height: 1.0
+                            ),
+                          ),
+                        ),
+                      ),
+                    ]
+                ),
+              )
             ),
           ),
         ),
@@ -53,107 +107,4 @@ class TrackInfoAreaState extends State<TrackInfoArea> {
     );
   }
 
-  Widget _buildTrackInfo(String name, String album, String artist)
-  {
-    return Align(
-      alignment: Alignment.topLeft,
-      child: Column(
-        children: <Widget>[
-          Align(
-            alignment: Alignment.topLeft,
-            child: RichText(
-              text: TextSpan(
-                text: name,
-                style: TextStyle(
-                  color: Colors.white,
-                  background: Paint(),
-                  fontSize: 32.0,
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: 2.0,
-                  height: 3.0
-                ),
-              ),
-            ),
-          ),
-          Align(
-            alignment: Alignment.topLeft,
-            child: RichText(
-              text: TextSpan(
-                text: album,
-                style: TextStyle(
-                  color: Colors.white,
-                  background: Paint(),
-                  fontSize: 18.0,
-                  fontWeight: FontWeight.normal,
-                  letterSpacing: 4.0,
-                  height: 1.0
-                ),
-              ),
-            ),
-          ),
-          Align(
-            alignment: Alignment.topLeft,
-            child: RichText(
-              text: TextSpan(
-                text: artist,
-                style: TextStyle(
-                  color: Colors.white,
-                  background: Paint(),
-                  fontSize: 16.0,
-                  fontWeight: FontWeight.normal,
-                  letterSpacing: 4.0,
-                  height: 1.0
-                ),
-              ),
-            ),
-          ),
-        ]
-      ),
-    );
-  }
-
-  Widget _buildPlaceholder()
-  {
-    return RichText(
-
-      text: TextSpan(
-          text: '',
-          children: <TextSpan>[
-            TextSpan(
-              text: widget.path.substring(widget.path.lastIndexOf('/')+1, widget.path.lastIndexOf('.')),
-              style: TextStyle(
-                  color: Colors.white,
-                  background: Paint(),
-                  fontSize: 32.0,
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: 2.0,
-                  height: 3.0
-              ),
-            ),
-            TextSpan(
-              text: 'Album\n',
-              style: TextStyle(
-                  color: Colors.white,
-                  background: Paint(),
-                  fontSize: 18.0,
-                  fontWeight: FontWeight.normal,
-                  letterSpacing: 4.0,
-                  height: 1.0
-              ),
-            ),
-            TextSpan(
-              text: 'Artist\n',
-              style: TextStyle(
-                  color: Colors.white,
-                  background: Paint(),
-                  fontSize: 16.0,
-                  fontWeight: FontWeight.normal,
-                  letterSpacing: 4.0,
-                  height: 1.0
-              ),
-            ),
-          ]
-      ),
-    );
-  }
 }
