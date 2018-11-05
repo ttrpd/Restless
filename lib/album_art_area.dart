@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 class AlbumArtArea extends StatefulWidget {
 
   double blurValue;
-  Future<List<Tag>> img;
+  Future<List<Tag>> img;//make this the future with all the track data
   AlbumArtArea({
     Key key,
     @required this.blurValue,
@@ -38,6 +38,7 @@ class AlbumArtAreaState extends State<AlbumArtArea> {
               future: widget.img,
               builder: (BuildContext context, AsyncSnapshot snapshot) {
                 if(snapshot.data != null) {
+                  print(snapshot.data);
                   return _buildAlbumArt(Image.memory(Uint8List.fromList(snapshot.data.last.tags['APIC'].imageData)).image);
                 } else {
                   return _buildPlaceholder(albumArt);

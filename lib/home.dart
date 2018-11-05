@@ -1,15 +1,11 @@
-import 'dart:math';
-import 'dart:typed_data';
 
 import 'package:dart_tags/dart_tags.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/animation.dart';
 import 'dart:io';
 import 'package:audioplayers/audioplayers.dart';
 
 import 'package:restless/album_art_area.dart';
 import 'package:restless/now_playing_menu.dart';
-import 'package:restless/progress_bar.dart';
 import 'package:restless/track_info_area.dart';
 
 
@@ -25,7 +21,7 @@ class HomePage extends State<Home> with SingleTickerProviderStateMixin
   @override
   void initState()
   {
-
+    imgFuture = _getAlbumArt(_path);
   }
 
 
@@ -44,7 +40,7 @@ class HomePage extends State<Home> with SingleTickerProviderStateMixin
   double _trackProgressPercent = 0.0;
   AudioPlayer audioPlayer = new AudioPlayer();
   String _path = '/storage/emulated/0/Music/Little Drama/Little Drama.mp3';
-
+  Future<List<Tag>> imgFuture;
 
   @override
   Widget build(BuildContext context) {
@@ -86,7 +82,7 @@ class HomePage extends State<Home> with SingleTickerProviderStateMixin
                           _blurValue = 15.0;
                       });
                     },
-                    child: TrackInfoArea(blurValue: _blurValue,),
+                    child: TrackInfoArea(blurValue: _blurValue, tags: _getAlbumArt(_path),),
                   ),
                   NowPlayingMenu(
                     playing: _playing,
