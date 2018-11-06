@@ -7,18 +7,19 @@ import 'dart:io';
 import 'package:audioplayers/audioplayers.dart';
 
 import 'package:restless/album_art_area.dart';
+import 'package:restless/my_scroll_behavior.dart';
 import 'package:restless/now_playing_menu.dart';
 import 'package:restless/track_info_area.dart';
 
 
-class Home extends StatefulWidget
+class NowPlaying extends StatefulWidget
 {
 
   @override
-  HomePage createState() => HomePage();
+  NowPlayingState createState() => NowPlayingState();
 }
 
-class HomePage extends State<Home> with SingleTickerProviderStateMixin
+class NowPlayingState extends State<NowPlaying> with SingleTickerProviderStateMixin
 {
 
   @override
@@ -126,14 +127,4 @@ class HomePage extends State<Home> with SingleTickerProviderStateMixin
   }
 
 
-}
-
-class MyScrollBehavior extends ScrollBehavior {
-  @override
-  Widget buildViewportChrome(
-      BuildContext context,
-      Widget child, AxisDirection
-      axisDirection) {
-    return child;
-  }
 }

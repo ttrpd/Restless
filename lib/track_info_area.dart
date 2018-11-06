@@ -48,56 +48,56 @@ class TrackInfoAreaState extends State<TrackInfoArea> {
               child: Align(
                 alignment: Alignment.topLeft,
                 child: Column(
-                    children: <Widget>[
-                      Align(
-                        alignment: Alignment.topLeft,
-                        child: RichText(
-                          text: TextSpan(
-                            text: widget.name ?? widget.path.substring(widget.path.lastIndexOf('/')+1, widget.path.lastIndexOf('.')),
-                            style: TextStyle(
-                                color: Colors.white,
-                                background: Paint(),
-                                fontSize: 32.0,
-                                fontWeight: FontWeight.bold,
-                                letterSpacing: 2.0,
-                                height: 3.0
-                            ),
+                  children: <Widget>[
+                    Align(
+                      alignment: Alignment.topLeft,
+                      child: RichText(
+                        text: TextSpan(
+                          text: widget.name ?? widget.path.substring(widget.path.lastIndexOf('/')+1, widget.path.lastIndexOf('.')),
+                          style: TextStyle(
+                            color: Colors.white,
+                            background: Paint(),
+                            fontSize: 32.0,
+                            fontWeight: FontWeight.bold,
+                            letterSpacing: 2.0,
+                            height: 3.0
                           ),
                         ),
                       ),
-                      Align(
-                        alignment: Alignment.topLeft,
-                        child: RichText(
-                          text: TextSpan(
-                            text: widget.album ?? '(Album)',
-                            style: TextStyle(
-                                color: Colors.white,
-                                background: Paint(),
-                                fontSize: 20.0,
-                                fontWeight: FontWeight.normal,
-                                letterSpacing: 4.0,
-                                height: 1.0
-                            ),
+                    ),
+                    Align(
+                      alignment: Alignment.topLeft,
+                      child: RichText(
+                        text: TextSpan(
+                          text: widget.album ?? '(Album)',
+                          style: TextStyle(
+                            color: Colors.white,
+                            background: Paint(),
+                            fontSize: 20.0,
+                            fontWeight: FontWeight.normal,
+                            letterSpacing: 4.0,
+                            height: 1.0
                           ),
                         ),
                       ),
-                      Align(
-                        alignment: Alignment.topLeft,
-                        child: RichText(
-                          text: TextSpan(
-                            text: widget.artist ?? '(Artist)',
-                            style: TextStyle(
-                                color: Colors.white,
-                                background: Paint(),
-                                fontSize: 16.0,
-                                fontWeight: FontWeight.normal,
-                                letterSpacing: 4.0,
-                                height: 2.0
-                            ),
+                    ),
+                    Align(
+                      alignment: Alignment.topLeft,
+                      child: RichText(
+                        text: TextSpan(
+                          text: widget.artist ?? '(Artist)',
+                          style: TextStyle(
+                            color: Colors.white,
+                            background: Paint(),
+                            fontSize: 16.0,
+                            fontWeight: FontWeight.normal,
+                            letterSpacing: 4.0,
+                            height: 2.0
                           ),
                         ),
                       ),
-                    ]
+                    ),
+                  ]
                 ),
               )
             ),
