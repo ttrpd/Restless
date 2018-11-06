@@ -34,7 +34,6 @@ class HomePage extends State<Home> with SingleTickerProviderStateMixin
     AttachedPicture pic;
     TagProcessor tp = TagProcessor();
     File f = File(path);
-//    tp.getTagsFromByteArray(f.readAsBytes()).then((l) => pic = l.last.tags['APIC']);
     return  tp.getTagsFromByteArray(f.readAsBytes());
   }
 
@@ -43,12 +42,14 @@ class HomePage extends State<Home> with SingleTickerProviderStateMixin
     File f = File(path);
     var img = await tp.getTagsFromByteArray(f.readAsBytes());
 
+
     setState(() {
       track = img.last.tags['title'];
       album = img.last.tags['album'];
       artist = img.last.tags['artist'];
       albumArt = Image.memory(Uint8List.fromList(img.last.tags['APIC'].imageData)).image;
     });
+    print(img.last.tags['APIC'].description);
     print('done');
   }
 
@@ -61,7 +62,7 @@ class HomePage extends State<Home> with SingleTickerProviderStateMixin
   bool _playing = false;
   double _trackProgressPercent = 0.0;
   AudioPlayer audioPlayer = new AudioPlayer();
-  String _path = '/storage/emulated/0/Music/In The Key Of Sublimation/Zest.mp3';
+  String _path = '/storage/emulated/0/Music/An Ambulance b∕w Never Know/Never Know.mp3';
 
 
 

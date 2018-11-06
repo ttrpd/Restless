@@ -44,7 +44,7 @@ class TrackInfoAreaState extends State<TrackInfoArea> {
           child: Container(
             width: double.maxFinite,
             child: Padding(
-              padding: const EdgeInsets.only(top: 20.0, left: 20.0, bottom: 5.0),
+              padding: const EdgeInsets.only(top: 20.0, left: 20.0, bottom: 5.0, right: 20.0),
               child: Align(
                 alignment: Alignment.topLeft,
                 child: Column(
