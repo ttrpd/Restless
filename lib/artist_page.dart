@@ -49,11 +49,11 @@ class ArtistPageState extends State<ArtistPage> {
         behavior: MyScrollBehavior(),
         child: Container(
           color: Colors.black,
-          child: Stack(
+          child: ListView(
+            scrollDirection: Axis.vertical,
+            controller: ScrollController(),
             children: <Widget>[
-              ListView(
-                scrollDirection: Axis.vertical,
-                controller: ScrollController(),
+              Stack(
                 children: <Widget>[
                   Container(
                     width: double.maxFinite,
@@ -116,48 +116,48 @@ class ArtistPageState extends State<ArtistPage> {
                       ],
                     ),
                   ),
-                  Container(
-                    width: double.maxFinite,
-                    height: 125.0,
-                    color: Colors.black,
-                  ),
-                  Container(
-                    width: double.maxFinite,
-                    height: 125.0,
-                    color: Colors.green,
-                  ),
-                  Container(
-                    width: double.maxFinite,
-                    height: 125.0,
-                    color: Colors.deepPurple,
-                  ),
-                  Container(
-                    width: double.maxFinite,
-                    height: 125.0,
-                    color: Colors.redAccent,
-                  ),
-                  Container(
-                    width: double.maxFinite,
-                    height: 125.0,
-                    color: Colors.lightBlue,
+                  Padding(
+                    padding: const EdgeInsets.only(top: 12.5, left: 10.0, right: 5.0, bottom: 5.0),
+                    child: RichText(
+                      text: TextSpan(
+                        text: 'Artist Name',
+                        style: TextStyle(
+                            color: Colors.white,
+                            background: Paint(),
+                            fontSize: 26.0,
+                            fontWeight: FontWeight.bold,
+                            letterSpacing: 2.0,
+                            height: 1.0
+                        ),
+                      ),
+                    ),
                   ),
                 ],
               ),
-              Padding(
-                padding: const EdgeInsets.only(top: 12.5, left: 10.0, right: 5.0, bottom: 5.0),
-                child: RichText(
-                  text: TextSpan(
-                    text: 'Artist Name',
-                    style: TextStyle(
-                      color: Colors.white,
-                      background: Paint(),
-                      fontSize: 26.0,
-                      fontWeight: FontWeight.bold,
-                      letterSpacing: 2.0,
-                      height: 1.0
-                    ),
-                  ),
-                ),
+              Container(
+                width: double.maxFinite,
+                height: 125.0,
+                color: Colors.black,
+              ),
+              Container(
+                width: double.maxFinite,
+                height: 125.0,
+                color: Colors.green,
+              ),
+              Container(
+                width: double.maxFinite,
+                height: 125.0,
+                color: Colors.deepPurple,
+              ),
+              Container(
+                width: double.maxFinite,
+                height: 125.0,
+                color: Colors.redAccent,
+              ),
+              Container(
+                width: double.maxFinite,
+                height: 125.0,
+                color: Colors.lightBlue,
               ),
             ],
           ),
