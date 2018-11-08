@@ -33,7 +33,13 @@ class ArtistPageState extends State<ArtistPage> {
   @override
   Widget build(BuildContext context) {
     print('artistPage');
-
+//    print(widget.artists['Accidente'].toList().toString());
+    print(widget.artists.keys.length);
+    for(String name in widget.artists.keys.toList())
+    {
+      if(widget.artists[name] == null)
+        print(name + ' -- contains null');
+    }
     return Scaffold(
       appBar: AppBar(
         actions: <Widget>[
@@ -65,7 +71,6 @@ class ArtistPageState extends State<ArtistPage> {
           child: ListView.builder(
             itemCount: widget.artists.entries.toList().length,
             itemBuilder: (BuildContext context, int index) {
-              print(widget.artists.keys.toList()[index] + ' ' + widget.artists.values.toList()[index].toString());
               return ArtistSliver(
                 artist: widget.artists.keys.toList()[index],
                 covers: widget.artists.values.toList()[index],

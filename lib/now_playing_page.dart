@@ -67,8 +67,6 @@ class NowPlayingState extends State<NowPlaying> with SingleTickerProviderStateMi
   @override
   Widget build(BuildContext context) {
 
-    print(widget.playing);
-    print('built');
     return Scaffold(
       body: ScrollConfiguration(
         behavior: MyScrollBehavior(),

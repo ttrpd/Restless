@@ -24,43 +24,50 @@ class Home extends StatefulWidget
 class HomeState extends State<Home> {
 
 
+
   Map<String, List<ImageProvider>> artists = {'':[]};
-  String _path = '/storage/emulated/0/Music/TestMusic/Mike Krol/I Hate Jazz/Fifteen Minutes.mp3';
+  String _path = '/storage/emulated/0/Music/TestMusic/Carousel Casualties/Madison/Bright Red Lights.mp3';
   bool _playing = false;
 
   Future _getAlbumInfo(String artist, String path) async
   {
 
-    String songPath = Directory(path).listSync().first.path;
+    String songPath = path;
+
     TagProcessor tp = TagProcessor();
     File f = File(songPath);
     var img = await tp.getTagsFromByteArray(f.readAsBytes());
 
     ImageProvider albumArt;
     if(img.last.tags['APIC'] == null)
+    {
+      print('Problems with: ' + artist);
+      print('::: ' + songPath.toString());
       return;
+    }
 
     artists[artist] = [];
     albumArt = Image.memory(Uint8List.fromList(img.last.tags['APIC'].imageData)).image;
 
     artists[artist].add(albumArt);
-    print(albumArt.toString());
   }
 
-//  Future _getTrackInfo(String path) async {
-//    TagProcessor tp = TagProcessor();
-//    File f = File(path);
-//    var img = await tp.getTagsFromByteArray(f.readAsBytes());
-//
-//    setState(() {
-//      track = img.last.tags['title'];
-//      album = img.last.tags['album'];
-//      artist = img.last.tags['artist'];
-//      albumArt = Image.memory(Uint8List.fromList(img.last.tags['APIC'].imageData)).image;
-//    });
-//    print(img.last.tags['APIC'].description);
-//    print('done');
-//  }
+  @override
+  void initState() {
+    print(Directory('storage/emulated/0/Music/TestMusic').listSync());
+    for( Directory artist in Directory('/storage/emulated/0/Music/TestMusic').listSync() )
+    {
+      for( var album in artist.listSync())
+      {
+        print('adding ' + album.path.substring(album.path.lastIndexOf('/')+1, album.path.length));
+        for( var file in Directory(album.path).listSync())
+        {
+          if(!file.path.contains('.ini') && !file.path.contains('.jpg') && !file.path.contains('.png'))
+            _getAlbumInfo(artist.toString().substring(artist.toString().lastIndexOf('/')+1, artist.toString().length-1),file.path);
+        }
+      }
+    }
+  }
 
   AudioPlayer audioPlayer = new AudioPlayer();
   @override
@@ -70,21 +77,6 @@ class HomeState extends State<Home> {
     audioPlayer.setUrl(_path, isLocal: true);
     audioPlayer.setReleaseMode(ReleaseMode.STOP);
 
-//    print(Directory('/storage/emulated/0/Music/TestMusic').listSync());
-    for( Directory artist in Directory('/storage/emulated/0/Music/TestMusic').listSync() )
-    {
-      print('-----'+artist.path.substring(artist.path.lastIndexOf('/')+1, artist.path.length));
-      for( var album in artist.listSync())
-      {
-        if(!album.toString().contains('.ini') && !album.toString().contains('.jpg') && !album.toString().contains('.png'))
-        {
-          print('adding ' + album.path.substring(album.path.lastIndexOf('/')+1, album.path.length));
-          _getAlbumInfo(artist.toString().substring(artist.toString().lastIndexOf('/')+1, artist.toString().length-1),album.path);
-        }
-      }
-    }
-
-    print(artists);
     artists.remove('');
 
     return PageView(
