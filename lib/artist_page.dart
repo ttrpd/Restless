@@ -1,4 +1,5 @@
 import 'dart:typed_data';
+import 'dart:collection';
 
 import 'package:dart_tags/dart_tags.dart';
 import 'package:flutter/material.dart';
@@ -6,6 +7,7 @@ import 'dart:io';
 import 'package:audioplayers/audioplayers.dart';
 
 import 'package:restless/album_art_area.dart';
+import 'package:restless/artist_sliver.dart';
 import 'package:restless/my_scroll_behavior.dart';
 import 'package:restless/now_playing_menu.dart';
 import 'package:restless/track_info_area.dart';
@@ -13,6 +15,13 @@ import 'package:restless/track_info_area.dart';
 
 class ArtistPage extends StatefulWidget
 {
+  Map<String, List<ImageProvider>> artists;
+
+  ArtistPage({
+    Key key,
+    @required this.artists,
+  }) : super(key: key);
+
   @override
   ArtistPageState createState() {
     return new ArtistPageState();
@@ -20,8 +29,11 @@ class ArtistPage extends StatefulWidget
 }
 
 class ArtistPageState extends State<ArtistPage> {
+
   @override
   Widget build(BuildContext context) {
+    print('artistPage');
+
     return Scaffold(
       appBar: AppBar(
         actions: <Widget>[
@@ -49,117 +61,16 @@ class ArtistPageState extends State<ArtistPage> {
         behavior: MyScrollBehavior(),
         child: Container(
           color: Colors.black,
-          child: ListView(
-            scrollDirection: Axis.vertical,
-            controller: ScrollController(),
-            children: <Widget>[
-              Stack(
-                children: <Widget>[
-                  Container(
-                    width: double.maxFinite,
-                    height: 125.0,
-                    color: Colors.black,
-                    child: ListView(
-                      controller: ScrollController(),
-                      scrollDirection: Axis.horizontal,
-                      children: <Widget>[
-                        Container(
-                          height: double.maxFinite,
-                          width: 100.0,
-                          decoration: BoxDecoration(
-                            image: DecorationImage(
-                              fit: BoxFit.cover,
-                              image: AssetImage('lib/assets/art20.jpg'),
-                            ),
-                          ),
-                        ),
-                        Container(
-                          height: double.maxFinite,
-                          width: 100.0,
-                          decoration: BoxDecoration(
-                            image: DecorationImage(
-                              fit: BoxFit.cover,
-                              image: AssetImage('lib/assets/art4.jpg'),
-                            ),
-                          ),
-                        ),
-                        Container(
-                          height: double.maxFinite,
-                          width: 100.0,
-                          decoration: BoxDecoration(
-                            image: DecorationImage(
-                              fit: BoxFit.cover,
-                              image: AssetImage('lib/assets/art12.jpg'),
-                            ),
-                          ),
-                        ),
-                        Container(
-                          height: double.maxFinite,
-                          width: 100.0,
-                          decoration: BoxDecoration(
-                            image: DecorationImage(
-                              fit: BoxFit.cover,
-                              image: AssetImage('lib/assets/art5.jpg'),
-                            ),
-                          ),
-                        ),
-                        Container(
-                          height: double.maxFinite,
-                          width: 100.0,
-                          decoration: BoxDecoration(
-                            image: DecorationImage(
-                              fit: BoxFit.fill,
-                              image: AssetImage('lib/assets/art8.jpg'),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 12.5, left: 10.0, right: 5.0, bottom: 5.0),
-                    child: RichText(
-                      text: TextSpan(
-                        text: 'Artist Name',
-                        style: TextStyle(
-                            color: Colors.white,
-                            background: Paint(),
-                            fontSize: 26.0,
-                            fontWeight: FontWeight.bold,
-                            letterSpacing: 2.0,
-                            height: 1.0
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              Container(
-                width: double.maxFinite,
-                height: 125.0,
-                color: Colors.black,
-              ),
-              Container(
-                width: double.maxFinite,
-                height: 125.0,
-                color: Colors.green,
-              ),
-              Container(
-                width: double.maxFinite,
-                height: 125.0,
-                color: Colors.deepPurple,
-              ),
-              Container(
-                width: double.maxFinite,
-                height: 125.0,
-                color: Colors.redAccent,
-              ),
-              Container(
-                width: double.maxFinite,
-                height: 125.0,
-                color: Colors.lightBlue,
-              ),
-            ],
+
+          child: ListView.builder(
+            itemCount: widget.artists.entries.toList().length,
+            itemBuilder: (BuildContext context, int index) {
+              print(widget.artists.keys.toList()[index] + ' ' + widget.artists.values.toList()[index].toString());
+              return ArtistSliver(
+                artist: widget.artists.keys.toList()[index],
+                covers: widget.artists.values.toList()[index],
+              );
+            },
           ),
         ),
       ),

@@ -14,6 +14,16 @@ import 'package:restless/track_info_area.dart';
 
 class NowPlaying extends StatefulWidget
 {
+  String path;
+  AudioPlayer audioPlayer;
+  bool playing;
+
+  NowPlaying({
+    Key key,
+    @required this.path,
+    @required this.audioPlayer,
+    @required this.playing,
+  }) : super(key: key);
 
   @override
   NowPlayingState createState() => NowPlayingState();
@@ -25,18 +35,9 @@ class NowPlayingState extends State<NowPlaying> with SingleTickerProviderStateMi
   @override
   void initState()
   {
-    _getTrackInfo(_path);
+    _getTrackInfo(widget.path);
   }
 
-
-
-  Future<List<Tag>> _getAlbumArt(String path) async{
-
-    AttachedPicture pic;
-    TagProcessor tp = TagProcessor();
-    File f = File(path);
-    return  tp.getTagsFromByteArray(f.readAsBytes());
-  }
 
   Future _getTrackInfo(String path) async {
     TagProcessor tp = TagProcessor();
@@ -50,7 +51,6 @@ class NowPlayingState extends State<NowPlaying> with SingleTickerProviderStateMi
       artist = img.last.tags['artist'];
       albumArt = Image.memory(Uint8List.fromList(img.last.tags['APIC'].imageData)).image;
     });
-    print(img.last.tags['APIC'].description);
     print('done');
   }
 
@@ -60,22 +60,14 @@ class NowPlayingState extends State<NowPlaying> with SingleTickerProviderStateMi
   String track;
 
   double _blurValue = 0.0;
-  bool _playing = false;
   double _trackProgressPercent = 0.0;
-  AudioPlayer audioPlayer = new AudioPlayer();
-  String _path = '/storage/emulated/0/Music/An Ambulance b∕w Never Know/Never Know.mp3';
 
 
 
   @override
   Widget build(BuildContext context) {
-    audioPlayer.setUrl(_path, isLocal: true);
-    audioPlayer.setReleaseMode(ReleaseMode.STOP);
 
-    Future<List<Tag>> imgFuture;
-    imgFuture = _getAlbumArt(_path);
-
-
+    print(widget.playing);
     print('built');
     return Scaffold(
       body: ScrollConfiguration(
@@ -110,11 +102,11 @@ class NowPlayingState extends State<NowPlaying> with SingleTickerProviderStateMi
                           _blurValue = 15.0;
                       });
                     },
-                    child: TrackInfoArea(blurValue: _blurValue, name: track, album: album, artist: artist, path: _path),
+                    child: TrackInfoArea(blurValue: _blurValue, name: track, album: album, artist: artist, path: widget.path),
                   ),
                   NowPlayingMenu(
-                    playing: _playing,
-                    audioPlayer: audioPlayer,
+                    playing: widget.playing,
+                    audioPlayer: widget.audioPlayer,
                     trackProgressPercent: _trackProgressPercent,
                   ),
                 ],

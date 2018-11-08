@@ -33,30 +33,22 @@ class NowPlayingMenuState extends State<NowPlayingMenu> {
   Duration currentTime = Duration(milliseconds: 1);
   Duration endTime = Duration(milliseconds: 1);
   double _trackProgressPercent = 0.0;
-  bool _playing = false;
 
-  Future<String> localPath() async {
 
-    Directory dir = await getApplicationDocumentsDirectory();
-//    Directory dir = Directory('/storage/emulated/0/Music');
-    return dir.path.toString();
+  @override
+  void initState() {
+    _trackProgressPercent = widget.trackProgressPercent;
   }
 
-  String debug = "";
+  @override
+  void dispose() {
+    super.dispose();
+    widget.trackProgressPercent = _trackProgressPercent;
+  }
 
   @override
   Widget build(BuildContext context)
   {
-
-    localPath().then( (String value) {
-      setState(() {
-        this.debug = value;
-      });
-    }).catchError((e) {
-      setState(() {
-        this.debug = e.toString();
-      });
-    });
 
     widget.audioPlayer.durationHandler = (Duration d) {
       if(endTime != null)
@@ -75,7 +67,7 @@ class NowPlayingMenuState extends State<NowPlayingMenu> {
     widget.audioPlayer.completionHandler = () {
       setState(() {
         _trackProgressPercent = 1.0;
-        _playing = false;
+        widget.playing = false;
       });
     };
 
@@ -156,7 +148,6 @@ class NowPlayingMenuState extends State<NowPlayingMenu> {
                             size: 40.0,
                           ),
                           onPressed: () {
-                            print(debug);//for debugging
                             print(Directory('/storage/emulated/0/Music').listSync());// need to set permissions for this
                           },
                         ),
@@ -170,19 +161,19 @@ class NowPlayingMenuState extends State<NowPlayingMenu> {
                             heroTag: 'playpause',
                             backgroundColor: Colors.white,
                             child: Icon(
-                              _playing?Icons.pause:Icons.play_arrow,
+                              widget.playing?Icons.pause:Icons.play_arrow,
                               color: Colors.black,
                               size: 40.0,
                             ),
                             onPressed: () {
-                              if(_playing) {
+                              if(widget.playing) {
                                 widget.audioPlayer.pause();
                               }
                               else {
                                 widget.audioPlayer.resume();
                               }
                               setState(() {
-                                _playing = !_playing;
+                                widget.playing = !widget.playing;
                               });
                             }
                         ),
