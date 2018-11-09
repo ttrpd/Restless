@@ -32,24 +32,27 @@ class HomeState extends State<Home> {
   Future _getAlbumInfo(String artist, String path) async
   {
 
-    String songPath = path;
 
     TagProcessor tp = TagProcessor();
-    File f = File(songPath);
+    File f = File(path);
     var img = await tp.getTagsFromByteArray(f.readAsBytes());
 
     ImageProvider albumArt;
     if(img.last.tags['APIC'] == null)
     {
       print('Problems with: ' + artist);
-      print('::: ' + songPath.toString());
+      print('::: ' + path.toString());
       return;
     }
 
-    artists[artist] = [];
-    albumArt = Image.memory(Uint8List.fromList(img.last.tags['APIC'].imageData)).image;
+    if(artists[artist] == null)
+      artists[artist] = [];
 
+    albumArt = Image.memory(Uint8List.fromList(img.last.tags['APIC'].imageData)).image;
     artists[artist].add(albumArt);
+
+    print('added ' + path.split('/')[7]);
+
   }
 
   @override
@@ -62,8 +65,12 @@ class HomeState extends State<Home> {
         print('adding ' + album.path.substring(album.path.lastIndexOf('/')+1, album.path.length));
         for( var file in Directory(album.path).listSync())
         {
-          if(!file.path.contains('.ini') && !file.path.contains('.jpg') && !file.path.contains('.png'))
+
+          if(file.path.contains('.mp3')) {
+            print(Directory(album.path).listSync());
             _getAlbumInfo(artist.toString().substring(artist.toString().lastIndexOf('/')+1, artist.toString().length-1),file.path);
+            break;
+          }
         }
       }
     }
@@ -78,6 +85,8 @@ class HomeState extends State<Home> {
     audioPlayer.setReleaseMode(ReleaseMode.STOP);
 
     artists.remove('');
+
+
 
     return PageView(
       pageSnapping: true,

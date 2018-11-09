@@ -53,7 +53,7 @@ class ArtistSliverState extends State<ArtistSliver> {
               padding: const EdgeInsets.only(top: 12.5, left: 10.0, right: 5.0, bottom: 5.0),
               child: RichText(
                 text: TextSpan(
-                  text: widget.artist,
+                  text: widget.artist+' '+widget.covers.length.toString(),
                   style: TextStyle(
                     color: Colors.white,
                     background: Paint(),

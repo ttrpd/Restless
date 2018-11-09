@@ -39,6 +39,8 @@ class ArtistPageState extends State<ArtistPage> {
     {
       if(widget.artists[name] == null)
         print(name + ' -- contains null');
+      else
+        print(name + ' has ' + widget.artists[name].length.toString() + ' albums');
     }
     return Scaffold(
       appBar: AppBar(
