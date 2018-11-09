@@ -35,11 +35,11 @@ class ArtistSliverState extends State<ArtistSliver> {
               itemBuilder: (BuildContext context, int index) {
 //                print((MediaQuery.of(context).size.width / ((widget.covers.length.toInt()>0 && widget.covers != null)?widget.covers.length:1)).toString());
                 return Container(
-                  width: MediaQuery.of(context).size.width,// / widget.covers.length.toInt(),
+                  width: MediaQuery.of(context).size.width / widget.covers.length.toInt(),
                   height: 150.0,
                   decoration: BoxDecoration(
                     image: DecorationImage(
-                      image: widget.covers[0] ?? AssetImage('lib/assets/art8.jpg'),
+                      image: widget.covers[index] ?? AssetImage('lib/assets/art8.jpg'),
                       fit: BoxFit.cover,
                     ),
                   ),
