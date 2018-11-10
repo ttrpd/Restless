@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 
 class ArtistSliver extends StatefulWidget
@@ -29,22 +31,8 @@ class ArtistSliverState extends State<ArtistSliver> {
             width: double.maxFinite,
             height: 125.0,
             color: Colors.black,
-            child: ListView.builder(
-              itemCount: widget.covers.length,
-              scrollDirection: Axis.horizontal,
-              itemBuilder: (BuildContext context, int index) {
-//                print((MediaQuery.of(context).size.width / ((widget.covers.length.toInt()>0 && widget.covers != null)?widget.covers.length:1)).toString());
-                return Container(
-                  width: MediaQuery.of(context).size.width / widget.covers.length.toInt(),
-                  height: 150.0,
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: widget.covers[index] ?? AssetImage('lib/assets/art8.jpg'),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                );
-              },
+            child: Stack(
+              children: _buildAlbumArtStack(context),
             ),
           ),
           Container(
@@ -53,7 +41,7 @@ class ArtistSliverState extends State<ArtistSliver> {
               padding: const EdgeInsets.only(top: 12.5, left: 10.0, right: 5.0, bottom: 5.0),
               child: RichText(
                 text: TextSpan(
-                  text: widget.artist+' '+widget.covers.length.toString(),
+                  text: widget.artist,
                   style: TextStyle(
                     color: Colors.white,
                     background: Paint(),
@@ -70,4 +58,73 @@ class ArtistSliverState extends State<ArtistSliver> {
       ),
     );
   }
+
+  List<Widget> _buildAlbumArtStack(BuildContext context)
+  {
+    List<Widget> artStack = List<Widget>();
+
+    artStack.add(
+        Container(
+          width: MediaQuery.of(context).size.width,
+          height: 150.0,
+          decoration: BoxDecoration(
+              image: DecorationImage(
+                image: widget.covers[0] ?? AssetImage('lib/assets/art8.jpg'),
+                fit: BoxFit.cover,
+              )
+          ),
+        )
+    );
+
+    for(int i = 1; i < widget.covers.length; i++)
+    {
+      artStack.add(
+        ClipPath(
+          clipper: RhombusClipper(divideOffset: 100.0 / widget.covers.length, slashPos: i * (MediaQuery.of(context).size.width / widget.covers.length) ),
+          child: Container(
+            width: MediaQuery.of(context).size.width,
+            height: 150.0,
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: widget.covers[i] ?? AssetImage('lib/assets/art8.jpg'),
+                fit: BoxFit.cover,
+              )
+            ),
+          ),
+        )
+      );
+    }
+    return artStack;
+  }
+}
+
+
+class RhombusClipper extends CustomClipper<Path>
+{
+  double divideOffset;
+  double slashPos;
+
+  RhombusClipper({
+    Key key,
+    @required this.divideOffset,
+    @required this.slashPos,
+  });
+
+  @override
+  Path getClip(Size size) {
+    // TODO: implement getClip
+    Path path = Path();
+    path.moveTo(slashPos + divideOffset, 0.0);
+    path.lineTo(size.width, 0.0);
+    path.lineTo(size.width, size.height);
+    path.lineTo(slashPos - divideOffset, size.height);
+    path.close();
+    return path;
+  }
+
+  @override
+  bool shouldReclip(CustomClipper<Path> oldClipper) {
+    return false;
+  }
+
 }
