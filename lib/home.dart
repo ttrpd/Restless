@@ -103,11 +103,11 @@ class HomeState extends State<Home> {
       print(a.name);
     }
 
-    artists.sort( (a, b) => a.name.compareTo(b.name) );//sort artists
+    artists.sort( (a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()) );//sort artists
 
     for(int i = 0; i < artists.length ; i++)
     {
-      artists[i].albums.sort( (a, b) => a.name.compareTo(b.name));// sort albums
+      artists[i].albums.sort( (a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));// sort albums
     }
 
     return PageView(
