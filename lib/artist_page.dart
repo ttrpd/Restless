@@ -7,6 +7,7 @@ import 'dart:io';
 import 'package:audioplayers/audioplayers.dart';
 
 import 'package:restless/album_art_area.dart';
+import 'package:restless/artist_data.dart';
 import 'package:restless/artist_sliver.dart';
 import 'package:restless/my_scroll_behavior.dart';
 import 'package:restless/now_playing_menu.dart';
@@ -15,11 +16,13 @@ import 'package:restless/track_info_area.dart';
 
 class ArtistPage extends StatefulWidget
 {
-  Map<String, List<ImageProvider>> artists;
+  List<ArtistData> artists;
+  ScrollController scrl;
 
   ArtistPage({
     Key key,
     @required this.artists,
+    this.scrl,
   }) : super(key: key);
 
   @override
@@ -33,15 +36,21 @@ class ArtistPageState extends State<ArtistPage> {
   @override
   Widget build(BuildContext context) {
     print('artistPage');
-//    print(widget.artists['Accidente'].toList().toString());
-    print(widget.artists.keys.length);
-    for(String name in widget.artists.keys.toList())
+
+    for(int i = 0; i < widget.artists.length ; i++)
     {
-      if(widget.artists[name] == null)
-        print(name + ' -- contains null');
-      else
-        print(name + ' has ' + widget.artists[name].length.toString() + ' albums');
+      widget.artists[i].albums.sort( (a, b) => a.name.compareTo(b.name));// sort albums
     }
+
+    for(int i = 0; i < widget.artists.length ; i++)
+    {
+      for(int j = 0; j < widget.artists[i].albums.length ; j++)
+      {
+        print(widget.artists[i].albums[j].name);
+      }
+      print('\n');
+    }
+
     return Scaffold(
       appBar: AppBar(
         actions: <Widget>[
@@ -71,11 +80,11 @@ class ArtistPageState extends State<ArtistPage> {
           color: Colors.black,
 
           child: ListView.builder(
-            itemCount: widget.artists.entries.toList().length,
+            controller: widget.scrl,
+            itemCount: widget.artists.length,
             itemBuilder: (BuildContext context, int index) {
               return ArtistSliver(
-                artist: widget.artists.keys.toList()[index],
-                covers: widget.artists.values.toList()[index],
+                artist: widget.artists[index],
               );
             },
           ),

@@ -1,16 +1,15 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:restless/artist_data.dart';
 
 class ArtistSliver extends StatefulWidget
 {
-  String artist;
-  List<ImageProvider> covers;
+  ArtistData artist;
 
   ArtistSliver({
     Key key,
     @required this.artist,
-    @required this.covers,
   }) : super(key: key);
 
   @override
@@ -41,7 +40,7 @@ class ArtistSliverState extends State<ArtistSliver> {
               padding: const EdgeInsets.only(top: 12.5, left: 10.0, right: 5.0, bottom: 5.0),
               child: RichText(
                 text: TextSpan(
-                  text: widget.artist,
+                  text: widget.artist.name,
                   style: TextStyle(
                     color: Colors.white,
                     background: Paint(),
@@ -62,6 +61,8 @@ class ArtistSliverState extends State<ArtistSliver> {
   List<Widget> _buildAlbumArtStack(BuildContext context)
   {
     List<Widget> artStack = List<Widget>();
+    if(widget.artist.albums == null)
+      print(widget.artist.name + ' has no albums');
 
     artStack.add(
         Container(
@@ -69,24 +70,27 @@ class ArtistSliverState extends State<ArtistSliver> {
           height: 150.0,
           decoration: BoxDecoration(
               image: DecorationImage(
-                image: widget.covers[0] ?? AssetImage('lib/assets/art8.jpg'),
+                image: widget.artist.albums[0].albumArt ?? AssetImage('lib/assets/default.jpg'),
                 fit: BoxFit.cover,
               )
           ),
         )
     );
 
-    for(int i = 1; i < widget.covers.length; i++)
+    for(int i = 1; i < widget.artist.albums.length; i++)
     {
       artStack.add(
         ClipPath(
-          clipper: RhombusClipper(divideOffset: 100.0 / widget.covers.length, slashPos: i * (MediaQuery.of(context).size.width / widget.covers.length) ),
+          clipper: RhombusClipper(
+              divideOffset: 100.0 / widget.artist.albums.length,
+              slashPos: i * (MediaQuery.of(context).size.width / widget.artist.albums.length)
+          ),
           child: Container(
             width: MediaQuery.of(context).size.width,
             height: 150.0,
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: widget.covers[i] ?? AssetImage('lib/assets/art8.jpg'),
+                image: widget.artist.albums[i].albumArt ?? AssetImage('lib/assets/art8.jpg'),
                 fit: BoxFit.cover,
               )
             ),

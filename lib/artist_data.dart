@@ -4,23 +4,37 @@ import 'package:flutter/material.dart';
 
 class ArtistData
 {
-  List<AlbumData> albums;
+  String name;
+  List<AlbumData> albums = List<AlbumData>(1);
 
-  ArtistData();
+  ArtistData({
+    @required this.name,
+    this.albums,
+  });
 }
 
 class AlbumData
 {
+  String name;
   ImageProvider albumArt;
-  List<TrackData> songs;
+  List<TrackData> songs = List<TrackData>(1);
 
-  AlbumData();
+  AlbumData({
+    @required this.name,
+    this.albumArt,
+    this.songs,
+  });
 }
 
 class TrackData
 {
+  String name;
   String path;
-  List<String> tags;
+  List<String> tags = List<String>(1);
 
-  TrackData();
+  TrackData({
+    @required this.path,
+    this.name,
+    this.tags,
+  });
 }
