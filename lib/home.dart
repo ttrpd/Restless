@@ -28,6 +28,7 @@ class HomeState extends State<Home> {
   List<ArtistData> artists;
   String _path = '/storage/emulated/0/Music/TestMusic/Carousel Casualties/Madison/Bright Red Lights.mp3';
   bool _playing = false;
+  double artistsListOffset = 0.0;
 
   Future _getAlbumInfo(String artist, String path) async
   {
@@ -114,7 +115,12 @@ class HomeState extends State<Home> {
       physics: BouncingScrollPhysics(),
       scrollDirection: Axis.horizontal,
       children: <Widget>[
-        ArtistPage(artists: artists, scrl: ScrollController(keepScrollOffset: false),),
+        ArtistPage(
+          artists: artists,
+          getOffset: () => artistsListOffset,
+          setOffset: (offset) => artistsListOffset = offset,
+          scrl: ScrollController(keepScrollOffset: false),
+        ),
         NowPlaying(audioPlayer: audioPlayer, path: _path, playing: _playing,),
       ],
     );

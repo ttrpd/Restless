@@ -13,15 +13,23 @@ import 'package:restless/my_scroll_behavior.dart';
 import 'package:restless/now_playing_menu.dart';
 import 'package:restless/track_info_area.dart';
 
+typedef double GetOffsetMethod();
+typedef void SetOffsetMethod(double offset);
 
 class ArtistPage extends StatefulWidget
 {
   List<ArtistData> artists;
   ScrollController scrl;
 
+  GetOffsetMethod getOffset;
+  SetOffsetMethod setOffset;
+
+
   ArtistPage({
     Key key,
     @required this.artists,
+    @required this.getOffset,
+    @required this.setOffset,
     this.scrl,
   }) : super(key: key);
 
@@ -32,6 +40,15 @@ class ArtistPage extends StatefulWidget
 }
 
 class ArtistPageState extends State<ArtistPage> {
+
+  ScrollController _scrl;
+
+
+  @override
+  void initState() {
+    super.initState();
+    _scrl = ScrollController(initialScrollOffset: widget.getOffset());
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -79,13 +96,19 @@ class ArtistPageState extends State<ArtistPage> {
         child: Container(
           color: Colors.black,
 
-          child: ListView.builder(
-            controller: widget.scrl,
-            itemCount: widget.artists.length,
-            itemBuilder: (BuildContext context, int index) {
-              return ArtistSliver(
-                artist: widget.artists[index],
-              );
+          child: NotificationListener(
+            child: ListView.builder(
+              controller: _scrl,
+              itemCount: widget.artists.length,
+              itemBuilder: (BuildContext context, int index) {
+                return ArtistSliver(
+                  artist: widget.artists[index],
+                );
+              },
+            ),
+            onNotification: (notification) {
+              if(notification is ScrollNotification)
+                widget.setOffset(notification.metrics.pixels);
             },
           ),
         ),
