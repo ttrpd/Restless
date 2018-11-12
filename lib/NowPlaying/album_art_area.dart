@@ -48,7 +48,7 @@ class AlbumArtAreaState extends State<AlbumArtArea> {
     return Container(
       decoration: BoxDecoration(
         image: DecorationImage(// use FutureBuilder here
-          image: albumArt ?? AssetImage('lib/assets/art15.jpg'),
+          image: albumArt ?? AssetImage('lib/assets/default.jpg'),
           fit: BoxFit.cover,
         ),
       ),

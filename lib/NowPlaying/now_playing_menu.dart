@@ -7,17 +7,16 @@ import 'package:restless/Neighbors/neighbor.dart';
 import 'package:restless/NowPlaying/progress_bar.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:dart_tags/dart_tags.dart';
+import 'package:restless/now_playing_provider.dart';
 
 class NowPlayingMenu extends StatefulWidget
 {
 
-  bool playing;
   double trackProgressPercent = 0.0;//currently unused
   AudioPlayer audioPlayer;
 
   NowPlayingMenu({
     Key key,
-    @required this.playing,
     @required this.trackProgressPercent,
     @required this.audioPlayer,
   }) : super(key: key);
@@ -30,44 +29,44 @@ class NowPlayingMenu extends StatefulWidget
 
 class NowPlayingMenuState extends State<NowPlayingMenu> {
   double _volumeSliderValue = 30.0;
-  Duration currentTime = Duration(milliseconds: 1);
-  Duration endTime = Duration(milliseconds: 1);
-  double _trackProgressPercent = 0.0;
+//  Duration currentTime = Duration(milliseconds: 1);
+//  Duration endTime = Duration(milliseconds: 1);
+//  double _trackProgressPercent = 0.0;
 
 
-  @override
-  void initState() {
-    _trackProgressPercent = widget.trackProgressPercent;
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    widget.trackProgressPercent = _trackProgressPercent;
-  }
+//  @override
+//  void initState() {
+//    _trackProgressPercent = widget.trackProgressPercent;
+//  }
+//
+//  @override
+//  void dispose() {
+//    super.dispose();
+//    widget.trackProgressPercent = _trackProgressPercent;
+//  }
 
   @override
   Widget build(BuildContext context)
   {
 
     widget.audioPlayer.durationHandler = (Duration d) {
-      if(endTime != null)
+      if(NowPlayingProvider.of(context).endTime != null)
       setState(() {
-        endTime = d;
+        NowPlayingProvider.of(context).endTime = d;
       });
     };
     
     widget.audioPlayer.positionHandler = (Duration d) {
       setState(() {
-        currentTime = d;
+        NowPlayingProvider.of(context).currentTime = d;
       });
-      _trackProgressPercent = currentTime.inMilliseconds / endTime.inMilliseconds;
+      NowPlayingProvider.of(context).trackProgressPercent = NowPlayingProvider.of(context).currentTime.inMilliseconds / NowPlayingProvider.of(context).endTime.inMilliseconds;
     };
 
     widget.audioPlayer.completionHandler = () {
       setState(() {
-        _trackProgressPercent = 1.0;
-        widget.playing = false;
+        NowPlayingProvider.of(context).trackProgressPercent = 1.0;
+        NowPlayingProvider.of(context).playing = false;
       });
     };
 
@@ -94,13 +93,13 @@ class NowPlayingMenuState extends State<NowPlayingMenu> {
             child: Column(
               children: <Widget>[
                 SeekBar(
-                  trackProgressPercent: _trackProgressPercent,
+                  trackProgressPercent: NowPlayingProvider.of(context).trackProgressPercent,
                   onSeekRequested: (double seekPercent) {//seekPercent is sometimes null
                     setState(() {
-                      final seekMils = (endTime.inMilliseconds.toDouble() * seekPercent).round();//source of toDouble called on null error
+                      final seekMils = (NowPlayingProvider.of(context).endTime.inMilliseconds.toDouble() * seekPercent).round();//source of toDouble called on null error
                       widget.audioPlayer.seek(Duration(milliseconds: seekMils));
-                      _trackProgressPercent = seekMils.toDouble() / endTime.inMilliseconds.toDouble();
-                      currentTime = Duration(milliseconds: seekMils);
+                      NowPlayingProvider.of(context).trackProgressPercent = seekMils.toDouble() / NowPlayingProvider.of(context).endTime.inMilliseconds.toDouble();
+                      NowPlayingProvider.of(context).currentTime = Duration(milliseconds: seekMils);
                     });
                   },
                 ),
@@ -109,7 +108,7 @@ class NowPlayingMenuState extends State<NowPlayingMenu> {
                   children: <Widget>[
                     RichText(
                       text: TextSpan(
-                        text: currentTime.toString().substring(currentTime.toString().indexOf(':')+1,currentTime.toString().lastIndexOf('.')),
+                        text: NowPlayingProvider.of(context).currentTime.toString().substring(NowPlayingProvider.of(context).currentTime.toString().indexOf(':')+1,NowPlayingProvider.of(context).currentTime.toString().lastIndexOf('.')),
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 18.0,
@@ -119,7 +118,7 @@ class NowPlayingMenuState extends State<NowPlayingMenu> {
                     Expanded(child: Container(),),
                     RichText(
                       text: TextSpan(
-                        text: endTime.toString().substring(endTime.toString().indexOf(':')+1,endTime.toString().lastIndexOf('.')),
+                        text: NowPlayingProvider.of(context).endTime.toString().substring(NowPlayingProvider.of(context).endTime.toString().indexOf(':')+1,NowPlayingProvider.of(context).endTime.toString().lastIndexOf('.')),
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 18.0,
@@ -161,19 +160,19 @@ class NowPlayingMenuState extends State<NowPlayingMenu> {
                             heroTag: 'playpause',
                             backgroundColor: Colors.white,
                             child: Icon(
-                              widget.playing?Icons.pause:Icons.play_arrow,
+                              NowPlayingProvider.of(context).playing?Icons.pause:Icons.play_arrow,
                               color: Colors.black,
                               size: 40.0,
                             ),
                             onPressed: () {
-                              if(widget.playing) {
+                              if(NowPlayingProvider.of(context).playing) {
                                 widget.audioPlayer.pause();
                               }
                               else {
                                 widget.audioPlayer.resume();
                               }
                               setState(() {
-                                widget.playing = !widget.playing;
+                                NowPlayingProvider.of(context).playing = !NowPlayingProvider.of(context).playing;
                               });
                             }
                         ),
@@ -484,9 +483,5 @@ class SeekBarState extends State<SeekBar> {
           )
       ),
     );
-  }
-
-  @override
-  void initState() {
   }
 }

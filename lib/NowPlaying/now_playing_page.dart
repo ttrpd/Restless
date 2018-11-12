@@ -10,19 +10,18 @@ import 'package:restless/NowPlaying/album_art_area.dart';
 import 'package:restless/my_scroll_behavior.dart';
 import 'package:restless/NowPlaying/now_playing_menu.dart';
 import 'package:restless/NowPlaying/track_info_area.dart';
+import 'package:restless/now_playing_provider.dart';
 
 
 class NowPlaying extends StatefulWidget
 {
   String path;
   AudioPlayer audioPlayer;
-  bool playing;
 
   NowPlaying({
     Key key,
     @required this.path,
     @required this.audioPlayer,
-    @required this.playing,
   }) : super(key: key);
 
   @override
@@ -59,7 +58,7 @@ class NowPlayingState extends State<NowPlaying> with SingleTickerProviderStateMi
   String album;
   String track;
 
-  double _blurValue = 0.0;
+//  double _blurValue = 0.0;
   double _trackProgressPercent = 0.0;
 
 
@@ -76,7 +75,7 @@ class NowPlayingState extends State<NowPlaying> with SingleTickerProviderStateMi
             children: <Widget>[
               Column(
                 children: <Widget>[
-                  AlbumArtArea(blurValue: _blurValue, img: albumArt,),//need to move this method call so that id doesn't rerun on build
+                  AlbumArtArea(blurValue: NowPlayingProvider.of(context).blurValue, img: albumArt,),//need to move this method call so that id doesn't rerun on build
                 ],
               ),
 
@@ -88,22 +87,21 @@ class NowPlayingState extends State<NowPlaying> with SingleTickerProviderStateMi
                     onVerticalDragUpdate: (DragUpdateDetails details) {
                       //TODO: add animation curve based on scroll
                       setState(() {
-                        if(_blurValue > 0.0 && details.delta.dy < 0)_blurValue -= 0.75;
-                        if(_blurValue < 15 && details.delta.dy > 0)_blurValue += 0.75;
+                        if(NowPlayingProvider.of(context).blurValue > 0.0 && details.delta.dy < 0)NowPlayingProvider.of(context).blurValue -= 0.75;
+                        if(NowPlayingProvider.of(context).blurValue < 15 && details.delta.dy > 0)NowPlayingProvider.of(context).blurValue += 0.75;
                       });
                     },
                     onVerticalDragEnd: (DragEndDetails details) {
                       setState(() {
-                        if(_blurValue < 8)
-                          _blurValue = 0.0;
+                        if(NowPlayingProvider.of(context).blurValue < 8)
+                          NowPlayingProvider.of(context).blurValue = 0.0;
                         else
-                          _blurValue = 15.0;
+                          NowPlayingProvider.of(context).blurValue = 15.0;
                       });
                     },
-                    child: TrackInfoArea(blurValue: _blurValue, name: track, album: album, artist: artist, path: widget.path),
+                    child: TrackInfoArea(blurValue: NowPlayingProvider.of(context).blurValue, name: track, album: album, artist: artist, path: widget.path),
                   ),
                   NowPlayingMenu(
-                    playing: widget.playing,
                     audioPlayer: widget.audioPlayer,
                     trackProgressPercent: _trackProgressPercent,
                   ),

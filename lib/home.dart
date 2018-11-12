@@ -10,6 +10,7 @@ import 'package:restless/artist_data.dart';
 import 'package:restless/Artists/artist_page.dart';
 import 'package:restless/my_scroll_behavior.dart';
 import 'package:restless/NowPlaying/now_playing_page.dart';
+import 'package:restless/now_playing_provider.dart';
 
 class Home extends StatefulWidget
 {
@@ -105,19 +106,26 @@ class HomeState extends State<Home> {
       artists[i].albums.sort( (a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));// sort albums
     }
 
-    return PageView(
-      pageSnapping: true,
-      physics: BouncingScrollPhysics(),
-      scrollDirection: Axis.horizontal,
-      children: <Widget>[
-        ArtistPage(
-          artists: artists,
-          getOffset: () => artistsListOffset,
-          setOffset: (offset) => artistsListOffset = offset,
-          scrl: ScrollController(keepScrollOffset: false),
-        ),
-        NowPlaying(audioPlayer: audioPlayer, path: _path, playing: _playing,),
-      ],
+    return NowPlayingProvider(
+      playing: _playing,
+      blurValue: 0.0,
+      currentTime: Duration(milliseconds: 1),
+      endTime: Duration(milliseconds: 1),
+      trackProgressPercent: 0.0,
+      child: PageView(
+        pageSnapping: true,
+        physics: BouncingScrollPhysics(),
+        scrollDirection: Axis.horizontal,
+        children: <Widget>[
+          ArtistPage(
+            artists: artists,
+            getOffset: () => artistsListOffset,
+            setOffset: (offset) => artistsListOffset = offset,
+            scrl: ScrollController(keepScrollOffset: false),
+          ),
+          NowPlaying(audioPlayer: audioPlayer, path: _path,),
+        ],
+      ),
     );
   }
 }
