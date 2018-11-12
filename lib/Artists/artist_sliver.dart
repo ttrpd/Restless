@@ -28,7 +28,7 @@ class ArtistSliverState extends State<ArtistSliver> {
         children: <Widget>[
           Container(
             width: double.maxFinite,
-            height: 125.0,
+            height: MediaQuery.of(context).size.height / 4.75,
             color: Colors.black,
             child: Stack(
               children: _buildAlbumArtStack(context),

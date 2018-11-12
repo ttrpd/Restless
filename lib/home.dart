@@ -118,7 +118,6 @@ class HomeState extends State<Home> {
         ArtistPage(
           getOffset: () => artistsListOffset,
           setOffset: (offset) => artistsListOffset = offset,
-          scrl: ScrollController(keepScrollOffset: false),
         ),
         NowPlaying(audioPlayer: audioPlayer, path: _path,),
       ],

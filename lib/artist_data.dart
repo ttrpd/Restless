@@ -38,3 +38,14 @@ class TrackData
     this.tags,
   });
 }
+
+class LetterData
+{
+  String letter = '';
+  bool available = false;
+
+  LetterData({
+    @required this.letter,
+    @required this.available,
+  });
+}
