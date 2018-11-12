@@ -30,7 +30,6 @@ class HomeState extends State<Home> {
 
   List<ArtistData> artists;
   String _path = '/storage/emulated/0/Music/TestMusic/Carousel Casualties/Madison/Bright Red Lights.mp3';
-  bool _playing = false;
   double artistsListOffset = 0.0;
 
   Future _getAlbumInfo(String artist, String path) async
@@ -72,6 +71,7 @@ class HomeState extends State<Home> {
 
   @override
   void initState() {
+    super.initState();
     artists = List<ArtistData>();
 
     print(Directory('storage/emulated/0/Music/TestMusic').listSync());
@@ -108,27 +108,19 @@ class HomeState extends State<Home> {
       artists[i].albums.sort( (a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));// sort albums
     }
 
+    ArtistsPageProvider.of(context).artists = artists;
+
     return PageView(
       pageSnapping: true,
       physics: BouncingScrollPhysics(),
       scrollDirection: Axis.horizontal,
       children: <Widget>[
-        ArtistsPageProvider(
-          artists: artists,
-          child: ArtistPage(
-            getOffset: () => artistsListOffset,
-            setOffset: (offset) => artistsListOffset = offset,
-            scrl: ScrollController(keepScrollOffset: false),
-          ),
+        ArtistPage(
+          getOffset: () => artistsListOffset,
+          setOffset: (offset) => artistsListOffset = offset,
+          scrl: ScrollController(keepScrollOffset: false),
         ),
-        NowPlayingProvider(
-          playing: _playing,
-          blurValue: 0.0,
-          currentTime: Duration(milliseconds: 1),
-          endTime: Duration(milliseconds: 1),
-          trackProgressPercent: 0.0,
-          child: NowPlaying(audioPlayer: audioPlayer, path: _path,)
-        ),
+        NowPlaying(audioPlayer: audioPlayer, path: _path,),
       ],
     );
   }
