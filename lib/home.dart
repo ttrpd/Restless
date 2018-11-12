@@ -7,9 +7,9 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:dart_tags/dart_tags.dart';
 import 'package:flutter/material.dart';
 import 'package:restless/artist_data.dart';
-import 'package:restless/artist_page.dart';
+import 'package:restless/Artists/artist_page.dart';
 import 'package:restless/my_scroll_behavior.dart';
-import 'package:restless/now_playing_page.dart';
+import 'package:restless/NowPlaying/now_playing_page.dart';
 
 class Home extends StatefulWidget
 {
@@ -97,11 +97,6 @@ class HomeState extends State<Home> {
 
     audioPlayer.setUrl(_path, isLocal: true);
     audioPlayer.setReleaseMode(ReleaseMode.STOP);
-
-    for(ArtistData a in artists)
-    {
-      print(a.name);
-    }
 
     artists.sort( (a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()) );//sort artists
 

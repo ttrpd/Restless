@@ -3,8 +3,8 @@ import 'dart:io';
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
-import 'package:restless/neighbor.dart';
-import 'package:restless/progress_bar.dart';
+import 'package:restless/Neighbors/neighbor.dart';
+import 'package:restless/NowPlaying/progress_bar.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:dart_tags/dart_tags.dart';
 
