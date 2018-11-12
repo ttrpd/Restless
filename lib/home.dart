@@ -106,26 +106,26 @@ class HomeState extends State<Home> {
       artists[i].albums.sort( (a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));// sort albums
     }
 
-    return NowPlayingProvider(
-      playing: _playing,
-      blurValue: 0.0,
-      currentTime: Duration(milliseconds: 1),
-      endTime: Duration(milliseconds: 1),
-      trackProgressPercent: 0.0,
-      child: PageView(
-        pageSnapping: true,
-        physics: BouncingScrollPhysics(),
-        scrollDirection: Axis.horizontal,
-        children: <Widget>[
-          ArtistPage(
-            artists: artists,
-            getOffset: () => artistsListOffset,
-            setOffset: (offset) => artistsListOffset = offset,
-            scrl: ScrollController(keepScrollOffset: false),
-          ),
-          NowPlaying(audioPlayer: audioPlayer, path: _path,),
-        ],
-      ),
+    return PageView(
+      pageSnapping: true,
+      physics: BouncingScrollPhysics(),
+      scrollDirection: Axis.horizontal,
+      children: <Widget>[
+        ArtistPage(
+          artists: artists,
+          getOffset: () => artistsListOffset,
+          setOffset: (offset) => artistsListOffset = offset,
+          scrl: ScrollController(keepScrollOffset: false),
+        ),
+        NowPlayingProvider(
+          playing: _playing,
+          blurValue: 0.0,
+          currentTime: Duration(milliseconds: 1),
+          endTime: Duration(milliseconds: 1),
+          trackProgressPercent: 0.0,
+          child: NowPlaying(audioPlayer: audioPlayer, path: _path,)
+        ),
+      ],
     );
   }
 }
