@@ -7,7 +7,7 @@ import 'package:restless/Neighbors/neighbor.dart';
 import 'package:restless/NowPlaying/progress_bar.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:dart_tags/dart_tags.dart';
-import 'package:restless/now_playing_provider.dart';
+import 'package:restless/NowPlaying/now_playing_provider.dart';
 
 class NowPlayingMenu extends StatefulWidget
 {

@@ -10,7 +10,7 @@ import 'package:restless/NowPlaying/album_art_area.dart';
 import 'package:restless/my_scroll_behavior.dart';
 import 'package:restless/NowPlaying/now_playing_menu.dart';
 import 'package:restless/NowPlaying/track_info_area.dart';
-import 'package:restless/now_playing_provider.dart';
+import 'package:restless/NowPlaying/now_playing_provider.dart';
 
 
 class NowPlaying extends StatefulWidget
@@ -45,23 +45,18 @@ class NowPlayingState extends State<NowPlaying> with SingleTickerProviderStateMi
 
 
     setState(() {
-      track = img.last.tags['title'];
-      album = img.last.tags['album'];
-      artist = img.last.tags['artist'];
-      albumArt = Image.memory(Uint8List.fromList(img.last.tags['APIC'].imageData)).image;
+      NowPlayingProvider.of(context).track = img.last.tags['title'];
+      NowPlayingProvider.of(context).album = img.last.tags['album'];
+      NowPlayingProvider.of(context).artist = img.last.tags['artist'];
+      NowPlayingProvider.of(context).albumArt = Image.memory(Uint8List.fromList(img.last.tags['APIC'].imageData)).image;
     });
     print('done');
   }
 
-  ImageProvider albumArt;
-  String artist;
-  String album;
-  String track;
-
-//  double _blurValue = 0.0;
-  double _trackProgressPercent = 0.0;
-
-
+//  ImageProvider albumArt;
+//  String artist;
+//  String album;
+//  String track;
 
   @override
   Widget build(BuildContext context) {
@@ -75,7 +70,7 @@ class NowPlayingState extends State<NowPlaying> with SingleTickerProviderStateMi
             children: <Widget>[
               Column(
                 children: <Widget>[
-                  AlbumArtArea(blurValue: NowPlayingProvider.of(context).blurValue, img: albumArt,),//need to move this method call so that id doesn't rerun on build
+                  AlbumArtArea(blurValue: NowPlayingProvider.of(context).blurValue, img: NowPlayingProvider.of(context).albumArt,),//need to move this method call so that id doesn't rerun on build
                 ],
               ),
 
@@ -99,11 +94,15 @@ class NowPlayingState extends State<NowPlaying> with SingleTickerProviderStateMi
                           NowPlayingProvider.of(context).blurValue = 15.0;
                       });
                     },
-                    child: TrackInfoArea(blurValue: NowPlayingProvider.of(context).blurValue, name: track, album: album, artist: artist, path: widget.path),
+                    child: TrackInfoArea(
+                      blurValue: NowPlayingProvider.of(context).blurValue,
+                      name: NowPlayingProvider.of(context).track, album: NowPlayingProvider.of(context).album,
+                      artist: NowPlayingProvider.of(context).artist, path: widget.path
+                    ),
                   ),
                   NowPlayingMenu(
                     audioPlayer: widget.audioPlayer,
-                    trackProgressPercent: _trackProgressPercent,
+                    trackProgressPercent: NowPlayingProvider.of(context).trackProgressPercent,
                   ),
                 ],
               ),

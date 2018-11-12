@@ -5,6 +5,7 @@ import 'package:dart_tags/dart_tags.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:audioplayers/audioplayers.dart';
+import 'package:restless/Artists/artists_page_provider.dart';
 
 import 'package:restless/NowPlaying/album_art_area.dart';
 import 'package:restless/artist_data.dart';
@@ -18,7 +19,6 @@ typedef void SetOffsetMethod(double offset);
 
 class ArtistPage extends StatefulWidget
 {
-  List<ArtistData> artists;
   ScrollController scrl;
 
   GetOffsetMethod getOffset;
@@ -27,7 +27,6 @@ class ArtistPage extends StatefulWidget
 
   ArtistPage({
     Key key,
-    @required this.artists,
     @required this.getOffset,
     @required this.setOffset,
     this.scrl,
@@ -54,16 +53,16 @@ class ArtistPageState extends State<ArtistPage> {
   Widget build(BuildContext context) {
     print('artistPage');
 
-    for(int i = 0; i < widget.artists.length ; i++)
+    for(int i = 0; i < ArtistsPageProvider.of(context).artists.length ; i++)
     {
-      widget.artists[i].albums.sort( (a, b) => a.name.compareTo(b.name));// sort albums
+      ArtistsPageProvider.of(context).artists[i].albums.sort( (a, b) => a.name.compareTo(b.name));// sort albums
     }
 
-    for(int i = 0; i < widget.artists.length ; i++)
+    for(int i = 0; i < ArtistsPageProvider.of(context).artists.length ; i++)
     {
-      for(int j = 0; j < widget.artists[i].albums.length ; j++)
+      for(int j = 0; j < ArtistsPageProvider.of(context).artists[i].albums.length ; j++)
       {
-        print(widget.artists[i].albums[j].name);
+        print(ArtistsPageProvider.of(context).artists[i].albums[j].name);
       }
       print('\n');
     }
@@ -99,10 +98,10 @@ class ArtistPageState extends State<ArtistPage> {
           child: NotificationListener(
             child: ListView.builder(
               controller: _scrl,
-              itemCount: widget.artists.length,
+              itemCount: ArtistsPageProvider.of(context).artists.length,
               itemBuilder: (BuildContext context, int index) {
                 return ArtistSliver(
-                  artist: widget.artists[index],
+                  artist: ArtistsPageProvider.of(context).artists[index],
                 );
               },
             ),
