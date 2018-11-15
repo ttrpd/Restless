@@ -3,21 +3,20 @@ import 'dart:io';
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
-import 'package:restless/neighbor.dart';
-import 'package:restless/progress_bar.dart';
+import 'package:restless/Neighbors/neighbor.dart';
+import 'package:restless/NowPlaying/progress_bar.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:dart_tags/dart_tags.dart';
+import 'package:restless/NowPlaying/now_playing_provider.dart';
 
 class NowPlayingMenu extends StatefulWidget
 {
 
-  bool playing;
   double trackProgressPercent = 0.0;//currently unused
   AudioPlayer audioPlayer;
 
   NowPlayingMenu({
     Key key,
-    @required this.playing,
     @required this.trackProgressPercent,
     @required this.audioPlayer,
   }) : super(key: key);
@@ -29,53 +28,29 @@ class NowPlayingMenu extends StatefulWidget
 }
 
 class NowPlayingMenuState extends State<NowPlayingMenu> {
-  double _volumeSliderValue = 30.0;
-  Duration currentTime = Duration(milliseconds: 1);
-  Duration endTime = Duration(milliseconds: 1);
-  double _trackProgressPercent = 0.0;
-  bool _playing = false;
-
-  Future<String> localPath() async {
-
-    Directory dir = await getApplicationDocumentsDirectory();
-//    Directory dir = Directory('/storage/emulated/0/Music');
-    return dir.path.toString();
-  }
-
-  String debug = "";
 
   @override
   Widget build(BuildContext context)
   {
 
-    localPath().then( (String value) {
-      setState(() {
-        this.debug = value;
-      });
-    }).catchError((e) {
-      setState(() {
-        this.debug = e.toString();
-      });
-    });
-
     widget.audioPlayer.durationHandler = (Duration d) {
-      if(endTime != null)
+      if(NowPlayingProvider.of(context).endTime != null)
       setState(() {
-        endTime = d;
+        NowPlayingProvider.of(context).endTime = d;
       });
     };
     
     widget.audioPlayer.positionHandler = (Duration d) {
       setState(() {
-        currentTime = d;
+        NowPlayingProvider.of(context).currentTime = d;
       });
-      _trackProgressPercent = currentTime.inMilliseconds / endTime.inMilliseconds;
+      NowPlayingProvider.of(context).trackProgressPercent = NowPlayingProvider.of(context).currentTime.inMilliseconds / NowPlayingProvider.of(context).endTime.inMilliseconds;
     };
 
     widget.audioPlayer.completionHandler = () {
       setState(() {
-        _trackProgressPercent = 1.0;
-        _playing = false;
+        NowPlayingProvider.of(context).trackProgressPercent = 1.0;
+        NowPlayingProvider.of(context).playing = false;
       });
     };
 
@@ -102,13 +77,13 @@ class NowPlayingMenuState extends State<NowPlayingMenu> {
             child: Column(
               children: <Widget>[
                 SeekBar(
-                  trackProgressPercent: _trackProgressPercent,
+                  trackProgressPercent: NowPlayingProvider.of(context).trackProgressPercent,
                   onSeekRequested: (double seekPercent) {//seekPercent is sometimes null
                     setState(() {
-                      final seekMils = (endTime.inMilliseconds.toDouble() * seekPercent).round();//source of toDouble called on null error
+                      final seekMils = (NowPlayingProvider.of(context).endTime.inMilliseconds.toDouble() * seekPercent).round();//source of toDouble called on null error
                       widget.audioPlayer.seek(Duration(milliseconds: seekMils));
-                      _trackProgressPercent = seekMils.toDouble() / endTime.inMilliseconds.toDouble();
-                      currentTime = Duration(milliseconds: seekMils);
+                      NowPlayingProvider.of(context).trackProgressPercent = seekMils.toDouble() / NowPlayingProvider.of(context).endTime.inMilliseconds.toDouble();
+                      NowPlayingProvider.of(context).currentTime = Duration(milliseconds: seekMils);
                     });
                   },
                 ),
@@ -117,7 +92,7 @@ class NowPlayingMenuState extends State<NowPlayingMenu> {
                   children: <Widget>[
                     RichText(
                       text: TextSpan(
-                        text: currentTime.toString().substring(currentTime.toString().indexOf(':')+1,currentTime.toString().lastIndexOf('.')),
+                        text: NowPlayingProvider.of(context).currentTime.toString().substring(NowPlayingProvider.of(context).currentTime.toString().indexOf(':')+1,NowPlayingProvider.of(context).currentTime.toString().lastIndexOf('.')),
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 18.0,
@@ -127,7 +102,7 @@ class NowPlayingMenuState extends State<NowPlayingMenu> {
                     Expanded(child: Container(),),
                     RichText(
                       text: TextSpan(
-                        text: endTime.toString().substring(endTime.toString().indexOf(':')+1,endTime.toString().lastIndexOf('.')),
+                        text: NowPlayingProvider.of(context).endTime.toString().substring(NowPlayingProvider.of(context).endTime.toString().indexOf(':')+1,NowPlayingProvider.of(context).endTime.toString().lastIndexOf('.')),
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 18.0,
@@ -156,7 +131,6 @@ class NowPlayingMenuState extends State<NowPlayingMenu> {
                             size: 40.0,
                           ),
                           onPressed: () {
-                            print(debug);//for debugging
                             print(Directory('/storage/emulated/0/Music').listSync());// need to set permissions for this
                           },
                         ),
@@ -170,19 +144,19 @@ class NowPlayingMenuState extends State<NowPlayingMenu> {
                             heroTag: 'playpause',
                             backgroundColor: Colors.white,
                             child: Icon(
-                              _playing?Icons.pause:Icons.play_arrow,
+                              NowPlayingProvider.of(context).playing?Icons.pause:Icons.play_arrow,
                               color: Colors.black,
                               size: 40.0,
                             ),
                             onPressed: () {
-                              if(_playing) {
+                              if(NowPlayingProvider.of(context).playing) {
                                 widget.audioPlayer.pause();
                               }
                               else {
                                 widget.audioPlayer.resume();
                               }
                               setState(() {
-                                _playing = !_playing;
+                                NowPlayingProvider.of(context).playing = !NowPlayingProvider.of(context).playing;
                               });
                             }
                         ),
@@ -216,7 +190,7 @@ class NowPlayingMenuState extends State<NowPlayingMenu> {
                 Padding(
                   padding: const EdgeInsets.only(top: 40.0),
                   child: Slider(// volume slider
-                    value: _volumeSliderValue,
+                    value: NowPlayingProvider.of(context).volumeValue,
                     activeColor: Colors.white,
                     inactiveColor: Colors.white70,
                     min: 0.0,
@@ -224,7 +198,8 @@ class NowPlayingMenuState extends State<NowPlayingMenu> {
                     divisions: 200,
                     onChanged: (double value) {
                       setState(() {
-                        _volumeSliderValue = value;
+                        widget.audioPlayer.setVolume(value / 200.0);
+                        NowPlayingProvider.of(context).volumeValue = value;
                       });
                     },
                   ),
@@ -493,9 +468,5 @@ class SeekBarState extends State<SeekBar> {
           )
       ),
     );
-  }
-
-  @override
-  void initState() {
   }
 }

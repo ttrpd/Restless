@@ -1,138 +1,126 @@
-
+import 'dart:collection';
+import 'dart:core';
+import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:audioplayers/audioplayers.dart';
 import 'package:dart_tags/dart_tags.dart';
 import 'package:flutter/material.dart';
-import 'dart:io';
-import 'package:audioplayers/audioplayers.dart';
-
-import 'package:restless/album_art_area.dart';
-import 'package:restless/now_playing_menu.dart';
-import 'package:restless/track_info_area.dart';
+import 'package:restless/artist_data.dart';
+import 'package:restless/Artists/artist_page.dart';
+import 'package:restless/my_scroll_behavior.dart';
+import 'package:restless/NowPlaying/now_playing_page.dart';
+import 'package:restless/NowPlaying/now_playing_provider.dart';
+import 'package:restless/Artists/artists_page_provider.dart';
 
 
 class Home extends StatefulWidget
 {
 
+
   @override
-  HomePage createState() => HomePage();
+  HomeState createState() {
+    return new HomeState();
+  }
 }
 
-class HomePage extends State<Home> with SingleTickerProviderStateMixin
-{
+class HomeState extends State<Home> {
 
-  @override
-  void initState()
+
+
+  List<ArtistData> artists;
+  String _path = '/storage/emulated/0/Music/TestMusic/Carousel Casualties/Madison/Bright Red Lights.mp3';
+  double artistsListOffset = 0.0;
+
+  Future _getAlbumInfo(String artist, String path) async
   {
-    _getTrackInfo(_path);
-  }
-
-
-
-  Future<List<Tag>> _getAlbumArt(String path) async{
-
-    AttachedPicture pic;
-    TagProcessor tp = TagProcessor();
-    File f = File(path);
-//    tp.getTagsFromByteArray(f.readAsBytes()).then((l) => pic = l.last.tags['APIC']);
-    return  tp.getTagsFromByteArray(f.readAsBytes());
-  }
-
-  Future _getTrackInfo(String path) async {
     TagProcessor tp = TagProcessor();
     File f = File(path);
     var img = await tp.getTagsFromByteArray(f.readAsBytes());
 
-    setState(() {
-      track = img.last.tags['title'];
-      album = img.last.tags['album'];
-      artist = img.last.tags['artist'];
-      albumArt = Image.memory(Uint8List.fromList(img.last.tags['APIC'].imageData)).image;
-    });
-    print('done');
+    if(img.last.tags['APIC'] == null)
+    {
+      print('Problems with: ' + artist);
+      print('::: ' + path.toString());
+      return;
+    }
+
+    artists.singleWhere( (a) => a.name == artist).albums.removeWhere( (a) => a.name == '' );
+
+    ImageProvider albumArt;
+    albumArt = Image.memory(Uint8List.fromList(img.last.tags['APIC'].imageData)).image;
+
+    if(artists.singleWhere( (a) => a.name == artist).albums == null)
+      artists.singleWhere( (a) => a.name == artist).albums = [
+        AlbumData(
+          name: path.split('/')[path.split('/').length-2],
+          albumArt: albumArt,
+        )
+      ];
+    else
+      artists.singleWhere( (a) => a.name == artist).albums.add(
+          AlbumData(
+            name: path.split('/')[path.split('/').length-2],
+            albumArt: albumArt,
+          )
+      );
+
+    print('added ' + path.split('/')[path.split('/').length-3]);
+
   }
 
-  ImageProvider albumArt;
-  String artist;
-  String album;
-  String track;
-
-  double _blurValue = 0.0;
-  bool _playing = false;
-  double _trackProgressPercent = 0.0;
-  AudioPlayer audioPlayer = new AudioPlayer();
-  String _path = '/storage/emulated/0/Music/In The Key Of Sublimation/Zest.mp3';
-
-
-
   @override
-  Widget build(BuildContext context) {
+  void initState() {
+    super.initState();
+    artists = List<ArtistData>();
+
+    print(Directory('storage/emulated/0/Music/TestMusic').listSync());
+    for( Directory artist in Directory('/storage/emulated/0/Music/TestMusic').listSync() )
+    {
+      String artistName = artist.path.substring(artist.path.lastIndexOf('/')+1);
+      artists.add(ArtistData(name: artistName, albums: [AlbumData(name: '')]));
+      for( var album in artist.listSync())
+      {
+        print('adding ' + album.path.substring(album.path.lastIndexOf('/')+1, album.path.length));
+        for( var file in Directory(album.path).listSync())
+        {
+          if(file.path.contains('.mp3')) {
+            _getAlbumInfo(artistName, file.path);
+            break;
+          }
+        }
+      }
+    }
+  }
+
+  AudioPlayer audioPlayer = new AudioPlayer();
+  @override
+  Widget build(BuildContext context)
+  {
+
     audioPlayer.setUrl(_path, isLocal: true);
     audioPlayer.setReleaseMode(ReleaseMode.STOP);
 
-    Future<List<Tag>> imgFuture;
-    imgFuture = _getAlbumArt(_path);
+    artists.sort( (a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()) );//sort artists
 
+    for(int i = 0; i < artists.length ; i++)
+    {
+      artists[i].albums.sort( (a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));// sort albums
+    }
 
-    print('built');
-    return Scaffold(
-      body: ScrollConfiguration(
-        behavior: MyScrollBehavior(),
-        child: Container(
-          color: Colors.black,
-          child: Stack(
-            children: <Widget>[
-              Column(
-                children: <Widget>[
-                  AlbumArtArea(blurValue: _blurValue, img: albumArt,),//need to move this method call so that id doesn't rerun on build
-                ],
-              ),
+    ArtistsPageProvider.of(context).artists = artists;
 
-              ListView(// info/control layer
-                physics: ScrollPhysics(),
-                children: <Widget>[
-
-                  GestureDetector(// TrackInfoArea
-                    onVerticalDragUpdate: (DragUpdateDetails details) {
-                      //TODO: add animation curve based on scroll
-                      setState(() {
-                        if(_blurValue > 0.0 && details.delta.dy < 0)_blurValue -= 0.75;
-                        if(_blurValue < 15 && details.delta.dy > 0)_blurValue += 0.75;
-                      });
-                    },
-                    onVerticalDragEnd: (DragEndDetails details) {
-                      setState(() {
-                        if(_blurValue < 8)
-                          _blurValue = 0.0;
-                        else
-                          _blurValue = 15.0;
-                      });
-                    },
-                    child: TrackInfoArea(blurValue: _blurValue, name: track, album: album, artist: artist, path: _path),
-                  ),
-                  NowPlayingMenu(
-                    playing: _playing,
-                    audioPlayer: audioPlayer,
-                    trackProgressPercent: _trackProgressPercent,
-                  ),
-                ],
-              ),
-            ],
-          ),
+    return PageView(
+      pageSnapping: true,
+      physics: BouncingScrollPhysics(),
+      scrollDirection: Axis.horizontal,
+      children: <Widget>[
+        ArtistPage(
+          getOffset: () => artistsListOffset,
+          setOffset: (offset) => artistsListOffset = offset,
         ),
-      ),
+        NowPlaying(audioPlayer: audioPlayer, path: _path,),
+      ],
     );
-  }
-
-
-}
-
-class MyScrollBehavior extends ScrollBehavior {
-  @override
-  Widget buildViewportChrome(
-      BuildContext context,
-      Widget child, AxisDirection
-      axisDirection) {
-    return child;
   }
 }

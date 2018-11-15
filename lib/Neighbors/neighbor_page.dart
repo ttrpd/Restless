@@ -1,7 +1,7 @@
 
 
 import 'package:flutter/material.dart';
-import 'package:restless/neighbor.dart';
+import 'package:restless/Neighbors/neighbor.dart';
 
 class NeighborPage extends StatefulWidget
 {
