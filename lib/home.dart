@@ -10,7 +10,6 @@ import 'package:restless/artist_data.dart';
 import 'package:restless/Artists/artist_page.dart';
 import 'package:restless/my_scroll_behavior.dart';
 import 'package:restless/NowPlaying/now_playing_page.dart';
-import 'package:restless/NowPlaying/now_playing_provider.dart';
 import 'package:restless/Artists/artists_page_provider.dart';
 
 

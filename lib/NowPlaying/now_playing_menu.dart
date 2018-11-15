@@ -29,9 +29,12 @@ class NowPlayingMenu extends StatefulWidget
 
 class NowPlayingMenuState extends State<NowPlayingMenu> {
 
+  double _volumeValue;
+
   @override
   Widget build(BuildContext context)
   {
+    _volumeValue = NowPlayingProvider.of(context).volumeValue;
 
     widget.audioPlayer.durationHandler = (Duration d) {
       if(NowPlayingProvider.of(context).endTime != null)
@@ -190,7 +193,7 @@ class NowPlayingMenuState extends State<NowPlayingMenu> {
                 Padding(
                   padding: const EdgeInsets.only(top: 40.0),
                   child: Slider(// volume slider
-                    value: NowPlayingProvider.of(context).volumeValue,
+                    value: _volumeValue,
                     activeColor: Colors.white,
                     inactiveColor: Colors.white70,
                     min: 0.0,
@@ -198,8 +201,10 @@ class NowPlayingMenuState extends State<NowPlayingMenu> {
                     divisions: 200,
                     onChanged: (double value) {
                       setState(() {
+                        print(NowPlayingProvider.of(context).volumeValue);
                         widget.audioPlayer.setVolume(value / 200.0);
                         NowPlayingProvider.of(context).volumeValue = value;
+                        _volumeValue = value;
                       });
                     },
                   ),
@@ -405,8 +410,6 @@ class SeekBar extends StatefulWidget
 
   SeekBar({
     Key key,
-//    this.thumbWidth = 3.0,
-//    this.thumbHeight = -10.0,
     this.trackProgressPercent = 0.0,
     this.onSeekRequested,
   }) : super(key: key);
