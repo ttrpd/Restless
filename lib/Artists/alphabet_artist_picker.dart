@@ -83,7 +83,6 @@ class AlphabetArtistPickerState extends State<AlphabetArtistPicker> {
                     return Container(
                       child: FlatButton(
                         onPressed: () {
-                          //TODO: scroll to first artist of that letter
                           widget.scrolltoLetter(letters[index].letter);
                           setState(() {
                             widget.opacityValue = 0.0;

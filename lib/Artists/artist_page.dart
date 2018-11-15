@@ -52,6 +52,7 @@ class ArtistPageState extends State<ArtistPage> {
           IconButton(
             icon: Icon(Icons.sort_by_alpha),
             onPressed: () {
+              print(opacityValue);
               setState(() {
                 opacityValue = (opacityValue > 0.0)?0.0:1.0;
               });
@@ -98,17 +99,12 @@ class ArtistPageState extends State<ArtistPage> {
           AlphabetArtistPicker(
             opacityValue: opacityValue,
             scrolltoLetter: (l) {
-//              print(
-////                ArtistsPageProvider.of(context).artists.indexOf(
-////                    ArtistsPageProvider.of(context).artists.singleWhere((a) => a.name.trim().toUpperCase()[0] == l)
-////                ) * (MediaQuery.of(context).size.height / 4.75)//+8.0
-////              );
-              print('scrolling');
               _scrl.jumpTo(// *
                   ArtistsPageProvider.of(context).artists.indexOf(
                       ArtistsPageProvider.of(context).artists.where((a) => a.name.trim().toUpperCase()[0] == l).first
                   ) * ((MediaQuery.of(context).size.height / 4.75)+8.0)
               );
+              opacityValue = 0.0;
             },
           ),
         ],
