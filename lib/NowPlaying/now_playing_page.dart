@@ -50,13 +50,7 @@ class NowPlayingState extends State<NowPlaying> with SingleTickerProviderStateMi
       NowPlayingProvider.of(context).artist = img.last.tags['artist'];
       NowPlayingProvider.of(context).albumArt = Image.memory(Uint8List.fromList(img.last.tags['APIC'].imageData)).image;
     });
-    print('done');
   }
-
-//  ImageProvider albumArt;
-//  String artist;
-//  String album;
-//  String track;
 
   @override
   Widget build(BuildContext context) {

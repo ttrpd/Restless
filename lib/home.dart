@@ -27,9 +27,30 @@ class HomeState extends State<Home> {
 
 
 
-  List<ArtistData> artists;
+  List<ArtistData> artists = List<ArtistData>();
+  String _musicDirectoryPath = '/storage/emulated/0/Music/TestMusic';
   String _path = '/storage/emulated/0/Music/TestMusic/Carousel Casualties/Madison/Bright Red Lights.mp3';
   double artistsListOffset = 0.0;
+
+  Future _getArtistsInfo(String directoryPath) async
+  {
+    for( Directory artist in Directory(directoryPath).listSync() )
+    {
+      String artistName = artist.path.substring(artist.path.lastIndexOf('/')+1);
+      artists.add(ArtistData(name: artistName, albums: [AlbumData(name: '')]));
+      for( var album in artist.listSync())
+      {
+        print('adding ' + album.path.substring(album.path.lastIndexOf('/')+1, album.path.length));
+        for( var file in Directory(album.path).listSync())
+        {
+          if(file.path.contains('.mp3')) {
+            _getAlbumInfo(artistName, file.path);
+            break;
+          }
+        }
+      }
+    }
+  }
 
   Future _getAlbumInfo(String artist, String path) async
   {
@@ -72,31 +93,16 @@ class HomeState extends State<Home> {
   void initState() {
     super.initState();
     artists = List<ArtistData>();
-
-    print(Directory('storage/emulated/0/Music/TestMusic').listSync());
-    for( Directory artist in Directory('/storage/emulated/0/Music/TestMusic').listSync() )
-    {
-      String artistName = artist.path.substring(artist.path.lastIndexOf('/')+1);
-      artists.add(ArtistData(name: artistName, albums: [AlbumData(name: '')]));
-      for( var album in artist.listSync())
-      {
-        print('adding ' + album.path.substring(album.path.lastIndexOf('/')+1, album.path.length));
-        for( var file in Directory(album.path).listSync())
-        {
-          if(file.path.contains('.mp3')) {
-            _getAlbumInfo(artistName, file.path);
-            break;
-          }
-        }
-      }
-    }
+    _getArtistsInfo(_musicDirectoryPath);
+    print('Initialized');
+    
   }
 
   AudioPlayer audioPlayer = new AudioPlayer();
   @override
   Widget build(BuildContext context)
   {
-
+    
     audioPlayer.setUrl(_path, isLocal: true);
     audioPlayer.setReleaseMode(ReleaseMode.STOP);
 
@@ -108,6 +114,8 @@ class HomeState extends State<Home> {
     }
 
     ArtistsPageProvider.of(context).artists = artists;
+
+    print('building home');
 
     return PageView(
       pageSnapping: true,
