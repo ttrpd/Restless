@@ -31,6 +31,7 @@ class HomeState extends State<Home> {
   String _musicDirectoryPath = '/storage/emulated/0/Music/TestMusic';
   String _path = '/storage/emulated/0/Music/TestMusic/Carousel Casualties/Madison/Bright Red Lights.mp3';
   double artistsListOffset = 0.0;
+  Future _ftr;
 
   Future _getArtistsInfo(String directoryPath) async
   {
@@ -44,7 +45,7 @@ class HomeState extends State<Home> {
         for( var file in Directory(album.path).listSync())
         {
           if(file.path.contains('.mp3')) {
-            _getAlbumInfo(artistName, file.path);
+            await _getAlbumInfo(artistName, file.path);
             break;
           }
         }
@@ -93,7 +94,7 @@ class HomeState extends State<Home> {
   void initState() {
     super.initState();
     artists = List<ArtistData>();
-    _getArtistsInfo(_musicDirectoryPath);
+    _ftr = _getArtistsInfo(_musicDirectoryPath);
     print('Initialized');
     
   }
@@ -117,17 +118,23 @@ class HomeState extends State<Home> {
 
     print('building home');
 
-    return PageView(
-      pageSnapping: true,
-      physics: BouncingScrollPhysics(),
-      scrollDirection: Axis.horizontal,
-      children: <Widget>[
-        ArtistPage(
-          getOffset: () => artistsListOffset,
-          setOffset: (offset) => artistsListOffset = offset,
-        ),
-        NowPlaying(audioPlayer: audioPlayer, path: _path,),
-      ],
+    return FutureBuilder(
+      future: _ftr,
+      builder: (BuildContext context, AsyncSnapshot snapshot) {
+        print('building future');
+        return PageView(
+          pageSnapping: true,
+          physics: BouncingScrollPhysics(),
+          scrollDirection: Axis.horizontal,
+          children: <Widget>[
+            ArtistPage(
+              getOffset: () => artistsListOffset,
+              setOffset: (offset) => artistsListOffset = offset,
+            ),
+            NowPlaying(audioPlayer: audioPlayer, path: _path,),
+          ],
+        );
+      },
     );
   }
 }
