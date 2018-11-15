@@ -4,6 +4,7 @@ class NowPlayingProvider extends InheritedWidget
 {
   bool playing;
   double blurValue;
+  double volumeValue;
   Duration currentTime;
   Duration endTime;
   double trackProgressPercent = 0.0;
@@ -24,6 +25,7 @@ class NowPlayingProvider extends InheritedWidget
     this.artist,
     this.album,
     this.track,
+    this.volumeValue,
   }) : super(key: key, child: child);
 
   @override

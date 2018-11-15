@@ -22,38 +22,44 @@ class ArtistSliverState extends State<ArtistSliver> {
   @override
   Widget build(BuildContext context)
   {
-    return Padding(
-      padding: const EdgeInsets.only(top: 8.0),
-      child: Stack(
-        children: <Widget>[
-          Container(
-            width: double.maxFinite,
-            height: MediaQuery.of(context).size.height / 4.75,
-            color: Colors.black,
-            child: Stack(
-              children: _buildAlbumArtStack(context),
+    return GestureDetector(
+      onTap: () {
+        //TODO: implement navigation
+        print(widget.artist.name + ' was pressed');
+      },
+      child: Padding(
+        padding: const EdgeInsets.only(top: 8.0),
+        child: Stack(
+          children: <Widget>[
+            Container(
+              width: double.maxFinite,
+              height: MediaQuery.of(context).size.height / 4.75,
+              color: Colors.black,
+              child: Stack(
+                children: _buildAlbumArtStack(context),
+              ),
             ),
-          ),
-          Container(
-            
-            child: Padding(
-              padding: const EdgeInsets.only(top: 12.5, left: 10.0, right: 5.0, bottom: 5.0),
-              child: RichText(
-                text: TextSpan(
-                  text: widget.artist.name,
-                  style: TextStyle(
-                    color: Colors.white,
-                    background: Paint(),
-                    fontSize: 26.0,
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: 2.0,
-                    height: 1.0
+            Container(
+
+              child: Padding(
+                padding: const EdgeInsets.only(top: 12.5, left: 10.0, right: 5.0, bottom: 5.0),
+                child: RichText(
+                  text: TextSpan(
+                    text: widget.artist.name,
+                    style: TextStyle(
+                      color: Colors.white,
+                      background: Paint(),
+                      fontSize: 26.0,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 2.0,
+                      height: 1.0
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -116,7 +122,6 @@ class RhombusClipper extends CustomClipper<Path>
 
   @override
   Path getClip(Size size) {
-    // TODO: implement getClip
     Path path = Path();
     path.moveTo(slashPos + divideOffset, 0.0);
     path.lineTo(size.width, 0.0);

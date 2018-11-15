@@ -28,22 +28,6 @@ class NowPlayingMenu extends StatefulWidget
 }
 
 class NowPlayingMenuState extends State<NowPlayingMenu> {
-  double _volumeSliderValue = 30.0;
-//  Duration currentTime = Duration(milliseconds: 1);
-//  Duration endTime = Duration(milliseconds: 1);
-//  double _trackProgressPercent = 0.0;
-
-
-//  @override
-//  void initState() {
-//    _trackProgressPercent = widget.trackProgressPercent;
-//  }
-//
-//  @override
-//  void dispose() {
-//    super.dispose();
-//    widget.trackProgressPercent = _trackProgressPercent;
-//  }
 
   @override
   Widget build(BuildContext context)
@@ -206,7 +190,7 @@ class NowPlayingMenuState extends State<NowPlayingMenu> {
                 Padding(
                   padding: const EdgeInsets.only(top: 40.0),
                   child: Slider(// volume slider
-                    value: _volumeSliderValue,
+                    value: NowPlayingProvider.of(context).volumeValue,
                     activeColor: Colors.white,
                     inactiveColor: Colors.white70,
                     min: 0.0,
@@ -214,7 +198,8 @@ class NowPlayingMenuState extends State<NowPlayingMenu> {
                     divisions: 200,
                     onChanged: (double value) {
                       setState(() {
-                        _volumeSliderValue = value;
+                        widget.audioPlayer.setVolume(value / 200.0);
+                        NowPlayingProvider.of(context).volumeValue = value;
                       });
                     },
                   ),

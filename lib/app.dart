@@ -17,6 +17,7 @@ class App extends StatelessWidget
       child: NowPlayingProvider(
         playing: false,
         blurValue: 0.0,
+        volumeValue: 0.5,
         currentTime: Duration(milliseconds: 1),
         endTime: Duration(milliseconds: 1),
         trackProgressPercent: 0.0,
