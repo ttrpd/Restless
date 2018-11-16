@@ -1,7 +1,9 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
+
 import 'package:restless/artist_data.dart';
+import 'package:restless/AlbumPage/album_page.dart';
+
 
 class ArtistSliver extends StatefulWidget
 {
@@ -25,6 +27,13 @@ class ArtistSliverState extends State<ArtistSliver> {
     return GestureDetector(
       onTap: () {
         //TODO: implement navigation
+        print(widget.artist);
+        Navigator.of(context, rootNavigator: true).push(
+          CupertinoPageRoute<void>(
+            builder: (BuildContext context) => AlbumPage(artist: widget.artist,),
+          ),
+        );
+        // Navigator.of(context).pushNamed('/albums_page');
         print(widget.artist.name + ' was pressed');
       },
       child: Padding(
