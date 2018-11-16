@@ -43,7 +43,7 @@ class ArtistSliverState extends State<ArtistSliver> {
             Container(
               width: double.maxFinite,
               height: MediaQuery.of(context).size.height / 4.75,
-              color: Colors.black,
+              color: Theme.of(context).primaryColor,
               child: Stack(
                 children: _buildAlbumArtStack(context),
               ),
@@ -56,7 +56,7 @@ class ArtistSliverState extends State<ArtistSliver> {
                   text: TextSpan(
                     text: widget.artist.name,
                     style: TextStyle(
-                      color: Colors.white,
+                      color: Theme.of(context).accentColor,
                       background: Paint(),
                       fontSize: 26.0,
                       fontWeight: FontWeight.bold,

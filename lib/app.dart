@@ -20,6 +20,10 @@ class App extends StatelessWidget
         endTime: Duration(milliseconds: 1),
         trackProgressPercent: 0.0,
         child: MaterialApp(
+          theme: ThemeData(
+            primaryColor: Colors.black,
+            accentColor: Colors.white,
+          ),
           title: 'MyApp',
           debugShowCheckedModeBanner: false,
           routes: <String, WidgetBuilder> {

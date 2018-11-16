@@ -59,12 +59,12 @@ class ArtistPageState extends State<ArtistPage> {
             },
           ),
         ],
-        backgroundColor: Colors.black,
+        backgroundColor: Theme.of(context).primaryColor,
         title: RichText(
           text: TextSpan(
             text: 'Artists',
             style: TextStyle(
-              color: Colors.white,
+              color: Theme.of(context).accentColor,
               fontSize: 20.0,
             ),
           ),
@@ -77,7 +77,7 @@ class ArtistPageState extends State<ArtistPage> {
           ScrollConfiguration(
             behavior: MyScrollBehavior(),
             child: Container(
-              color: Colors.black,
+              color: Theme.of(context).primaryColor,
 
               child: NotificationListener(
                 child: ListView.builder(

@@ -20,10 +20,10 @@ class _AlbumPageState extends State<AlbumPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: Theme.of(context).primaryColor,
       appBar: AppBar(
         centerTitle: true,
-        backgroundColor: Colors.black,
+        backgroundColor: Theme.of(context).primaryColor,
         leading: IconButton(
           icon: Icon(Icons.chevron_left),
           onPressed: () {
@@ -35,7 +35,7 @@ class _AlbumPageState extends State<AlbumPage> {
           text: TextSpan(
             text: widget.artist.name,
             style: TextStyle(
-              color: Colors.white,
+              color: Theme.of(context).accentColor,
               fontSize: 20.0,
             ),
           ),
@@ -62,7 +62,7 @@ class _AlbumPageState extends State<AlbumPage> {
                     text: TextSpan(
                       text: widget.artist.albums[index].name,
                       style: TextStyle(
-                        color: Colors.white,
+                        color: Theme.of(context).accentColor,
                         background: Paint(),
                         fontSize: 26.0,
                         fontWeight: FontWeight.bold,
@@ -75,14 +75,45 @@ class _AlbumPageState extends State<AlbumPage> {
               ],
             ),
             content: Container(
-              height: 200.0,
+              height: 58.0 * widget.artist.albums.length,
               child: ListView.builder(
                 physics: NeverScrollableScrollPhysics(),
                 itemCount: widget.artist.albums.length,
                 itemBuilder: (BuildContext context, int j) {
                   return Padding(
                     padding: const EdgeInsets.all(4.0),
-                    child: Container(color: Colors.lightBlue, height: 50.0,),
+                    child: Container(
+                      height: 50.0,
+                      color: Theme.of(context).primaryColor,
+                      child: Center(
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: <Widget>[
+                            IconButton(
+                              icon: Icon(Icons.play_arrow, color: Theme.of(context).accentColor), 
+                              onPressed: () {
+                                print(widget.artist.albums[index].name + ' should be playing now');
+                              },
+                            ),
+                            Flexible(
+                              child: RichText(
+                                overflow: TextOverflow.ellipsis,
+                                text: TextSpan(
+                                  text: widget.artist.albums[index].name,
+                                  style: TextStyle(
+                                    color: Theme.of(context).accentColor,
+                                    fontSize: 18.0,
+                                    fontWeight: FontWeight.bold,
+                                    letterSpacing: 2.0,
+                                    height: 1.0
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
+                    ),
                   );
                 },
               ),
@@ -102,7 +133,7 @@ class _AlbumPageState extends State<AlbumPage> {
       //             Container(
       //               width: double.maxFinite,
       //               height: MediaQuery.of(context).size.height / 4.75,
-      //               color: Colors.black,
+      //               color: Theme.of(context).primaryColor,
       //               decoration: BoxDecoration(
       //                 image: DecorationImage(
       //                   image: widget.artist.albums[index].albumArt ?? AssetImage('lib/assets/default.jpg'),
@@ -118,7 +149,7 @@ class _AlbumPageState extends State<AlbumPage> {
       //                   text: TextSpan(
       //                     text: widget.artist.name,
       //                     style: TextStyle(
-      //                       color: Colors.white,
+      //                       color: Theme.of(context).accentColor,
       //                       background: Paint(),
       //                       fontSize: 26.0,
       //                       fontWeight: FontWeight.bold,

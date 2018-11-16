@@ -55,7 +55,7 @@ class TrackInfoAreaState extends State<TrackInfoArea> {
                         text: TextSpan(
                           text: widget.name ?? widget.path.substring(widget.path.lastIndexOf('/')+1, widget.path.lastIndexOf('.')),
                           style: TextStyle(
-                            color: Colors.white,
+                            color: Theme.of(context).accentColor,
                             background: Paint(),
                             fontSize: 32.0,
                             fontWeight: FontWeight.bold,
@@ -71,7 +71,7 @@ class TrackInfoAreaState extends State<TrackInfoArea> {
                         text: TextSpan(
                           text: widget.album ?? '(Album)',
                           style: TextStyle(
-                            color: Colors.white,
+                            color: Theme.of(context).accentColor,
                             background: Paint(),
                             fontSize: 20.0,
                             fontWeight: FontWeight.normal,
@@ -87,7 +87,7 @@ class TrackInfoAreaState extends State<TrackInfoArea> {
                         text: TextSpan(
                           text: widget.artist ?? '(Artist)',
                           style: TextStyle(
-                            color: Colors.white,
+                            color: Theme.of(context).accentColor,
                             background: Paint(),
                             fontSize: 16.0,
                             fontWeight: FontWeight.normal,
