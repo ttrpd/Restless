@@ -57,7 +57,7 @@ class ArtistSliverState extends State<ArtistSliver> {
                     text: widget.artist.name,
                     style: TextStyle(
                       color: Theme.of(context).accentColor,
-                      background: Paint(),
+                      background: Paint()..color = Theme.of(context).primaryColor,
                       fontSize: 26.0,
                       fontWeight: FontWeight.bold,
                       letterSpacing: 2.0,

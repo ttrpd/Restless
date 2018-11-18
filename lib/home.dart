@@ -8,7 +8,6 @@ import 'package:dart_tags/dart_tags.dart';
 import 'package:flutter/material.dart';
 import 'package:restless/artist_data.dart';
 import 'package:restless/Artists/artist_page.dart';
-import 'package:restless/my_scroll_behavior.dart';
 import 'package:restless/NowPlaying/now_playing_page.dart';
 import 'package:restless/Artists/artists_page_provider.dart';
 
@@ -25,11 +24,9 @@ class Home extends StatefulWidget
 
 class HomeState extends State<Home> {
 
-
-
   List<ArtistData> artists = List<ArtistData>();
-  String _musicDirectoryPath = '/storage/emulated/0/Music/TestMusic';
-  String _path = '/storage/emulated/0/Music/TestMusic/Carousel Casualties/Madison/Bright Red Lights.mp3';
+  String _musicDirectoryPath = '/storage/emulated/0/Music';//'/storage/emulated/0/Music/TestMusic';
+  String _path = '/storage/emulated/0/Music/Carousel Casualties/Madison/Bright Red Lights.mp3';
   double artistsListOffset = 0.0;
   Future _ftr;
 
@@ -37,6 +34,11 @@ class HomeState extends State<Home> {
   {
     for( Directory artist in Directory(directoryPath).listSync() )
     {
+      if(artist is Directory)
+        print('yes');
+      
+      print(Directory(directoryPath).listSync().length);
+      print(artist.path);
       String artistName = artist.path.substring(artist.path.lastIndexOf('/')+1);
       artists.add(ArtistData(name: artistName, albums: [AlbumData(name: '')]));
       for( var album in artist.listSync())
@@ -58,7 +60,7 @@ class HomeState extends State<Home> {
     TagProcessor tp = TagProcessor();
     File f = File(path);
     var img = await tp.getTagsFromByteArray(f.readAsBytes());
-
+    // print(img.toString());
     if(img.last.tags['APIC'] == null)
     {
       print('Problems with: ' + artist);
@@ -94,9 +96,8 @@ class HomeState extends State<Home> {
   void initState() {
     super.initState();
     artists = List<ArtistData>();
-    _ftr = _getArtistsInfo(_musicDirectoryPath);
-    print('Initialized');
-    
+    _ftr = _getArtistsInfo('/storage/emulated/0/Music/');
+    print('Initialized');   
   }
 
   AudioPlayer audioPlayer = new AudioPlayer();
@@ -116,7 +117,7 @@ class HomeState extends State<Home> {
 
     ArtistsPageProvider.of(context).artists = artists;
 
-    print('building home');
+    // print(ArtistsPageProvider.of(context).artists.length);
 
     return FutureBuilder(
       future: _ftr,

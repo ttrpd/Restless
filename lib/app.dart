@@ -5,12 +5,14 @@ import 'package:restless/Neighbors/neighbor_page.dart';
 import 'package:restless/AlbumPage/album_page.dart';
 import 'package:restless/Artists/artists_page_provider.dart';
 import 'package:restless/NowPlaying/now_playing_provider.dart';
+import 'package:simple_permissions/simple_permissions.dart';
 
 class App extends StatelessWidget
 {
   @override
   Widget build(BuildContext context)
   {
+    SimplePermissions.requestPermission(Permission.ReadExternalStorage);
     return ArtistsPageProvider(
       child: NowPlayingProvider(
         playing: false,
@@ -22,6 +24,7 @@ class App extends StatelessWidget
         child: MaterialApp(
           theme: ThemeData(
             primaryColor: Colors.black,
+            primaryColorDark: Color.fromARGB(255, 103, 103, 103),
             accentColor: Colors.white,
           ),
           title: 'MyApp',

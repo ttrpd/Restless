@@ -17,13 +17,13 @@ class ProgressBar extends StatefulWidget
   ProgressBar({
     Key key,
     this.trackThickness = 2.0,
-    this.trackColor = Colors.white30,
+    @required this.trackColor,
     this.progressThickness = 2.0,
-    this.progressColor = Colors.white,
+    @required this.progressColor,
     this.progressPercent = 0.0,
     this.thumbHeight = -10.0,
     this.thumbWidth = 3.0,
-    this.thumbColor = Colors.white
+    @required this.thumbColor,
   }) : super(key: key);
 
   @override
@@ -74,7 +74,7 @@ class ProgressBarPainter extends CustomPainter
     @required thumbColor,
   }) : trackPaint = Paint()
         ..color = trackColor
-        ..style = PaintingStyle.stroke // maybe fill
+        ..style = PaintingStyle.stroke
         ..strokeWidth = trackThickness , // dependent on trackPaint.style
        progressPaint = Paint()
         ..color = progressColor
@@ -103,7 +103,7 @@ class ProgressBarPainter extends CustomPainter
     canvas.drawRect(
       Rect.fromLTWH(
         size.width * progressPercent,
-        (size.height / 2.0) + progressThickness,
+        (size.height / progressThickness) + (progressThickness * 1.5),
         thumbWidth,
         thumbHeight,
       ),

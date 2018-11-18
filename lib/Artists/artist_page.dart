@@ -50,7 +50,7 @@ class ArtistPageState extends State<ArtistPage> {
       appBar: AppBar(
         actions: <Widget>[
           IconButton(
-            icon: Icon(Icons.sort_by_alpha),
+            icon: Icon(Icons.sort_by_alpha, color: Theme.of(context).accentColor,),
             onPressed: () {
               print(opacityValue);
               setState(() {

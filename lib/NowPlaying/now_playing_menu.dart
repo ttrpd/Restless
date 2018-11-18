@@ -65,7 +65,7 @@ class NowPlayingMenuState extends State<NowPlayingMenu> {
           color: Theme.of(context).primaryColor,
             boxShadow: [
               BoxShadow(
-                color: Theme.of(context).primaryColor,
+                color: Colors.black,
                 spreadRadius: 5.0,
                 blurRadius: 70.0,
               ),
@@ -193,7 +193,7 @@ class NowPlayingMenuState extends State<NowPlayingMenu> {
                   child: Slider(// volume slider
                     value: _volumeValue,
                     activeColor: Theme.of(context).accentColor,
-                    inactiveColor: Colors.white70,
+                    inactiveColor: Theme.of(context).primaryColorDark,
                     min: 0.0,
                     max: 200.0,
                     divisions: 200,
@@ -248,52 +248,68 @@ class NowPlayingMenuState extends State<NowPlayingMenu> {
                             spacing: 3.0,
                             children: <Widget>[
                               Chip(
-                                label: Text('hello'),
+                                backgroundColor: Theme.of(context).accentColor,
+                                label: Text('hello', style: TextStyle(color: Theme.of(context).primaryColor),),
                               ),
                               Chip(
-                                label: Text('hi'),
+                                backgroundColor: Theme.of(context).accentColor,
+                                label: Text('hi', style: TextStyle(color: Theme.of(context).primaryColor),),
                               ),
                               Chip(
-                                label: Text('bonjour'),
+                                backgroundColor: Theme.of(context).accentColor,
+                                label: Text('bonjour', style: TextStyle(color: Theme.of(context).primaryColor),),
                               ),
                               Chip(
-                                label: Text('salut'),
+                                backgroundColor: Theme.of(context).accentColor,
+                                label: Text('salut', style: TextStyle(color: Theme.of(context).primaryColor),),
                               ),
                               Chip(
-                                label: Text('anyonghaseo'),
+                                backgroundColor: Theme.of(context).accentColor,
+                                label: Text('anyonghaseo', style: TextStyle(color: Theme.of(context).primaryColor),),
                               ),
                               Chip(
-                                label: Text('aurevoir'),
+                                backgroundColor: Theme.of(context).accentColor,
+                                label: Text('aurevoir', style: TextStyle(color: Theme.of(context).primaryColor),),
                               ),
                               Chip(
-                                label: Text('bye'),
+                                backgroundColor: Theme.of(context).accentColor,
+                                label: Text('bye', style: TextStyle(color: Theme.of(context).primaryColor),),
                               ),
                               Chip(
-                                label: Text('see ya'),
+                                backgroundColor: Theme.of(context).accentColor,
+                                label: Text('see ya', style: TextStyle(color: Theme.of(context).primaryColor),),
                               ),
                               Chip(
-                                label: Text('hello'),
+                                backgroundColor: Theme.of(context).accentColor,
+                                label: Text('hello', style: TextStyle(color: Theme.of(context).primaryColor),),
                               ),
                               Chip(
-                                label: Text('hi'),
+                                backgroundColor: Theme.of(context).accentColor,
+                                label: Text('hi', style: TextStyle(color: Theme.of(context).primaryColor),),
                               ),
                               Chip(
-                                label: Text('bonjour'),
+                                backgroundColor: Theme.of(context).accentColor,
+                                label: Text('bonjour', style: TextStyle(color: Theme.of(context).primaryColor),),
                               ),
                               Chip(
-                                label: Text('salut'),
+                                backgroundColor: Theme.of(context).accentColor,
+                                label: Text('salut', style: TextStyle(color: Theme.of(context).primaryColor),),
                               ),
                               Chip(
-                                label: Text('anyonghaseo'),
+                                backgroundColor: Theme.of(context).accentColor,
+                                label: Text('anyonghaseo', style: TextStyle(color: Theme.of(context).primaryColor),),
                               ),
                               Chip(
-                                label: Text('aurevoir'),
+                                backgroundColor: Theme.of(context).accentColor,
+                                label: Text('aurevoir', style: TextStyle(color: Theme.of(context).primaryColor),),
                               ),
                               Chip(
-                                label: Text('bye'),
+                                backgroundColor: Theme.of(context).accentColor,
+                                label: Text('bye', style: TextStyle(color: Theme.of(context).primaryColor),),
                               ),
                               Chip(
-                                label: Text('see ya'),
+                                backgroundColor: Theme.of(context).accentColor,
+                                label: Text('see ya', style: TextStyle(color: Theme.of(context).primaryColor),),
                               ),
                             ],
                           ),
@@ -466,6 +482,9 @@ class SeekBarState extends State<SeekBar> {
             progressPercent: _seeking?_seekProgressPercent:widget.trackProgressPercent,
             thumbWidth: _thumbWidth,
             thumbHeight: _thumbHeight,
+            progressColor: Theme.of(context).accentColor,
+            trackColor: Theme.of(context).primaryColorDark,
+            thumbColor: Theme.of(context).accentColor,
           )
       ),
     );

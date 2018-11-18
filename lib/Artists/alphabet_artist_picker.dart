@@ -94,7 +94,7 @@ class AlphabetArtistPickerState extends State<AlphabetArtistPicker> {
                               text: letters[index].letter,
                               style: TextStyle(
                                 letterSpacing: 0.0,
-                                color: (letters[index].available)?Theme.of(context).accentColor:Colors.grey,
+                                color: (letters[index].available)?Theme.of(context).accentColor:Theme.of(context).primaryColorDark,
                                 fontSize: 30.0,
                               ),
                             ),
