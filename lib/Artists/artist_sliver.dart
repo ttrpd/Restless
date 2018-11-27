@@ -26,14 +26,12 @@ class ArtistSliverState extends State<ArtistSliver> {
   {
     return GestureDetector(
       onTap: () {
-        //TODO: implement navigation
         print(widget.artist);
         Navigator.of(context, rootNavigator: true).push(
           CupertinoPageRoute<void>(
             builder: (BuildContext context) => AlbumPage(artist: widget.artist,),
           ),
         );
-        // Navigator.of(context).pushNamed('/albums_page');
         print(widget.artist.name + ' was pressed');
       },
       child: Padding(

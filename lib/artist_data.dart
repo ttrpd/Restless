@@ -5,32 +5,32 @@ import 'package:flutter/material.dart';
 class ArtistData
 {
   String name;
-  List<AlbumData> albums = List<AlbumData>(1);
+  List<AlbumData> albums;
 
   ArtistData({
     @required this.name,
     this.albums,
-  });
+  }){albums = new List<AlbumData>();}
 }
 
 class AlbumData
 {
   String name;
   ImageProvider albumArt;
-  List<TrackData> songs = List<TrackData>(1);
+  List<TrackData> songs;
 
   AlbumData({
     @required this.name,
     this.albumArt,
     this.songs,
-  });
+  }){songs = new List<TrackData>();}
 }
 
 class TrackData
 {
   String name;
   String path;
-  List<String> tags = List<String>(1);
+  List<String> tags = new List<String>();
 
   TrackData({
     @required this.path,

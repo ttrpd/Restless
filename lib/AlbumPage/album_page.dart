@@ -75,7 +75,7 @@ class _AlbumPageState extends State<AlbumPage> {
               ],
             ),
             content: Container(
-              height: 58.0 * widget.artist.albums.length,
+              height: (index != widget.artist.albums.length-1)?58.0 * widget.artist.albums.length:(MediaQuery.of(context).size.height*0.66),
               child: ListView.builder(
                 physics: NeverScrollableScrollPhysics(),
                 itemCount: widget.artist.albums.length,
