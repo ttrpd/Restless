@@ -23,9 +23,9 @@ class App extends StatelessWidget
         trackProgressPercent: 0.0,
         child: MaterialApp(
           theme: ThemeData(
-            primaryColor: Colors.black,
+            primaryColor: Color.fromARGB(255, 25, 25, 25),
             primaryColorDark: Color.fromARGB(255, 103, 103, 103),
-            accentColor: Colors.white,
+            accentColor: Color.fromARGB(255, 240, 240, 240),
           ),
           title: 'MyApp',
           debugShowCheckedModeBanner: false,
