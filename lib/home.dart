@@ -24,8 +24,8 @@ class Home extends StatefulWidget
 class HomeState extends State<Home> {
 
   List<ArtistData> artists = new List<ArtistData>();
-  String _musicDirectoryPath = '/storage/emulated/0/Music';//'/storage/emulated/0/Music/TestMusic';
-  String _path = '/storage/emulated/0/Music/Carousel Casualties/Madison/Bright Red Lights.mp3';
+  String _musicDirectoryPath = '/storage/emulated/0/Music/TestMusic';//'/storage/emulated/0/Music/TestMusic';
+  String _path = '/storage/emulated/0/Music/TestMusic/Carousel Casualties/Madison/Bright Red Lights.mp3';
   double artistsListOffset = 0.0;
   Future _ftr;
 
@@ -74,6 +74,15 @@ class HomeState extends State<Home> {
               artists.firstWhere( (a) => a.name.toUpperCase().trim() == img.last.tags['artist'].toString().toUpperCase().trim(), orElse: ()=>null)
               .albums.add(album);
             }
+
+            if(artists.firstWhere( (a) => a.name.toUpperCase().trim() == img.last.tags['artist'].toString().toUpperCase().trim(), orElse: ()=>null)
+              .albums.firstWhere( (al) => al.name.toUpperCase().trim() == img.last.tags['album'].toString().toUpperCase().trim(), orElse: ()=>null)
+              .songs.firstWhere( (s) => s.name.toUpperCase().trim() == img.last.tags['track'].toString().toUpperCase().trim(), orElse: ()=>null) == null)
+            {
+              artists.firstWhere( (a) => a.name.toUpperCase().trim() == img.last.tags['artist'].toString().toUpperCase().trim(), orElse: ()=>null)
+              .albums.firstWhere( (al) => al.name.toUpperCase().trim() == img.last.tags['album'].toString().toUpperCase().trim(), orElse:()=>null)
+              .songs.add(track);
+            }
           }
           
           // return Future.delayed(Duration(milliseconds: 1));
@@ -100,11 +109,6 @@ class HomeState extends State<Home> {
 
     artists.sort( (a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()) );//sort artists
 
-    for(int i = 0; i < artists.length ;i++)
-    {
-      artists[i].albums.sort( (a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));// sort albums
-    }
-
     for(int i = 0; i < artists.length; i++)
     {
       print('\t'+artists[i].name);
@@ -126,6 +130,10 @@ class HomeState extends State<Home> {
       future: _ftr,
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         print('building future');
+        for(int i = 0; i < artists.length ;i++)
+        {
+          artists[i].albums.sort( (a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));// sort albums
+        }
         return PageView(
           pageSnapping: true,
           physics: BouncingScrollPhysics(),

@@ -78,7 +78,7 @@ class _AlbumPageState extends State<AlbumPage> {
               height: (index != widget.artist.albums.length-1)?58.0 * widget.artist.albums.length:(MediaQuery.of(context).size.height*0.66),
               child: ListView.builder(
                 physics: NeverScrollableScrollPhysics(),
-                itemCount: widget.artist.albums.length,
+                itemCount: widget.artist.albums[index].songs.length,
                 itemBuilder: (BuildContext context, int j) {
                   return Padding(
                     padding: const EdgeInsets.all(4.0),
@@ -92,14 +92,14 @@ class _AlbumPageState extends State<AlbumPage> {
                             IconButton(
                               icon: Icon(Icons.play_arrow, color: Theme.of(context).accentColor), 
                               onPressed: () {
-                                print(widget.artist.albums[index].name + ' should be playing now');
+                                print(widget.artist.albums[index].songs[j].name + ' should be playing now');
                               },
                             ),
                             Flexible(
                               child: RichText(
                                 overflow: TextOverflow.ellipsis,
                                 text: TextSpan(
-                                  text: widget.artist.albums[index].name,
+                                  text: widget.artist.albums[index].songs[j].name,
                                   style: TextStyle(
                                     color: Theme.of(context).accentColor,
                                     fontSize: 18.0,
