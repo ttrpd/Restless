@@ -47,32 +47,9 @@ class ArtistPageState extends State<ArtistPage> {
     }
 
     return Scaffold(
-      appBar: AppBar(
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.sort_by_alpha, color: Theme.of(context).accentColor,),
-            onPressed: () {
-              print(opacityValue);
-              setState(() {
-                opacityValue = (opacityValue > 0.0)?0.0:1.0;
-              });
-            },
-          ),
-        ],
-        backgroundColor: Theme.of(context).primaryColor,
-        title: RichText(
-          text: TextSpan(
-            text: 'Artists',
-            style: TextStyle(
-              color: Theme.of(context).accentColor,
-              fontSize: 20.0,
-            ),
-          ),
-        ),
-        centerTitle: true,
-
-      ),
+      
       body: Stack(
+        alignment: Alignment.bottomRight,
         children: <Widget>[
           ScrollConfiguration(
             behavior: MyScrollBehavior(),
@@ -106,6 +83,20 @@ class ArtistPageState extends State<ArtistPage> {
               );
               opacityValue = 0.0;
             },
+          ),
+          Padding(
+            padding: const EdgeInsets.only(right: 10.0, bottom: 24.0),
+            child: FloatingActionButton(
+              backgroundColor: Theme.of(context).primaryColor,
+              foregroundColor: Theme.of(context).accentColor,
+              child: Icon(Icons.sort_by_alpha),
+              onPressed: () {
+                print(opacityValue);
+                setState(() {
+                  opacityValue = (opacityValue > 0.0)?0.0:1.0;
+                });
+              },
+            ),
           ),
         ],
       ),

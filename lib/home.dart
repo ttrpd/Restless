@@ -109,21 +109,8 @@ class HomeState extends State<Home> {
 
     artists.sort( (a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()) );//sort artists
 
-    for(int i = 0; i < artists.length; i++)
-    {
-      print('\t'+artists[i].name);
-      for(int j = 0; j < artists[i].albums.length; j++)
-      {
-        print('\t\t'+artists[i].albums[j].name);
-        for(int k = 0; k < artists[i].albums[j].songs.length; k++)
-        {
-          print('\t\t\t'+artists[i].albums[j].songs[k].name);
-        }
-      }
-    }
-
     ArtistsPageProvider.of(context).artists = artists;
-
+    // _ftr.then((f)=>ArtistsPageProvider.of(context).artists = artists);
     
 
     return FutureBuilder(
