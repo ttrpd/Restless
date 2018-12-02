@@ -17,12 +17,12 @@ class NeighborPageState extends State<NeighborPage> {
   {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.black,
+        backgroundColor: Theme.of(context).primaryColor,
         title: RichText(
           text: TextSpan(
             text: 'Neighbors',
             style: TextStyle(
-              color: Colors.white,
+              color: Theme.of(context).accentColor,
               fontSize: 24.0,
               fontWeight: FontWeight.bold,
             ),
@@ -30,7 +30,7 @@ class NeighborPageState extends State<NeighborPage> {
         ),
       ),
       body: Container(
-        color: Colors.black,
+        color: Theme.of(context).primaryColor,
         child: GridView.count(
           crossAxisCount: 2,
           children: <Widget>[

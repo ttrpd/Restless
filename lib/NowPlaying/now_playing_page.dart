@@ -59,7 +59,7 @@ class NowPlayingState extends State<NowPlaying> with SingleTickerProviderStateMi
       body: ScrollConfiguration(
         behavior: MyScrollBehavior(),
         child: Container(
-          color: Colors.black,
+          color: Theme.of(context).primaryColor,
           child: Stack(
             children: <Widget>[
               Column(

@@ -20,14 +20,13 @@ class _AlbumPageState extends State<AlbumPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: Theme.of(context).primaryColor,
       appBar: AppBar(
         centerTitle: true,
-        backgroundColor: Colors.black,
+        backgroundColor: Theme.of(context).primaryColor,
         leading: IconButton(
           icon: Icon(Icons.chevron_left),
           onPressed: () {
-            //TODO: navigate back to artistPage
             Navigator.of(context).pop();
           },
         ),
@@ -35,7 +34,7 @@ class _AlbumPageState extends State<AlbumPage> {
           text: TextSpan(
             text: widget.artist.name,
             style: TextStyle(
-              color: Colors.white,
+              color: Theme.of(context).accentColor,
               fontSize: 20.0,
             ),
           ),
@@ -62,7 +61,7 @@ class _AlbumPageState extends State<AlbumPage> {
                     text: TextSpan(
                       text: widget.artist.albums[index].name,
                       style: TextStyle(
-                        color: Colors.white,
+                        color: Theme.of(context).accentColor,
                         background: Paint(),
                         fontSize: 26.0,
                         fontWeight: FontWeight.bold,
@@ -75,14 +74,45 @@ class _AlbumPageState extends State<AlbumPage> {
               ],
             ),
             content: Container(
-              height: 200.0,
+              height: (index != widget.artist.albums.length-1)?58.0 * widget.artist.albums.length:(MediaQuery.of(context).size.height*0.66),
               child: ListView.builder(
                 physics: NeverScrollableScrollPhysics(),
-                itemCount: widget.artist.albums.length,
+                itemCount: widget.artist.albums[index].songs.length,
                 itemBuilder: (BuildContext context, int j) {
                   return Padding(
                     padding: const EdgeInsets.all(4.0),
-                    child: Container(color: Colors.lightBlue, height: 50.0,),
+                    child: Container(
+                      height: 50.0,
+                      color: Theme.of(context).primaryColor,
+                      child: Center(
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: <Widget>[
+                            IconButton(
+                              icon: Icon(Icons.play_arrow, color: Theme.of(context).accentColor), 
+                              onPressed: () {
+                                print(widget.artist.albums[index].songs[j].name + ' should be playing now');
+                              },
+                            ),
+                            Flexible(
+                              child: RichText(
+                                overflow: TextOverflow.ellipsis,
+                                text: TextSpan(
+                                  text: widget.artist.albums[index].songs[j].name,
+                                  style: TextStyle(
+                                    color: Theme.of(context).accentColor,
+                                    fontSize: 18.0,
+                                    fontWeight: FontWeight.bold,
+                                    letterSpacing: 2.0,
+                                    height: 1.0
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
+                    ),
                   );
                 },
               ),
@@ -90,51 +120,6 @@ class _AlbumPageState extends State<AlbumPage> {
           );
         },
       ),
-      // body: ListView.builder(
-      //   itemCount: widget.artist.albums.length,
-      //   itemBuilder: (BuildContext context, int index) {
-      //     print(widget.artist.albums[index].name);
-      //     return StickyHeader(
-      //       header: Padding(
-      //         padding: const EdgeInsets.only(top: 8.0),
-      //         child: Stack(
-      //           children: <Widget>[
-      //             Container(
-      //               width: double.maxFinite,
-      //               height: MediaQuery.of(context).size.height / 4.75,
-      //               color: Colors.black,
-      //               decoration: BoxDecoration(
-      //                 image: DecorationImage(
-      //                   image: widget.artist.albums[index].albumArt ?? AssetImage('lib/assets/default.jpg'),
-      //                   fit: BoxFit.cover,
-      //                 ),
-      //               ),
-      //             ),
-      //             Container(
-
-      //               child: Padding(
-      //                 padding: const EdgeInsets.only(top: 12.5, left: 10.0, right: 5.0, bottom: 5.0),
-      //                 child: RichText(
-      //                   text: TextSpan(
-      //                     text: widget.artist.name,
-      //                     style: TextStyle(
-      //                       color: Colors.white,
-      //                       background: Paint(),
-      //                       fontSize: 26.0,
-      //                       fontWeight: FontWeight.bold,
-      //                       letterSpacing: 2.0,
-      //                       height: 1.0
-      //                     ),
-      //                   ),
-      //                 ),
-      //               ),
-      //             ),
-      //           ],
-      //         ),
-      //       ), content: Container(color: Colors.amberAccent, height: 400.0,),
-      //     );
-      //   },
-      // ),
     );
   }
 }

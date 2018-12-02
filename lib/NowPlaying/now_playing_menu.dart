@@ -57,12 +57,12 @@ class NowPlayingMenuState extends State<NowPlayingMenu> {
 
 
     return Container(
-      color: Colors.black,
+      color: Theme.of(context).primaryColor,
       child: Container(
         width: double.maxFinite,
         height: 820.0,
         decoration: BoxDecoration(
-          color: Colors.black,
+          color: Theme.of(context).primaryColor,
             boxShadow: [
               BoxShadow(
                 color: Colors.black,
@@ -95,7 +95,7 @@ class NowPlayingMenuState extends State<NowPlayingMenu> {
                       text: TextSpan(
                         text: NowPlayingProvider.of(context).currentTime.toString().substring(NowPlayingProvider.of(context).currentTime.toString().indexOf(':')+1,NowPlayingProvider.of(context).currentTime.toString().lastIndexOf('.')),
                         style: TextStyle(
-                          color: Colors.white,
+                          color: Theme.of(context).accentColor,
                           fontSize: 18.0,
                         ),
                       ),
@@ -105,7 +105,7 @@ class NowPlayingMenuState extends State<NowPlayingMenu> {
                       text: TextSpan(
                         text: NowPlayingProvider.of(context).endTime.toString().substring(NowPlayingProvider.of(context).endTime.toString().indexOf(':')+1,NowPlayingProvider.of(context).endTime.toString().lastIndexOf('.')),
                         style: TextStyle(
-                          color: Colors.white,
+                          color: Theme.of(context).accentColor,
                           fontSize: 18.0,
                         ),
                       ),
@@ -128,7 +128,7 @@ class NowPlayingMenuState extends State<NowPlayingMenu> {
                           backgroundColor: Colors.transparent,
                           child: Icon(
                             Icons.fast_rewind,
-                            color: Colors.white,
+                            color: Theme.of(context).accentColor,
                             size: 40.0,
                           ),
                           onPressed: () {
@@ -143,10 +143,10 @@ class NowPlayingMenuState extends State<NowPlayingMenu> {
                       Container(
                         child: FloatingActionButton(
                             heroTag: 'playpause',
-                            backgroundColor: Colors.white,
+                            backgroundColor: Theme.of(context).accentColor,
                             child: Icon(
                               NowPlayingProvider.of(context).playing?Icons.pause:Icons.play_arrow,
-                              color: Colors.black,
+                              color: Theme.of(context).primaryColor,
                               size: 40.0,
                             ),
                             onPressed: () {
@@ -173,7 +173,7 @@ class NowPlayingMenuState extends State<NowPlayingMenu> {
                           backgroundColor: Colors.transparent,
                           child: Icon(
                             Icons.fast_forward,
-                            color: Colors.white,
+                            color: Theme.of(context).accentColor,
                             size: 40.0,
                           ),
                           onPressed: () {
@@ -192,8 +192,8 @@ class NowPlayingMenuState extends State<NowPlayingMenu> {
                   padding: const EdgeInsets.only(top: 40.0),
                   child: Slider(// volume slider
                     value: _volumeValue,
-                    activeColor: Colors.white,
-                    inactiveColor: Colors.white70,
+                    activeColor: Theme.of(context).accentColor,
+                    inactiveColor: Theme.of(context).primaryColorDark,
                     min: 0.0,
                     max: 200.0,
                     divisions: 200,
@@ -211,7 +211,7 @@ class NowPlayingMenuState extends State<NowPlayingMenu> {
                 Padding(
                   padding: const EdgeInsets.only(top: 40.0, left: 20.0, right: 20.0, bottom: 0.0),
                   child: Divider(
-                    color: Colors.white,
+                    color: Theme.of(context).accentColor,
                   ),
                 ),
 
@@ -230,7 +230,7 @@ class NowPlayingMenuState extends State<NowPlayingMenu> {
                               text: TextSpan(
                                 text: 'Tags',
                                 style: TextStyle(
-                                  color: Colors.white,
+                                  color: Theme.of(context).accentColor,
                                   fontSize: 24.0,
                                   fontWeight: FontWeight.bold,
                                 ),
@@ -248,52 +248,68 @@ class NowPlayingMenuState extends State<NowPlayingMenu> {
                             spacing: 3.0,
                             children: <Widget>[
                               Chip(
-                                label: Text('hello'),
+                                backgroundColor: Theme.of(context).accentColor,
+                                label: Text('hello', style: TextStyle(color: Theme.of(context).primaryColor),),
                               ),
                               Chip(
-                                label: Text('hi'),
+                                backgroundColor: Theme.of(context).accentColor,
+                                label: Text('hi', style: TextStyle(color: Theme.of(context).primaryColor),),
                               ),
                               Chip(
-                                label: Text('bonjour'),
+                                backgroundColor: Theme.of(context).accentColor,
+                                label: Text('bonjour', style: TextStyle(color: Theme.of(context).primaryColor),),
                               ),
                               Chip(
-                                label: Text('salut'),
+                                backgroundColor: Theme.of(context).accentColor,
+                                label: Text('salut', style: TextStyle(color: Theme.of(context).primaryColor),),
                               ),
                               Chip(
-                                label: Text('anyonghaseo'),
+                                backgroundColor: Theme.of(context).accentColor,
+                                label: Text('anyonghaseo', style: TextStyle(color: Theme.of(context).primaryColor),),
                               ),
                               Chip(
-                                label: Text('aurevoir'),
+                                backgroundColor: Theme.of(context).accentColor,
+                                label: Text('aurevoir', style: TextStyle(color: Theme.of(context).primaryColor),),
                               ),
                               Chip(
-                                label: Text('bye'),
+                                backgroundColor: Theme.of(context).accentColor,
+                                label: Text('bye', style: TextStyle(color: Theme.of(context).primaryColor),),
                               ),
                               Chip(
-                                label: Text('see ya'),
+                                backgroundColor: Theme.of(context).accentColor,
+                                label: Text('see ya', style: TextStyle(color: Theme.of(context).primaryColor),),
                               ),
                               Chip(
-                                label: Text('hello'),
+                                backgroundColor: Theme.of(context).accentColor,
+                                label: Text('hello', style: TextStyle(color: Theme.of(context).primaryColor),),
                               ),
                               Chip(
-                                label: Text('hi'),
+                                backgroundColor: Theme.of(context).accentColor,
+                                label: Text('hi', style: TextStyle(color: Theme.of(context).primaryColor),),
                               ),
                               Chip(
-                                label: Text('bonjour'),
+                                backgroundColor: Theme.of(context).accentColor,
+                                label: Text('bonjour', style: TextStyle(color: Theme.of(context).primaryColor),),
                               ),
                               Chip(
-                                label: Text('salut'),
+                                backgroundColor: Theme.of(context).accentColor,
+                                label: Text('salut', style: TextStyle(color: Theme.of(context).primaryColor),),
                               ),
                               Chip(
-                                label: Text('anyonghaseo'),
+                                backgroundColor: Theme.of(context).accentColor,
+                                label: Text('anyonghaseo', style: TextStyle(color: Theme.of(context).primaryColor),),
                               ),
                               Chip(
-                                label: Text('aurevoir'),
+                                backgroundColor: Theme.of(context).accentColor,
+                                label: Text('aurevoir', style: TextStyle(color: Theme.of(context).primaryColor),),
                               ),
                               Chip(
-                                label: Text('bye'),
+                                backgroundColor: Theme.of(context).accentColor,
+                                label: Text('bye', style: TextStyle(color: Theme.of(context).primaryColor),),
                               ),
                               Chip(
-                                label: Text('see ya'),
+                                backgroundColor: Theme.of(context).accentColor,
+                                label: Text('see ya', style: TextStyle(color: Theme.of(context).primaryColor),),
                               ),
                             ],
                           ),
@@ -317,7 +333,7 @@ class NowPlayingMenuState extends State<NowPlayingMenu> {
                             text: TextSpan(
                               text: 'Neighbors',
                               style: TextStyle(
-                                color: Colors.white,
+                                color: Theme.of(context).accentColor,
                                 fontSize: 24.0,
                                 fontWeight: FontWeight.bold,
                               ),
@@ -341,7 +357,7 @@ class NowPlayingMenuState extends State<NowPlayingMenu> {
                             text: TextSpan(
                               text: 'Sort',
                               style: TextStyle(
-                                color: Colors.white,
+                                color: Theme.of(context).accentColor,
                                 fontSize: 24.0,
                                 fontWeight: FontWeight.bold,
                               ),
@@ -466,6 +482,9 @@ class SeekBarState extends State<SeekBar> {
             progressPercent: _seeking?_seekProgressPercent:widget.trackProgressPercent,
             thumbWidth: _thumbWidth,
             thumbHeight: _thumbHeight,
+            progressColor: Theme.of(context).accentColor,
+            trackColor: Theme.of(context).primaryColorDark,
+            thumbColor: Theme.of(context).accentColor,
           )
       ),
     );

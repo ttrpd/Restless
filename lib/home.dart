@@ -1,4 +1,3 @@
-import 'dart:collection';
 import 'dart:core';
 import 'dart:io';
 import 'dart:typed_data';
@@ -8,7 +7,6 @@ import 'package:dart_tags/dart_tags.dart';
 import 'package:flutter/material.dart';
 import 'package:restless/artist_data.dart';
 import 'package:restless/Artists/artist_page.dart';
-import 'package:restless/my_scroll_behavior.dart';
 import 'package:restless/NowPlaying/now_playing_page.dart';
 import 'package:restless/Artists/artists_page_provider.dart';
 
@@ -25,78 +23,80 @@ class Home extends StatefulWidget
 
 class HomeState extends State<Home> {
 
-
-
-  List<ArtistData> artists = List<ArtistData>();
-  String _musicDirectoryPath = '/storage/emulated/0/Music/TestMusic';
-  String _path = '/storage/emulated/0/Music/TestMusic/Carousel Casualties/Madison/Bright Red Lights.mp3';
+  List<ArtistData> artists = new List<ArtistData>();
+  String _musicDirectoryPath = '/storage/emulated/0/Music';//'/storage/emulated/0/Music/TestMusic';
+  String _path = '/storage/emulated/0/Music/Carousel Casualties/Madison/Bright Red Lights.mp3';
   double artistsListOffset = 0.0;
   Future _ftr;
 
-  Future _getArtistsInfo(String directoryPath) async
+  Future _getMusicData(String directoryPath) async 
   {
-    for( Directory artist in Directory(directoryPath).listSync() )
+    List<FileSystemEntity> dirs = Directory(directoryPath).listSync();
+    dirs.removeWhere((fse)=>fse==null);
+    for(FileSystemEntity entity in dirs)
     {
-      String artistName = artist.path.substring(artist.path.lastIndexOf('/')+1);
-      artists.add(ArtistData(name: artistName, albums: [AlbumData(name: '')]));
-      for( var album in artist.listSync())
+      if(entity == null)
       {
-        print('adding ' + album.path.substring(album.path.lastIndexOf('/')+1, album.path.length));
-        for( var file in Directory(album.path).listSync())
+        print('Entity was null');
+        break;
+      }
+      else if(entity is Directory)
+      {
+        _getMusicData(entity.path);// recurse
+      }
+      else
+      {
+        if(entity.path.contains('.mp3'))
         {
-          if(file.path.contains('.mp3')) {
-            await _getAlbumInfo(artistName, file.path);
-            break;
+          TagProcessor tp = TagProcessor();
+          // File f = File(entity.path);
+          var img = await tp.getTagsFromByteArray(File(entity.path).readAsBytes());
+          // print(img.toString());
+          // print(img.last.tags);
+          if(img.last.tags != null && img.last.tags['APIC'] != null)
+          {
+            // print('trying to add'+img.last.tags['album']+' by '+img.last.tags['artist']);
+            ImageProvider albumArt;
+            albumArt = Image.memory(Uint8List.fromList(img.last.tags['APIC'].imageData)).image;
+
+            TrackData track = TrackData(name: img.last.tags['title'].trim(), path: entity.path);
+            AlbumData album = AlbumData(name: (img.last.tags['album']!=null)?img.last.tags['album'].trim():'ImAnAlbUM', albumArt: albumArt, songs: [track],);
+            ArtistData artist = ArtistData(name: img.last.tags['artist'].trim(),albums: [album],);
+
+            if(artists.firstWhere( (a) => a.name.toUpperCase().trim() == img.last.tags['artist'].toString().toUpperCase().trim(), orElse: ()=>null) == null)
+            {
+              artists.add(artist);
+            }
+            
+            if(artists.firstWhere( (a) => a.name.toUpperCase().trim() == img.last.tags['artist'].toString().toUpperCase().trim(), orElse: ()=>null)
+              .albums.firstWhere( (al) => al.name.toUpperCase().trim() == img.last.tags['album'].toString().toUpperCase().trim(), orElse: ()=>null) == null)
+            {
+              artists.firstWhere( (a) => a.name.toUpperCase().trim() == img.last.tags['artist'].toString().toUpperCase().trim(), orElse: ()=>null)
+              .albums.add(album);
+            }
+
+            if(artists.firstWhere( (a) => a.name.toUpperCase().trim() == img.last.tags['artist'].toString().toUpperCase().trim(), orElse: ()=>null)
+              .albums.firstWhere( (al) => al.name.toUpperCase().trim() == img.last.tags['album'].toString().toUpperCase().trim(), orElse: ()=>null)
+              .songs.firstWhere( (s) => s.name.toUpperCase().trim() == img.last.tags['track'].toString().toUpperCase().trim(), orElse: ()=>null) == null)
+            {
+              artists.firstWhere( (a) => a.name.toUpperCase().trim() == img.last.tags['artist'].toString().toUpperCase().trim(), orElse: ()=>null)
+              .albums.firstWhere( (al) => al.name.toUpperCase().trim() == img.last.tags['album'].toString().toUpperCase().trim(), orElse:()=>null)
+              .songs.add(track);
+            }
           }
+          
+          // return Future.delayed(Duration(milliseconds: 1));
         }
       }
     }
   }
 
-  Future _getAlbumInfo(String artist, String path) async
-  {
-    TagProcessor tp = TagProcessor();
-    File f = File(path);
-    var img = await tp.getTagsFromByteArray(f.readAsBytes());
-
-    if(img.last.tags['APIC'] == null)
-    {
-      print('Problems with: ' + artist);
-      print('::: ' + path.toString());
-      return;
-    }
-
-    artists.singleWhere( (a) => a.name == artist).albums.removeWhere( (a) => a.name == '' );
-
-    ImageProvider albumArt;
-    albumArt = Image.memory(Uint8List.fromList(img.last.tags['APIC'].imageData)).image;
-
-    if(artists.singleWhere( (a) => a.name == artist).albums == null)
-      artists.singleWhere( (a) => a.name == artist).albums = [
-        AlbumData(
-          name: path.split('/')[path.split('/').length-2],
-          albumArt: albumArt,
-        )
-      ];
-    else
-      artists.singleWhere( (a) => a.name == artist).albums.add(
-          AlbumData(
-            name: path.split('/')[path.split('/').length-2],
-            albumArt: albumArt,
-          )
-      );
-
-    print('added ' + path.split('/')[path.split('/').length-3]);
-
-  }
 
   @override
   void initState() {
     super.initState();
-    artists = List<ArtistData>();
-    _ftr = _getArtistsInfo(_musicDirectoryPath);
-    print('Initialized');
-    
+    _ftr = _getMusicData(_musicDirectoryPath);
+    print('Initialized');   
   }
 
   AudioPlayer audioPlayer = new AudioPlayer();
@@ -109,19 +109,18 @@ class HomeState extends State<Home> {
 
     artists.sort( (a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()) );//sort artists
 
-    for(int i = 0; i < artists.length ; i++)
-    {
-      artists[i].albums.sort( (a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));// sort albums
-    }
-
     ArtistsPageProvider.of(context).artists = artists;
-
-    print('building home');
+    // _ftr.then((f)=>ArtistsPageProvider.of(context).artists = artists);
+    
 
     return FutureBuilder(
       future: _ftr,
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         print('building future');
+        for(int i = 0; i < artists.length ;i++)
+        {
+          artists[i].albums.sort( (a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));// sort albums
+        }
         return PageView(
           pageSnapping: true,
           physics: BouncingScrollPhysics(),

@@ -24,26 +24,24 @@ class ArtistSliverState extends State<ArtistSliver> {
   @override
   Widget build(BuildContext context)
   {
-    return GestureDetector(
-      onTap: () {
-        //TODO: implement navigation
-        print(widget.artist);
-        Navigator.of(context, rootNavigator: true).push(
-          CupertinoPageRoute<void>(
-            builder: (BuildContext context) => AlbumPage(artist: widget.artist,),
-          ),
-        );
-        // Navigator.of(context).pushNamed('/albums_page');
-        print(widget.artist.name + ' was pressed');
-      },
-      child: Padding(
-        padding: const EdgeInsets.only(top: 8.0),
+    return Padding(
+      padding: const EdgeInsets.only(left: 0.0, right: 0.0, top: 6.0, bottom: 6.0),
+      child: GestureDetector(
+        onTap: () {
+          print(widget.artist);
+          Navigator.of(context, rootNavigator: true).push(
+            CupertinoPageRoute<void>(
+              builder: (BuildContext context) => AlbumPage(artist: widget.artist,),
+            ),
+          );
+          print(widget.artist.name + ' was pressed');
+        },
         child: Stack(
           children: <Widget>[
             Container(
               width: double.maxFinite,
               height: MediaQuery.of(context).size.height / 4.75,
-              color: Colors.black,
+              color: Theme.of(context).primaryColor,
               child: Stack(
                 children: _buildAlbumArtStack(context),
               ),
@@ -56,8 +54,8 @@ class ArtistSliverState extends State<ArtistSliver> {
                   text: TextSpan(
                     text: widget.artist.name,
                     style: TextStyle(
-                      color: Colors.white,
-                      background: Paint(),
+                      color: Theme.of(context).accentColor,
+                      background: Paint()..color = Theme.of(context).primaryColor,
                       fontSize: 26.0,
                       fontWeight: FontWeight.bold,
                       letterSpacing: 2.0,

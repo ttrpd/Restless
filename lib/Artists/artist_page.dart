@@ -47,37 +47,14 @@ class ArtistPageState extends State<ArtistPage> {
     }
 
     return Scaffold(
-      appBar: AppBar(
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.sort_by_alpha),
-            onPressed: () {
-              print(opacityValue);
-              setState(() {
-                opacityValue = (opacityValue > 0.0)?0.0:1.0;
-              });
-            },
-          ),
-        ],
-        backgroundColor: Colors.black,
-        title: RichText(
-          text: TextSpan(
-            text: 'Artists',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 20.0,
-            ),
-          ),
-        ),
-        centerTitle: true,
-
-      ),
+      
       body: Stack(
+        alignment: Alignment.bottomRight,
         children: <Widget>[
           ScrollConfiguration(
             behavior: MyScrollBehavior(),
             child: Container(
-              color: Colors.black,
+              color: Theme.of(context).primaryColor,
 
               child: NotificationListener(
                 child: ListView.builder(
@@ -102,10 +79,24 @@ class ArtistPageState extends State<ArtistPage> {
               _scrl.jumpTo(// *
                   ArtistsPageProvider.of(context).artists.indexOf(
                       ArtistsPageProvider.of(context).artists.where((a) => a.name.trim().toUpperCase()[0] == l).first
-                  ) * ((MediaQuery.of(context).size.height / 4.75)+8.0)
+                  ) * ((MediaQuery.of(context).size.height / 4.0))
               );
               opacityValue = 0.0;
             },
+          ),
+          Padding(
+            padding: const EdgeInsets.only(right: 10.0, bottom: 24.0),
+            child: FloatingActionButton(
+              backgroundColor: Theme.of(context).primaryColor,
+              foregroundColor: Theme.of(context).accentColor,
+              child: Icon(Icons.sort_by_alpha),
+              onPressed: () {
+                print(opacityValue);
+                setState(() {
+                  opacityValue = (opacityValue > 0.0)?0.0:1.0;
+                });
+              },
+            ),
           ),
         ],
       ),
