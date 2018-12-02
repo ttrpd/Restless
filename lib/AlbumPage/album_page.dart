@@ -27,7 +27,6 @@ class _AlbumPageState extends State<AlbumPage> {
         leading: IconButton(
           icon: Icon(Icons.chevron_left),
           onPressed: () {
-            //TODO: navigate back to artistPage
             Navigator.of(context).pop();
           },
         ),
@@ -121,51 +120,6 @@ class _AlbumPageState extends State<AlbumPage> {
           );
         },
       ),
-      // body: ListView.builder(
-      //   itemCount: widget.artist.albums.length,
-      //   itemBuilder: (BuildContext context, int index) {
-      //     print(widget.artist.albums[index].name);
-      //     return StickyHeader(
-      //       header: Padding(
-      //         padding: const EdgeInsets.only(top: 8.0),
-      //         child: Stack(
-      //           children: <Widget>[
-      //             Container(
-      //               width: double.maxFinite,
-      //               height: MediaQuery.of(context).size.height / 4.75,
-      //               color: Theme.of(context).primaryColor,
-      //               decoration: BoxDecoration(
-      //                 image: DecorationImage(
-      //                   image: widget.artist.albums[index].albumArt ?? AssetImage('lib/assets/default.jpg'),
-      //                   fit: BoxFit.cover,
-      //                 ),
-      //               ),
-      //             ),
-      //             Container(
-
-      //               child: Padding(
-      //                 padding: const EdgeInsets.only(top: 12.5, left: 10.0, right: 5.0, bottom: 5.0),
-      //                 child: RichText(
-      //                   text: TextSpan(
-      //                     text: widget.artist.name,
-      //                     style: TextStyle(
-      //                       color: Theme.of(context).accentColor,
-      //                       background: Paint(),
-      //                       fontSize: 26.0,
-      //                       fontWeight: FontWeight.bold,
-      //                       letterSpacing: 2.0,
-      //                       height: 1.0
-      //                     ),
-      //                   ),
-      //                 ),
-      //               ),
-      //             ),
-      //           ],
-      //         ),
-      //       ), content: Container(color: Colors.amberAccent, height: 400.0,),
-      //     );
-      //   },
-      // ),
     );
   }
 }

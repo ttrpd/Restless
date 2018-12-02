@@ -79,7 +79,7 @@ class ArtistPageState extends State<ArtistPage> {
               _scrl.jumpTo(// *
                   ArtistsPageProvider.of(context).artists.indexOf(
                       ArtistsPageProvider.of(context).artists.where((a) => a.name.trim().toUpperCase()[0] == l).first
-                  ) * ((MediaQuery.of(context).size.height / 4.75)+8.0)
+                  ) * ((MediaQuery.of(context).size.height / 4.0))
               );
               opacityValue = 0.0;
             },
