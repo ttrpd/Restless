@@ -59,9 +59,7 @@ class HomeState extends State<Home> {
             ImageProvider albumArt;
             albumArt = Image.memory(Uint8List.fromList(img.last.tags['APIC'].imageData)).image;
 
-            if(img.last.tags == null)
-              print('It was null!');
-
+            print(img.last.tags);
             TrackData track = TrackData(name: img.last.tags['title'].trim(), path: entity.path, tags: img.last.tags);
             AlbumData album = AlbumData(name: (img.last.tags['album']!=null)?img.last.tags['album'].trim():'ImAnAlbUM', albumArt: albumArt, songs: [track],);
             ArtistData artist = ArtistData(name: img.last.tags['artist'].trim(),albums: [album],);

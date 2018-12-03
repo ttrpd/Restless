@@ -79,22 +79,18 @@ class AlbumSongsPage extends StatelessWidget {
                 alignment: Alignment.center,
                 child: Padding(
                   padding: const EdgeInsets.only(top: 70.0, bottom: 50.0),
-                  child: Container(
-                    height: 30.0,
-                    color: Theme.of(context).primaryColor,
-                    child: RichText(
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 1,
-                      text: TextSpan(
-                        text: widget.artist.albums[index].name,
-                        style: TextStyle(
-                          color: Theme.of(context).accentColor,
-                          background: Paint()..color = Theme.of(context).primaryColor,
-                          fontSize: 26.0,
-                          fontWeight: FontWeight.bold,
-                          letterSpacing: 2.0,
-                          height: 1.0
-                        ),
+                  child: RichText(
+                    textAlign: TextAlign.center,
+                    maxLines: 3,
+                    text: TextSpan(
+                      text: widget.artist.albums[index].name,
+                      style: TextStyle(
+                        color: Theme.of(context).accentColor,
+                        background: Paint()..color = Theme.of(context).primaryColor,
+                        fontSize: 26.0,
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 2.0,
+                        height: 1.0
                       ),
                     ),
                   ),
