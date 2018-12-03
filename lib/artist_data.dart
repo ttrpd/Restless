@@ -30,7 +30,7 @@ class TrackData
 {
   String name;
   String path;
-  List<String> tags = new List<String>();
+  Map<String, Object> tags = Map<String, Object>();
 
   TrackData({
     @required this.path,

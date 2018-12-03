@@ -59,7 +59,10 @@ class HomeState extends State<Home> {
             ImageProvider albumArt;
             albumArt = Image.memory(Uint8List.fromList(img.last.tags['APIC'].imageData)).image;
 
-            TrackData track = TrackData(name: img.last.tags['title'].trim(), path: entity.path);
+            if(img.last.tags == null)
+              print('It was null!');
+
+            TrackData track = TrackData(name: img.last.tags['title'].trim(), path: entity.path, tags: img.last.tags);
             AlbumData album = AlbumData(name: (img.last.tags['album']!=null)?img.last.tags['album'].trim():'ImAnAlbUM', albumArt: albumArt, songs: [track],);
             ArtistData artist = ArtistData(name: img.last.tags['artist'].trim(),albums: [album],);
 
@@ -120,6 +123,10 @@ class HomeState extends State<Home> {
         for(int i = 0; i < artists.length ;i++)
         {
           artists[i].albums.sort( (a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));// sort albums
+          for(int j = 0; j < artists[i].albums.length; j++)
+          {
+            artists[i].albums[j].songs.sort( (a, b) => a.tags['track'].toString().compareTo(b.tags['track'].toString()));
+          }
         }
         return PageView(
           pageSnapping: true,
