@@ -53,7 +53,7 @@ class TrackInfoAreaState extends State<TrackInfoArea> {
                       alignment: Alignment.topLeft,
                       child: RichText(
                         text: TextSpan(
-                          text: widget.name ?? widget.path.substring(widget.path.lastIndexOf('/')+1, widget.path.lastIndexOf('.')),
+                          text: widget.name, //?? widget.path.substring(widget.path.lastIndexOf('/')+1, widget.path.lastIndexOf('.')),
                           style: TextStyle(
                             color: Theme.of(context).accentColor,
                             background: Paint()..color = Theme.of(context).primaryColor,

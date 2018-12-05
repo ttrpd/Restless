@@ -5,6 +5,7 @@ import 'dart:typed_data';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:dart_tags/dart_tags.dart';
 import 'package:flutter/material.dart';
+import 'package:restless/NowPlaying/now_playing_provider.dart';
 import 'package:restless/artist_data.dart';
 import 'package:restless/Artists/artist_page.dart';
 import 'package:restless/NowPlaying/now_playing_page.dart';
@@ -24,8 +25,8 @@ class Home extends StatefulWidget
 class HomeState extends State<Home> {
 
   List<ArtistData> artists = new List<ArtistData>();
-  String _musicDirectoryPath = '/storage/emulated/0/Music';//'/storage/emulated/0/Music/TestMusic';
-  String _path = '/storage/emulated/0/Music/Carousel Casualties/Madison/Bright Red Lights.mp3';
+  String _musicDirectoryPath = '/storage/emulated/0/Music/TestMusic';//'/storage/emulated/0/Music/TestMusic';
+  String _path = '/storage/emulated/0/Music/TestMusic/Carousel Casualties/Madison/Bright Red Lights.mp3';
   double artistsListOffset = 0.0;
   Future _ftr;
 
@@ -60,9 +61,16 @@ class HomeState extends State<Home> {
             albumArt = Image.memory(Uint8List.fromList(img.last.tags['APIC'].imageData)).image;
 
             print(img.last.tags);
-            TrackData track = TrackData(name: img.last.tags['title'].trim(), path: entity.path, tags: img.last.tags);
-            AlbumData album = AlbumData(name: (img.last.tags['album']!=null)?img.last.tags['album'].trim():'ImAnAlbUM', albumArt: albumArt, songs: [track],);
-            ArtistData artist = ArtistData(name: img.last.tags['artist'].trim(),albums: [album],);
+            TrackData track = TrackData(
+              name: img.last.tags['title'].trim(), 
+              path: entity.path, 
+              tags: img.last.tags,
+              artistName: img.last.tags['artist'].trim(),
+              albumName: img.last.tags['album'].trim(), 
+              albumArt: albumArt
+            );
+            AlbumData album = AlbumData(name: track.albumName, albumArt: albumArt, songs: [track],);
+            ArtistData artist = ArtistData(name: track.artistName,albums: [album],);
 
             if(artists.firstWhere( (a) => a.name.toUpperCase().trim() == img.last.tags['artist'].toString().toUpperCase().trim(), orElse: ()=>null) == null)
             {
@@ -97,16 +105,17 @@ class HomeState extends State<Home> {
   void initState() {
     super.initState();
     _ftr = _getMusicData(_musicDirectoryPath);
-    print('Initialized');   
+    
+    print('Initialized'); 
   }
 
-  AudioPlayer audioPlayer = new AudioPlayer();
+
+
   @override
   Widget build(BuildContext context)
   {
-    
-    audioPlayer.setUrl(_path, isLocal: true);
-    audioPlayer.setReleaseMode(ReleaseMode.STOP);
+    // NowPlayingProvider.of(context).audioPlayer.setUrl(_path, isLocal: true);
+    NowPlayingProvider.of(context).audioPlayer.setReleaseMode(ReleaseMode.STOP);
 
     artists.sort( (a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()) );//sort artists
 
@@ -135,7 +144,7 @@ class HomeState extends State<Home> {
               getOffset: () => artistsListOffset,
               setOffset: (offset) => artistsListOffset = offset,
             ),
-            NowPlaying(audioPlayer: audioPlayer, path: _path,),
+            NowPlaying(audioPlayer: NowPlayingProvider.of(context).audioPlayer,),
           ],
         );
       },

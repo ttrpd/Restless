@@ -1,20 +1,15 @@
-import 'dart:io';
-import 'dart:math';
-import 'dart:typed_data';
 import 'dart:ui';
 
-import 'package:dart_tags/dart_tags.dart';
 import 'package:flutter/material.dart';
 
 class AlbumArtArea extends StatefulWidget {
 
   double blurValue;
   ImageProvider img;
-//  Future<List<Tag>> img;//make this the future with all the track data
+  
   AlbumArtArea({
     Key key,
     @required this.blurValue,
-//    @required this.img,
     @required this.img,
   }) : super(key: key);
 

@@ -29,6 +29,11 @@ class NowPlayingMenuState extends State<NowPlayingMenu> {
 
   double _volumeValue;
 
+
+  @override
+  void initState() {
+    super.initState();
+  }
   @override
   Widget build(BuildContext context)
   {
@@ -47,13 +52,13 @@ class NowPlayingMenuState extends State<NowPlayingMenu> {
       });
       NowPlayingProvider.of(context).trackProgressPercent = NowPlayingProvider.of(context).currentTime.inMilliseconds / NowPlayingProvider.of(context).endTime.inMilliseconds;
     };
-
     widget.audioPlayer.completionHandler = () {
       setState(() {
         NowPlayingProvider.of(context).trackProgressPercent = 1.0;
         NowPlayingProvider.of(context).playing = false;
       });
     };
+    
 
 
     return Container(
