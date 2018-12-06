@@ -44,7 +44,7 @@ class TrackInfoAreaState extends State<TrackInfoArea> {
           child: Container(
             width: double.maxFinite,
             child: Padding(
-              padding: const EdgeInsets.only(top: 20.0, left: 20.0, bottom: 5.0, right: 20.0),
+              padding: const EdgeInsets.only(top: 70.0, left: 20.0, bottom: 5.0, right: 20.0),
               child: Align(
                 alignment: Alignment.topLeft,
                 child: Column(
@@ -52,6 +52,7 @@ class TrackInfoAreaState extends State<TrackInfoArea> {
                     Align(
                       alignment: Alignment.topLeft,
                       child: RichText(
+                        maxLines: 2,
                         text: TextSpan(
                           text: widget.name, //?? widget.path.substring(widget.path.lastIndexOf('/')+1, widget.path.lastIndexOf('.')),
                           style: TextStyle(
@@ -60,7 +61,27 @@ class TrackInfoAreaState extends State<TrackInfoArea> {
                             fontSize: 32.0,
                             fontWeight: FontWeight.bold,
                             letterSpacing: 2.0,
-                            height: 3.0
+                            height: 1.0,
+                          ),
+                        ),
+                      ),
+                    ),
+                    Align(
+                      alignment: Alignment.topLeft,
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 20.0),
+                        child: RichText(
+                          maxLines: 2,
+                          text: TextSpan(
+                            text: widget.album ?? '(Album)',
+                            style: TextStyle(
+                              color: Theme.of(context).accentColor,
+                              background: Paint()..color = Theme.of(context).primaryColor,
+                              fontSize: 20.0,
+                              fontWeight: FontWeight.normal,
+                              letterSpacing: 4.0,
+                              height: 1.0
+                            ),
                           ),
                         ),
                       ),
@@ -68,22 +89,7 @@ class TrackInfoAreaState extends State<TrackInfoArea> {
                     Align(
                       alignment: Alignment.topLeft,
                       child: RichText(
-                        text: TextSpan(
-                          text: widget.album ?? '(Album)',
-                          style: TextStyle(
-                            color: Theme.of(context).accentColor,
-                            background: Paint()..color = Theme.of(context).primaryColor,
-                            fontSize: 20.0,
-                            fontWeight: FontWeight.normal,
-                            letterSpacing: 4.0,
-                            height: 1.0
-                          ),
-                        ),
-                      ),
-                    ),
-                    Align(
-                      alignment: Alignment.topLeft,
-                      child: RichText(
+                        maxLines: 2,
                         text: TextSpan(
                           text: widget.artist ?? '(Artist)',
                           style: TextStyle(

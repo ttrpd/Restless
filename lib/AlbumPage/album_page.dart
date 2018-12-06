@@ -57,6 +57,7 @@ class _AlbumPageState extends State<AlbumPage> {
             ),
           ),
           PageView.builder(
+            physics: BouncingScrollPhysics(),
             itemCount: widget.artist.albums.length,
             onPageChanged: (index) {
               setState(() {
@@ -94,6 +95,7 @@ class AlbumSongsPageState extends State<AlbumSongsPage> {
   @override
   Widget build(BuildContext context) {
     return ListView(
+      physics: BouncingScrollPhysics(),
       children: <Widget>[
         Padding(
           padding: const EdgeInsets.only(left: 40.0, right: 40.0),
@@ -139,18 +141,33 @@ class AlbumSongsPageState extends State<AlbumSongsPage> {
                         children: <Widget>[
                           IconButton(
                             iconSize: 18,
-                            icon: Icon(Icons.play_arrow, color: Theme.of(context).accentColor), 
+                            icon: Icon((NowPlayingProvider.of(context).playing && NowPlayingProvider.of(context).track.name == widget.widget.artist.albums[widget.index].songs[j].name)?Icons.pause:Icons.play_arrow, color: Theme.of(context).accentColor), 
                             onPressed: () {
                               setState(() {
-                                NowPlayingProvider.of(context).playing = false;
-                                NowPlayingProvider.of(context).audioPlayer.setUrl(
-                                  widget.widget.artist.albums[widget.index].songs[j].path
-                                );
-                                NowPlayingProvider.of(context).track = widget.widget.artist.albums[widget.index].songs[j];
-                                NowPlayingProvider.of(context).audioPlayer.play(
-                                  widget.widget.artist.albums[widget.index].songs[j].path
-                                );
-                                NowPlayingProvider.of(context).playing = true;                      
+                                if(NowPlayingProvider.of(context).track == widget.widget.artist.albums[widget.index].songs[j])
+                                {
+                                  if(NowPlayingProvider.of(context).playing) {
+                                    NowPlayingProvider.of(context).audioPlayer.pause();
+                                  }
+                                  else {
+                                    NowPlayingProvider.of(context).audioPlayer.resume();
+                                  }
+                                  setState(() {
+                                    NowPlayingProvider.of(context).playing = !NowPlayingProvider.of(context).playing;
+                                  });
+                                }
+                                else
+                                {
+                                  NowPlayingProvider.of(context).playing = false;
+                                  NowPlayingProvider.of(context).audioPlayer.setUrl(
+                                    widget.widget.artist.albums[widget.index].songs[j].path
+                                  );
+                                  NowPlayingProvider.of(context).track = widget.widget.artist.albums[widget.index].songs[j];
+                                  NowPlayingProvider.of(context).audioPlayer.play(
+                                    widget.widget.artist.albums[widget.index].songs[j].path
+                                  );
+                                  NowPlayingProvider.of(context).playing = true;
+                                }
                               });
                             },
                           ),

@@ -25,8 +25,8 @@ class Home extends StatefulWidget
 class HomeState extends State<Home> {
 
   List<ArtistData> artists = new List<ArtistData>();
-  String _musicDirectoryPath = '/storage/emulated/0/Music/TestMusic';//'/storage/emulated/0/Music/TestMusic';
-  String _path = '/storage/emulated/0/Music/TestMusic/Carousel Casualties/Madison/Bright Red Lights.mp3';
+  String _musicDirectoryPath = '/storage/emulated/0/Music';//'/storage/emulated/0/Music/TestMusic';
+  String _path = '/storage/emulated/0/Music/Carousel Casualties/Madison/Bright Red Lights.mp3';
   double artistsListOffset = 0.0;
   Future _ftr;
 
