@@ -1,3 +1,4 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 
 import 'package:restless/home.dart';
@@ -21,6 +22,7 @@ class App extends StatelessWidget
         currentTime: Duration(milliseconds: 1),
         endTime: Duration(milliseconds: 1),
         trackProgressPercent: 0.0,
+        audioPlayer: AudioPlayer(),
         child: MaterialApp(
           theme: ThemeData(
             primaryColor: Color.fromARGB(255, 25, 25, 25),

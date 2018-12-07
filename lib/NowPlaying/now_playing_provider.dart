@@ -1,4 +1,6 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
+import 'package:restless/artist_data.dart';
 
 class NowPlayingProvider extends InheritedWidget
 {
@@ -9,9 +11,9 @@ class NowPlayingProvider extends InheritedWidget
   Duration endTime;
   double trackProgressPercent = 0.0;
   ImageProvider albumArt;
-  String artist;
-  String album;
-  String track;
+  TrackData track;
+  AudioPlayer audioPlayer = new AudioPlayer();
+
 
   NowPlayingProvider({
     Key key,
@@ -21,11 +23,9 @@ class NowPlayingProvider extends InheritedWidget
     this.endTime,
     this.currentTime,
     this.trackProgressPercent,
-    this.albumArt,
-    this.artist,
-    this.album,
     this.track,
     this.volumeValue,
+    this.audioPlayer,
   }) : super(key: key, child: child);
 
   @override

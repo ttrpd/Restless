@@ -24,54 +24,57 @@ class ArtistSliverState extends State<ArtistSliver> {
   @override
   Widget build(BuildContext context)
   {
-    return Padding(
-      padding: const EdgeInsets.only(left: 0.0, right: 0.0, top: 6.0, bottom: 6.0),
-      child: GestureDetector(
-        onTap: () {
-          print(widget.artist);
-          Navigator.of(context, rootNavigator: true).push(
-            CupertinoPageRoute<void>(
-              builder: (BuildContext context) => AlbumPage(artist: widget.artist,),
-            ),
-          );
-          print(widget.artist.name + ' was pressed');
-        },
-        child: Stack(
-          children: <Widget>[
-            Container(
-              width: double.maxFinite,
-              height: MediaQuery.of(context).size.height / 4.75,
-              color: Theme.of(context).primaryColor,
-              child: Stack(
-                children: _buildAlbumArtStack(context),
+    return Container(
+      height: MediaQuery.of(context).size.height / 4.75,
+      child: Padding(
+        padding: const EdgeInsets.only(left: 0.0, right: 0.0, top: 6.0, bottom: 6.0),
+        child: GestureDetector(
+          onTap: () {
+            print(widget.artist);
+            Navigator.of(context, rootNavigator: true).push(
+              CupertinoPageRoute<void>(
+                builder: (BuildContext context) => AlbumPage(artist: widget.artist,),
               ),
-            ),
-            Container(
+            );
+            print(widget.artist.name + ' was pressed');
+          },
+          child: Stack(
+            children: <Widget>[
+              Container(
+                width: double.maxFinite,
+                // height: MediaQuery.of(context).size.height / 2.0,
+                color: Theme.of(context).primaryColor,
+                child: Stack(
+                  children: _buildAlbumArtStack(context, MediaQuery.of(context).size.height),
+                ),
+              ),
+              Container(
 
-              child: Padding(
-                padding: const EdgeInsets.only(top: 12.5, left: 10.0, right: 5.0, bottom: 5.0),
-                child: RichText(
-                  text: TextSpan(
-                    text: widget.artist.name,
-                    style: TextStyle(
-                      color: Theme.of(context).accentColor,
-                      background: Paint()..color = Theme.of(context).primaryColor,
-                      fontSize: 26.0,
-                      fontWeight: FontWeight.bold,
-                      letterSpacing: 2.0,
-                      height: 1.0
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 12.5, left: 10.0, right: 5.0, bottom: 5.0),
+                  child: RichText(
+                    text: TextSpan(
+                      text: widget.artist.name,
+                      style: TextStyle(
+                        color: Theme.of(context).accentColor,
+                        background: Paint()..color = Theme.of(context).primaryColor,
+                        fontSize: 26.0,
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 2.0,
+                        height: 1.0
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
   }
 
-  List<Widget> _buildAlbumArtStack(BuildContext context)
+  List<Widget> _buildAlbumArtStack(BuildContext context, double height)
   {
     List<Widget> artStack = List<Widget>();
     if(widget.artist.albums == null)
@@ -80,7 +83,7 @@ class ArtistSliverState extends State<ArtistSliver> {
     artStack.add(
         Container(
           width: MediaQuery.of(context).size.width,
-          height: 150.0,
+          height: height,
           decoration: BoxDecoration(
               image: DecorationImage(
                 image: widget.artist.albums[0].albumArt ?? AssetImage('lib/assets/default.jpg'),
@@ -100,7 +103,7 @@ class ArtistSliverState extends State<ArtistSliver> {
           ),
           child: Container(
             width: MediaQuery.of(context).size.width,
-            height: 150.0,
+            height: height,
             decoration: BoxDecoration(
               image: DecorationImage(
                 image: widget.artist.albums[i].albumArt ?? AssetImage('lib/assets/art8.jpg'),

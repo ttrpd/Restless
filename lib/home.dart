@@ -5,6 +5,7 @@ import 'dart:typed_data';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:dart_tags/dart_tags.dart';
 import 'package:flutter/material.dart';
+import 'package:restless/NowPlaying/now_playing_provider.dart';
 import 'package:restless/artist_data.dart';
 import 'package:restless/Artists/artist_page.dart';
 import 'package:restless/NowPlaying/now_playing_page.dart';
@@ -59,9 +60,17 @@ class HomeState extends State<Home> {
             ImageProvider albumArt;
             albumArt = Image.memory(Uint8List.fromList(img.last.tags['APIC'].imageData)).image;
 
-            TrackData track = TrackData(name: img.last.tags['title'].trim(), path: entity.path);
-            AlbumData album = AlbumData(name: (img.last.tags['album']!=null)?img.last.tags['album'].trim():'ImAnAlbUM', albumArt: albumArt, songs: [track],);
-            ArtistData artist = ArtistData(name: img.last.tags['artist'].trim(),albums: [album],);
+            print(img.last.tags);
+            TrackData track = TrackData(
+              name: img.last.tags['title'].trim(), 
+              path: entity.path, 
+              tags: img.last.tags,
+              artistName: img.last.tags['artist'].trim(),
+              albumName: img.last.tags['album'].trim(), 
+              albumArt: albumArt
+            );
+            AlbumData album = AlbumData(name: track.albumName, albumArt: albumArt, songs: [track],);
+            ArtistData artist = ArtistData(name: track.artistName,albums: [album],);
 
             if(artists.firstWhere( (a) => a.name.toUpperCase().trim() == img.last.tags['artist'].toString().toUpperCase().trim(), orElse: ()=>null) == null)
             {
@@ -96,16 +105,17 @@ class HomeState extends State<Home> {
   void initState() {
     super.initState();
     _ftr = _getMusicData(_musicDirectoryPath);
-    print('Initialized');   
+    
+    print('Initialized'); 
   }
 
-  AudioPlayer audioPlayer = new AudioPlayer();
+
+
   @override
   Widget build(BuildContext context)
   {
-    
-    audioPlayer.setUrl(_path, isLocal: true);
-    audioPlayer.setReleaseMode(ReleaseMode.STOP);
+    // NowPlayingProvider.of(context).audioPlayer.setUrl(_path, isLocal: true);
+    NowPlayingProvider.of(context).audioPlayer.setReleaseMode(ReleaseMode.STOP);
 
     artists.sort( (a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()) );//sort artists
 
@@ -120,6 +130,10 @@ class HomeState extends State<Home> {
         for(int i = 0; i < artists.length ;i++)
         {
           artists[i].albums.sort( (a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));// sort albums
+          for(int j = 0; j < artists[i].albums.length; j++)
+          {
+            artists[i].albums[j].songs.sort( (a, b) => a.tags['track'].toString().compareTo(b.tags['track'].toString()));
+          }
         }
         return PageView(
           pageSnapping: true,
@@ -130,7 +144,7 @@ class HomeState extends State<Home> {
               getOffset: () => artistsListOffset,
               setOffset: (offset) => artistsListOffset = offset,
             ),
-            NowPlaying(audioPlayer: audioPlayer, path: _path,),
+            NowPlaying(audioPlayer: NowPlayingProvider.of(context).audioPlayer,),
           ],
         );
       },
