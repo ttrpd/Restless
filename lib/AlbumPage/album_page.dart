@@ -148,7 +148,7 @@ class AlbumSongsPageState extends State<AlbumSongsPage> {
         ),
         Container(
           child: Padding(
-            padding: const EdgeInsets.only(left: 35.0, right: 35.0),
+            padding: const EdgeInsets.only(left: 35.0, right: 35.0, bottom: 20.0),
             child: Container(
               color: Colors.transparent,
               height: widget.widget.artist.albums[widget.index].songs.length * 44.0,
