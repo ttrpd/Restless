@@ -10,12 +10,10 @@ import 'package:restless/NowPlaying/now_playing_provider.dart';
 class NowPlayingMenu extends StatefulWidget
 {
 
-  double trackProgressPercent = 0.0;//currently unused
   AudioPlayer audioPlayer;
 
   NowPlayingMenu({
     Key key,
-    @required this.trackProgressPercent,
     @required this.audioPlayer,
   }) : super(key: key);
 
@@ -28,7 +26,6 @@ class NowPlayingMenu extends StatefulWidget
 class NowPlayingMenuState extends State<NowPlayingMenu> {
 
   double _volumeValue;
-
 
   @override
   void initState() {

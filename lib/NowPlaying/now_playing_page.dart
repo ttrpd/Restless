@@ -94,7 +94,6 @@ class NowPlayingState extends State<NowPlaying> with SingleTickerProviderStateMi
                   ),
                   NowPlayingMenu(
                     audioPlayer: widget.audioPlayer,
-                    trackProgressPercent: NowPlayingProvider.of(context).trackProgressPercent,
                   ),
                 ],
               ),

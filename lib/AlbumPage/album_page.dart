@@ -23,9 +23,33 @@ class AlbumPage extends StatefulWidget {
 }
 
 class _AlbumPageState extends State<AlbumPage> {
+
+  
+
   int i = 0;
   @override
   Widget build(BuildContext context) {
+
+    NowPlayingProvider.of(context).audioPlayer.durationHandler = (Duration d) {
+      if(NowPlayingProvider.of(context).endTime != null)
+      setState(() {
+        NowPlayingProvider.of(context).endTime = d;
+      });
+    };
+    
+    NowPlayingProvider.of(context).audioPlayer.positionHandler = (Duration d) {
+      setState(() {
+        NowPlayingProvider.of(context).currentTime = d;
+      });
+      NowPlayingProvider.of(context).trackProgressPercent = NowPlayingProvider.of(context).currentTime.inMilliseconds / NowPlayingProvider.of(context).endTime.inMilliseconds;
+    };
+    NowPlayingProvider.of(context).audioPlayer.completionHandler = () {
+      setState(() {
+        NowPlayingProvider.of(context).trackProgressPercent = 1.0;
+        NowPlayingProvider.of(context).playing = false;
+      });
+    };
+
     return Scaffold(
       backgroundColor: Theme.of(context).primaryColor,
       // appBar: AppBar(
@@ -92,6 +116,7 @@ class AlbumSongsPage extends StatefulWidget {
 }
 
 class AlbumSongsPageState extends State<AlbumSongsPage> {
+
   @override
   Widget build(BuildContext context) {
     return ListView(
