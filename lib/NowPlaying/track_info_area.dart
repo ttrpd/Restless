@@ -54,7 +54,7 @@ class TrackInfoAreaState extends State<TrackInfoArea> {
                       child: RichText(
                         maxLines: 2,
                         text: TextSpan(
-                          text: widget.name, //?? widget.path.substring(widget.path.lastIndexOf('/')+1, widget.path.lastIndexOf('.')),
+                          text: widget.name,
                           style: TextStyle(
                             color: Theme.of(context).accentColor,
                             background: Paint()..color = Theme.of(context).primaryColor,

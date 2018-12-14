@@ -26,7 +26,6 @@ class HomeState extends State<Home> {
 
   List<ArtistData> artists = new List<ArtistData>();
   String _musicDirectoryPath = '/storage/emulated/0/Music';//'/storage/emulated/0/Music/TestMusic';
-  String _path = '/storage/emulated/0/Music/Carousel Casualties/Madison/Bright Red Lights.mp3';
   double artistsListOffset = 0.0;
   Future _ftr;
 
@@ -132,7 +131,7 @@ class HomeState extends State<Home> {
           artists[i].albums.sort( (a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));// sort albums
           for(int j = 0; j < artists[i].albums.length; j++)
           {
-            artists[i].albums[j].songs.sort( (a, b) => a.tags['track'].toString().compareTo(b.tags['track'].toString()));
+            artists[i].albums[j].songs.sort( (a, b) => int.parse(a.tags['track'].toString()) - int.parse(b.tags['track'].toString()));
           }
         }
         return PageView(

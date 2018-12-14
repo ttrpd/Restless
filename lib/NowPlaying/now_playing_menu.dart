@@ -27,6 +27,8 @@ class NowPlayingMenuState extends State<NowPlayingMenu> {
 
   double _volumeValue;
 
+  List<Widget> tags = List<Widget>();
+
   @override
   void initState() {
     super.initState();
@@ -35,6 +37,43 @@ class NowPlayingMenuState extends State<NowPlayingMenu> {
   Widget build(BuildContext context)
   {
     _volumeValue = NowPlayingProvider.of(context).volumeValue;
+
+    tags.add(
+      Chip(
+        backgroundColor: Theme.of(context).accentColor,
+        label: Text(
+          NowPlayingProvider.of(context).track.name, 
+          style: TextStyle(color: Theme.of(context).primaryColor),
+        ),
+      ),
+    );
+    tags.add(
+      Chip(
+        backgroundColor: Theme.of(context).accentColor,
+        label: Text(
+          NowPlayingProvider.of(context).track.albumName, 
+          style: TextStyle(color: Theme.of(context).primaryColor),
+        ),
+      ),
+    );
+    tags.add(
+      Chip(
+        backgroundColor: Theme.of(context).accentColor,
+        label: Text(
+          NowPlayingProvider.of(context).track.artistName, 
+          style: TextStyle(color: Theme.of(context).primaryColor),
+        ),
+      ),
+    );
+    tags.add(
+      Chip(
+        backgroundColor: Theme.of(context).accentColor,
+        label: Text(
+          NowPlayingProvider.of(context).track.tags['track'], 
+          style: TextStyle(color: Theme.of(context).primaryColor),
+        ),
+      ),
+    );
 
     widget.audioPlayer.durationHandler = (Duration d) {
       if(NowPlayingProvider.of(context).endTime != null)
@@ -49,11 +88,24 @@ class NowPlayingMenuState extends State<NowPlayingMenu> {
       });
       NowPlayingProvider.of(context).trackProgressPercent = NowPlayingProvider.of(context).currentTime.inMilliseconds / NowPlayingProvider.of(context).endTime.inMilliseconds;
     };
+    
     widget.audioPlayer.completionHandler = () {
+      if(NowPlayingProvider.of(context).playQueue != null)
+      {
+        NowPlayingProvider.of(context).audioPlayer.play(
+          NowPlayingProvider.of(context).playQueue.elementAt(0).path
+        );
+        setState(() {
+          NowPlayingProvider.of(context).track = NowPlayingProvider.of(context).playQueue.elementAt(0);
+        });
+        NowPlayingProvider.of(context).playQueue.removeAt(0);
+      }
+      
       setState(() {
         NowPlayingProvider.of(context).trackProgressPercent = 1.0;
-        NowPlayingProvider.of(context).playing = false;
+        NowPlayingProvider.of(context).playing = true;
       });
+      
     };
     
 
@@ -62,7 +114,7 @@ class NowPlayingMenuState extends State<NowPlayingMenu> {
       color: Theme.of(context).primaryColor,
       child: Container(
         width: double.maxFinite,
-        height: 820.0,
+        height: 860.0,//820.0,
         decoration: BoxDecoration(
           color: Theme.of(context).primaryColor,
             boxShadow: [
@@ -134,7 +186,21 @@ class NowPlayingMenuState extends State<NowPlayingMenu> {
                             size: 40.0,
                           ),
                           onPressed: () {
-                            print(Directory('/storage/emulated/0/Music').listSync());// need to set permissions for this
+                            if(NowPlayingProvider.of(context).playQueue != null)
+                            {
+                              NowPlayingProvider.of(context).audioPlayer.play(
+                                NowPlayingProvider.of(context).playQueue.elementAt(0).path
+                              );
+                              setState(() {
+                                NowPlayingProvider.of(context).track = NowPlayingProvider.of(context).playQueue.elementAt(0);
+                              });
+                              NowPlayingProvider.of(context).playQueue.removeAt(0);
+                            }
+                            
+                            setState(() {
+                              NowPlayingProvider.of(context).trackProgressPercent = 1.0;
+                              NowPlayingProvider.of(context).playing = true;
+                            });
                           },
                         ),
                       ),
@@ -179,7 +245,21 @@ class NowPlayingMenuState extends State<NowPlayingMenu> {
                             size: 40.0,
                           ),
                           onPressed: () {
-
+                            if(NowPlayingProvider.of(context).playQueue != null)
+                            {
+                              NowPlayingProvider.of(context).audioPlayer.play(
+                                NowPlayingProvider.of(context).playQueue.elementAt(0).path
+                              );
+                              setState(() {
+                                NowPlayingProvider.of(context).track = NowPlayingProvider.of(context).playQueue.elementAt(0);
+                              });
+                              NowPlayingProvider.of(context).playQueue.removeAt(0);
+                            }
+                            
+                            setState(() {
+                              // NowPlayingProvider.of(context).trackProgressPercent = 1.0;
+                              NowPlayingProvider.of(context).playing = true;
+                            });
                           },
                         ),
                       ),
@@ -246,74 +326,8 @@ class NowPlayingMenuState extends State<NowPlayingMenu> {
                         ),
                         Flexible(
                           child: Wrap(
-
                             spacing: 3.0,
-                            children: <Widget>[
-                              Chip(
-                                backgroundColor: Theme.of(context).accentColor,
-                                label: Text('hello', style: TextStyle(color: Theme.of(context).primaryColor),),
-                              ),
-                              Chip(
-                                backgroundColor: Theme.of(context).accentColor,
-                                label: Text('hi', style: TextStyle(color: Theme.of(context).primaryColor),),
-                              ),
-                              Chip(
-                                backgroundColor: Theme.of(context).accentColor,
-                                label: Text('bonjour', style: TextStyle(color: Theme.of(context).primaryColor),),
-                              ),
-                              Chip(
-                                backgroundColor: Theme.of(context).accentColor,
-                                label: Text('salut', style: TextStyle(color: Theme.of(context).primaryColor),),
-                              ),
-                              Chip(
-                                backgroundColor: Theme.of(context).accentColor,
-                                label: Text('anyonghaseo', style: TextStyle(color: Theme.of(context).primaryColor),),
-                              ),
-                              Chip(
-                                backgroundColor: Theme.of(context).accentColor,
-                                label: Text('aurevoir', style: TextStyle(color: Theme.of(context).primaryColor),),
-                              ),
-                              Chip(
-                                backgroundColor: Theme.of(context).accentColor,
-                                label: Text('bye', style: TextStyle(color: Theme.of(context).primaryColor),),
-                              ),
-                              Chip(
-                                backgroundColor: Theme.of(context).accentColor,
-                                label: Text('see ya', style: TextStyle(color: Theme.of(context).primaryColor),),
-                              ),
-                              Chip(
-                                backgroundColor: Theme.of(context).accentColor,
-                                label: Text('hello', style: TextStyle(color: Theme.of(context).primaryColor),),
-                              ),
-                              Chip(
-                                backgroundColor: Theme.of(context).accentColor,
-                                label: Text('hi', style: TextStyle(color: Theme.of(context).primaryColor),),
-                              ),
-                              Chip(
-                                backgroundColor: Theme.of(context).accentColor,
-                                label: Text('bonjour', style: TextStyle(color: Theme.of(context).primaryColor),),
-                              ),
-                              Chip(
-                                backgroundColor: Theme.of(context).accentColor,
-                                label: Text('salut', style: TextStyle(color: Theme.of(context).primaryColor),),
-                              ),
-                              Chip(
-                                backgroundColor: Theme.of(context).accentColor,
-                                label: Text('anyonghaseo', style: TextStyle(color: Theme.of(context).primaryColor),),
-                              ),
-                              Chip(
-                                backgroundColor: Theme.of(context).accentColor,
-                                label: Text('aurevoir', style: TextStyle(color: Theme.of(context).primaryColor),),
-                              ),
-                              Chip(
-                                backgroundColor: Theme.of(context).accentColor,
-                                label: Text('bye', style: TextStyle(color: Theme.of(context).primaryColor),),
-                              ),
-                              Chip(
-                                backgroundColor: Theme.of(context).accentColor,
-                                label: Text('see ya', style: TextStyle(color: Theme.of(context).primaryColor),),
-                              ),
-                            ],
+                            children: tags,
                           ),
                         ),
                       ],
@@ -322,7 +336,7 @@ class NowPlayingMenuState extends State<NowPlayingMenu> {
                 ),
 
 
-                //neighbors list
+                //up next list
                 Padding(
                   padding: const EdgeInsets.only(top: 20.0),
                   child: Row(
@@ -333,7 +347,7 @@ class NowPlayingMenuState extends State<NowPlayingMenu> {
                           splashColor: Colors.transparent,
                           child: RichText(
                             text: TextSpan(
-                              text: 'Neighbors',
+                              text: 'Up Next',
                               style: TextStyle(
                                 color: Theme.of(context).accentColor,
                                 fontSize: 24.0,
@@ -341,73 +355,104 @@ class NowPlayingMenuState extends State<NowPlayingMenu> {
                               ),
                             ),
                           ),
-                          onPressed: () {
-                            Navigator.of(context).pushNamed('/neighbor_page');
-                            print('neighbors!');
-                          },
+                          onPressed: (){},
                         ),
 
                       ),
 
                       Expanded(child: Container(),),
 
-                      Container(
-                        alignment: Alignment.topRight,
-                        child: FlatButton(
-                          splashColor: Colors.transparent,
-                          child: RichText(
-                            text: TextSpan(
-                              text: 'Sort',
-                              style: TextStyle(
-                                color: Theme.of(context).accentColor,
-                                fontSize: 24.0,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                          onPressed: () {
-//                          Navigator.of(context).pushNamed('/sort_page');
-                            print('sort!');
-                          },
-                        ),
-                      ),
                     ],
                   ),
                 ),
-
-                Expanded(
-                  child: Container(
-                    child: GridView.count(
-                      crossAxisCount: 2,
-                      children: <Widget>[
-                        Neighbor(path:'lib/assets/art0.jpg'),
-                        Neighbor(path:'lib/assets/art1.jpg'),
-                        Neighbor(path:'lib/assets/art2.jpg'),
-                        Neighbor(path:'lib/assets/art3.jpg'),
-                        Neighbor(path:'lib/assets/art4.jpg'),
-                        Neighbor(path:'lib/assets/art5.jpg'),
-                        Neighbor(path:'lib/assets/art6.jpg'),
-                        Neighbor(path:'lib/assets/art7.jpg'),
-                        Neighbor(path:'lib/assets/art8.jpg'),
-                        Neighbor(path:'lib/assets/art9.jpg'),
-                        Neighbor(path:'lib/assets/art10.jpg'),
-                        Neighbor(path:'lib/assets/art11.jpg'),
-                        Neighbor(path:'lib/assets/art12.jpg'),
-                        Neighbor(path:'lib/assets/art13.jpg'),
-                        Neighbor(path:'lib/assets/art14.jpg'),
-                        Neighbor(path:'lib/assets/art15.jpg'),
-                        Neighbor(path:'lib/assets/art16.jpg'),
-                        Neighbor(path:'lib/assets/art17.jpg'),
-                        Neighbor(path:'lib/assets/art18.jpg'),
-                        Neighbor(path:'lib/assets/art19.jpg'),
-                        Neighbor(path:'lib/assets/art20.jpg'),
-                        Neighbor(path:'lib/assets/art21.jpg'),
-                      ],
-                    ),
-
+                Container(
+                  height: 280.0,
+                  child: ListView.builder(
+                    physics: BouncingScrollPhysics(),
+                    itemCount: (NowPlayingProvider.of(context).playQueue==null)?0:NowPlayingProvider.of(context).playQueue.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return Column(
+                        children: <Widget>[
+                          Divider(
+                            color: Theme.of(context).accentColor,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 4.0, right: 4.0),
+                            child: Container(
+                              alignment: Alignment.center,
+                              height: 40.0,
+                              width: double.maxFinite,
+                              color: Theme.of(context).primaryColor,
+                              child: Padding(
+                                padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+                                child: Row(
+                                  children: <Widget>[
+                                    RichText(
+                                      overflow: TextOverflow.clip,
+                                      text: TextSpan(
+                                        text: (NowPlayingProvider.of(context).playQueue==null)?'':NowPlayingProvider.of(context).playQueue[index].tags['track'],
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.normal,
+                                          fontSize: 18.0,
+                                          height: 1.0,
+                                          letterSpacing: 0.0,
+                                          color: Theme.of(context).accentColor
+                                        ),
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+                                      child: RichText(
+                                        overflow: TextOverflow.clip,
+                                        text: TextSpan(
+                                          text: (NowPlayingProvider.of(context).playQueue==null)?'':NowPlayingProvider.of(context).playQueue[index].name,
+                                          style: TextStyle(
+                                            fontSize: 16.0,
+                                            height: 1.0,
+                                            letterSpacing: 0.0,
+                                            fontWeight: FontWeight.bold,
+                                            color: Theme.of(context).accentColor
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    RichText(
+                                      overflow: TextOverflow.clip,
+                                      text: TextSpan(
+                                        text: (NowPlayingProvider.of(context).playQueue==null)?'':NowPlayingProvider.of(context).playQueue[index].artistName,
+                                        style: TextStyle(
+                                          fontSize: 14.0,
+                                          height: 1.0,
+                                          letterSpacing: 0.0,
+                                          fontWeight: FontWeight.normal,
+                                          color: Theme.of(context).accentColor
+                                        ),
+                                      ),
+                                    ),
+                                    Expanded(child: Container(),),
+                                    RichText(
+                                      overflow: TextOverflow.clip,
+                                      text: TextSpan(
+                                        text: '0:00',
+                                        style: TextStyle(
+                                          fontSize: 18.0,
+                                          height: 1.0,
+                                          letterSpacing: 0.0,
+                                          fontWeight: FontWeight.normal,
+                                          color: Theme.of(context).accentColor
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      );
+                    },
                   ),
-                )
-
+                ),
               ],
             ),
           ),

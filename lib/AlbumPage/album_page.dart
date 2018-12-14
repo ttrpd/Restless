@@ -1,11 +1,8 @@
-import 'dart:typed_data';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:restless/NowPlaying/now_playing_provider.dart';
 import 'package:restless/artist_data.dart';
-import 'package:audioplayers/audioplayers.dart';
-import 'package:dart_tags/dart_tags.dart';
 
 
 class AlbumPage extends StatefulWidget {
@@ -44,6 +41,14 @@ class _AlbumPageState extends State<AlbumPage> {
       NowPlayingProvider.of(context).trackProgressPercent = NowPlayingProvider.of(context).currentTime.inMilliseconds / NowPlayingProvider.of(context).endTime.inMilliseconds;
     };
     NowPlayingProvider.of(context).audioPlayer.completionHandler = () {
+      if(NowPlayingProvider.of(context).playQueue != null)
+      {
+        NowPlayingProvider.of(context).audioPlayer.play(
+          NowPlayingProvider.of(context).playQueue.elementAt(0).path
+        );
+        NowPlayingProvider.of(context).playQueue.removeAt(0);
+      }
+
       setState(() {
         NowPlayingProvider.of(context).trackProgressPercent = 1.0;
         NowPlayingProvider.of(context).playing = false;
@@ -192,6 +197,18 @@ class AlbumSongsPageState extends State<AlbumSongsPage> {
                                     widget.widget.artist.albums[widget.index].songs[j].path
                                   );
                                   NowPlayingProvider.of(context).playing = true;
+                                  if(NowPlayingProvider.of(context).playQueue != null)
+                                  {
+                                    NowPlayingProvider.of(context).playQueue.clear();
+                                    NowPlayingProvider.of(context).playQueue.addAll(
+                                      widget.widget.artist.albums[widget.index].songs.sublist(j)
+                                    );
+                                  }
+                                  else
+                                  {
+                                    NowPlayingProvider.of(context).playQueue = new List<TrackData>();
+                                    NowPlayingProvider.of(context).playQueue += widget.widget.artist.albums[widget.index].songs.sublist(j);
+                                  }
                                 }
                               });
                             },
