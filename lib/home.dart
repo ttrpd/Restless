@@ -1,3 +1,4 @@
+import 'dart:collection';
 import 'dart:core';
 import 'dart:io';
 import 'dart:typed_data';
@@ -44,57 +45,49 @@ class HomeState extends State<Home> {
       {
         _getMusicData(entity.path);// recurse
       }
-      else
+      else if(entity.path.contains('.mp3'))
       {
-        if(entity.path.contains('.mp3'))
+        TagProcessor tp = TagProcessor();
+        var img = await tp.getTagsFromByteArray(File(entity.path).readAsBytes());
+        if(img.last.tags != null && img.last.tags['APIC'] != null)
         {
-          TagProcessor tp = TagProcessor();
-          // File f = File(entity.path);
-          var img = await tp.getTagsFromByteArray(File(entity.path).readAsBytes());
-          // print(img.toString());
-          // print(img.last.tags);
-          if(img.last.tags != null && img.last.tags['APIC'] != null)
+          ImageProvider albumArt;
+          albumArt = Image.memory(Uint8List.fromList(img.last.tags['APIC'].imageData)).image;
+
+          TrackData track = TrackData(
+            name: (img.last.tags['title']!=null)?img.last.tags['title'].trim():entity.path.split('/').last.substring(0,entity.path.split('/').last.indexOf('.')).trim(), 
+            path: entity.path, 
+            tags: img.last.tags,
+            artistName: img.last.tags['TPE2'].trim(),
+            albumName: img.last.tags['album'].trim(), 
+            albumArt: albumArt
+          );
+          AlbumData album = AlbumData(name: track.albumName, albumArt: albumArt, songs: [track],);
+          ArtistData artist = ArtistData(name: track.artistName, albums: [album],);
+          print(artist.name + " - " + album.name);
+          if(artists.firstWhere( (a) => a.name.toUpperCase().trim() == track.artistName.toUpperCase().trim(), orElse: ()=>null) == null)
           {
-            // print('trying to add'+img.last.tags['album']+' by '+img.last.tags['artist']);
-            ImageProvider albumArt;
-            albumArt = Image.memory(Uint8List.fromList(img.last.tags['APIC'].imageData)).image;
-
-            print(img.last.tags);
-            TrackData track = TrackData(
-              name: img.last.tags['title'].trim(), 
-              path: entity.path, 
-              tags: img.last.tags,
-              artistName: img.last.tags['artist'].trim(),
-              albumName: img.last.tags['album'].trim(), 
-              albumArt: albumArt
-            );
-            AlbumData album = AlbumData(name: track.albumName, albumArt: albumArt, songs: [track],);
-            ArtistData artist = ArtistData(name: track.artistName,albums: [album],);
-
-            if(artists.firstWhere( (a) => a.name.toUpperCase().trim() == img.last.tags['artist'].toString().toUpperCase().trim(), orElse: ()=>null) == null)
-            {
-              artists.add(artist);
-            }
-            
-            if(artists.firstWhere( (a) => a.name.toUpperCase().trim() == img.last.tags['artist'].toString().toUpperCase().trim(), orElse: ()=>null)
-              .albums.firstWhere( (al) => al.name.toUpperCase().trim() == img.last.tags['album'].toString().toUpperCase().trim(), orElse: ()=>null) == null)
-            {
-              artists.firstWhere( (a) => a.name.toUpperCase().trim() == img.last.tags['artist'].toString().toUpperCase().trim(), orElse: ()=>null)
-              .albums.add(album);
-            }
-
-            if(artists.firstWhere( (a) => a.name.toUpperCase().trim() == img.last.tags['artist'].toString().toUpperCase().trim(), orElse: ()=>null)
-              .albums.firstWhere( (al) => al.name.toUpperCase().trim() == img.last.tags['album'].toString().toUpperCase().trim(), orElse: ()=>null)
-              .songs.firstWhere( (s) => s.name.toUpperCase().trim() == img.last.tags['track'].toString().toUpperCase().trim(), orElse: ()=>null) == null)
-            {
-              artists.firstWhere( (a) => a.name.toUpperCase().trim() == img.last.tags['artist'].toString().toUpperCase().trim(), orElse: ()=>null)
-              .albums.firstWhere( (al) => al.name.toUpperCase().trim() == img.last.tags['album'].toString().toUpperCase().trim(), orElse:()=>null)
-              .songs.add(track);
-            }
+            artists.add(artist);
           }
           
-          // return Future.delayed(Duration(milliseconds: 1));
+          if(artists.firstWhere( (a) => a.name.toUpperCase().trim() == track.artistName.toUpperCase().trim(), orElse: ()=>null)
+            .albums.firstWhere( (al) => al.name.toUpperCase().trim() == track.albumName.toUpperCase().trim(), orElse: ()=>null) == null)
+          {
+            artists.firstWhere( (a) => a.name.toUpperCase().trim() == track.artistName.toUpperCase().trim(), orElse: ()=>null)
+            .albums.add(album);
+          }
+
+          if(artists.firstWhere( (a) => a.name.toUpperCase().trim() == track.artistName.toUpperCase().trim(), orElse: ()=>null)
+            .albums.firstWhere( (al) => al.name.toUpperCase().trim() == track.albumName.toUpperCase().trim(), orElse: ()=>null)
+            .songs.firstWhere( (s) => s.name.toUpperCase().trim() == track.name.toUpperCase().trim(), orElse: ()=>null) == null)
+          {
+            artists.firstWhere( (a) => a.name.toUpperCase().trim() == track.artistName.toUpperCase().trim(), orElse: ()=>null)
+            .albums.firstWhere( (al) => al.name.toUpperCase().trim() == track.albumName.toUpperCase().trim(), orElse:()=>null)
+            .songs.add(track);
+          }
         }
+        
+        // return Future.delayed(Duration(milliseconds: 1));
       }
     }
   }
@@ -116,7 +109,7 @@ class HomeState extends State<Home> {
     // NowPlayingProvider.of(context).audioPlayer.setUrl(_path, isLocal: true);
     NowPlayingProvider.of(context).audioPlayer.setReleaseMode(ReleaseMode.STOP);
 
-    artists.sort( (a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()) );//sort artists
+    artists.sort( (a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()) );
 
     ArtistsPageProvider.of(context).artists = artists;
     // _ftr.then((f)=>ArtistsPageProvider.of(context).artists = artists);

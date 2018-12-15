@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:restless/NowPlaying/now_playing_provider.dart';
 import 'package:restless/artist_data.dart';
@@ -137,7 +138,7 @@ class AlbumSongsPageState extends State<AlbumSongsPage> {
                 textAlign: TextAlign.center,
                 maxLines: 3,
                 text: TextSpan(
-                  text: widget.widget.artist.albums[widget.index].name,
+                  text: widget.widget.artist.albums[widget.index].name.replaceAll('"', '/').replaceAll('∕', '/').replaceAll('"', ''),
                   style: TextStyle(
                     color: Theme.of(context).accentColor,
                     background: Paint()..color = Theme.of(context).primaryColor,

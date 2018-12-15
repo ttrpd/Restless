@@ -77,9 +77,9 @@ class NowPlayingMenuState extends State<NowPlayingMenu> {
 
     widget.audioPlayer.durationHandler = (Duration d) {
       if(NowPlayingProvider.of(context).endTime != null)
-      setState(() {
-        NowPlayingProvider.of(context).endTime = d;
-      });
+        setState(() {
+          NowPlayingProvider.of(context).endTime = d;
+        });
     };
     
     widget.audioPlayer.positionHandler = (Duration d) {
@@ -114,7 +114,7 @@ class NowPlayingMenuState extends State<NowPlayingMenu> {
       color: Theme.of(context).primaryColor,
       child: Container(
         width: double.maxFinite,
-        height: 860.0,//820.0,
+        height: 860.0,
         decoration: BoxDecoration(
           color: Theme.of(context).primaryColor,
             boxShadow: [
@@ -365,7 +365,7 @@ class NowPlayingMenuState extends State<NowPlayingMenu> {
                     ],
                   ),
                 ),
-                Container(
+                Container(//Up Next List
                   height: 280.0,
                   child: ListView.builder(
                     physics: BouncingScrollPhysics(),

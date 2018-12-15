@@ -54,7 +54,7 @@ class TrackInfoAreaState extends State<TrackInfoArea> {
                       child: RichText(
                         maxLines: 2,
                         text: TextSpan(
-                          text: widget.name,
+                          text: widget.name.replaceAll('"', '/').replaceAll('∕', '/').replaceAll('"', ''),
                           style: TextStyle(
                             color: Theme.of(context).accentColor,
                             background: Paint()..color = Theme.of(context).primaryColor,
@@ -73,7 +73,7 @@ class TrackInfoAreaState extends State<TrackInfoArea> {
                         child: RichText(
                           maxLines: 2,
                           text: TextSpan(
-                            text: widget.album ?? '(Album)',
+                            text: widget.album.replaceAll('"', '/').replaceAll('∕', '/').replaceAll('"', '') ?? '(Album)',
                             style: TextStyle(
                               color: Theme.of(context).accentColor,
                               background: Paint()..color = Theme.of(context).primaryColor,
@@ -91,7 +91,7 @@ class TrackInfoAreaState extends State<TrackInfoArea> {
                       child: RichText(
                         maxLines: 2,
                         text: TextSpan(
-                          text: widget.artist ?? '(Artist)',
+                          text: widget.artist.replaceAll('"', '/').replaceAll('∕', '/').replaceAll('"', '') ?? '(Artist)',
                           style: TextStyle(
                             color: Theme.of(context).accentColor,
                             background: Paint()..color = Theme.of(context).primaryColor,
