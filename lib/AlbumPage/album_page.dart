@@ -202,13 +202,18 @@ class AlbumSongsPageState extends State<AlbumSongsPage> {
                                   {
                                     NowPlayingProvider.of(context).playQueue.clear();
                                     NowPlayingProvider.of(context).playQueue.addAll(
-                                      widget.widget.artist.albums[widget.index].songs.sublist(j)
+                                      widget.widget.artist.albums[widget.index].songs.sublist(j+1)
                                     );
                                   }
                                   else
                                   {
-                                    NowPlayingProvider.of(context).playQueue = new List<TrackData>();
-                                    NowPlayingProvider.of(context).playQueue += widget.widget.artist.albums[widget.index].songs.sublist(j);
+                                    // NowPlayingProvider.of(context).playQueue = new List<TrackData>();
+                                    NowPlayingProvider.of(context).playQueue += widget.widget.artist.albums[widget.index].songs.sublist(j+1);
+                                  }
+
+                                  if(NowPlayingProvider.of(context).playedQueue.length < 1)
+                                  {
+                                    NowPlayingProvider.of(context).playedQueue += widget.widget.artist.albums[widget.index].songs.sublist(0,j-1);
                                   }
                                 }
                               });

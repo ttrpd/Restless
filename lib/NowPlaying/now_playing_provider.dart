@@ -12,7 +12,8 @@ class NowPlayingProvider extends InheritedWidget
   double trackProgressPercent = 0.0;
   ImageProvider albumArt;
   TrackData track;
-  List<TrackData> playQueue;
+  List<TrackData> playQueue = new List<TrackData>();
+  List<TrackData> playedQueue = new List<TrackData>();
   AudioPlayer audioPlayer = new AudioPlayer();
 
 

@@ -1,4 +1,5 @@
 import 'dart:collection';
+import 'dart:convert';
 import 'dart:core';
 import 'dart:io';
 import 'dart:typed_data';
@@ -51,8 +52,9 @@ class HomeState extends State<Home> {
         var img = await tp.getTagsFromByteArray(File(entity.path).readAsBytes());
         if(img.last.tags != null && img.last.tags['APIC'] != null)
         {
+          // AttachedPicture
           ImageProvider albumArt;
-          albumArt = Image.memory(Uint8List.fromList(img.last.tags['APIC'].imageData)).image;
+          albumArt = Image.memory(base64.decode(img.last.tags['APIC'].imageData64)).image;
 
           TrackData track = TrackData(
             name: (img.last.tags['title']!=null)?img.last.tags['title'].trim():entity.path.split('/').last.substring(0,entity.path.split('/').last.indexOf('.')).trim(), 

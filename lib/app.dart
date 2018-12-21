@@ -29,7 +29,7 @@ class App extends StatelessWidget
             primaryColorDark: Color.fromARGB(255, 103, 103, 103),
             accentColor: Color.fromARGB(255, 240, 240, 240),
           ),
-          title: 'MyApp',
+          title: 'Restless',
           debugShowCheckedModeBanner: false,
           routes: <String, WidgetBuilder> {
             '/neighbor_page': (BuildContext context) => NeighborPage(),

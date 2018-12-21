@@ -92,6 +92,9 @@ class NowPlayingMenuState extends State<NowPlayingMenu> {
     widget.audioPlayer.completionHandler = () {
       if(NowPlayingProvider.of(context).playQueue != null)
       {
+        if(NowPlayingProvider.of(context).playQueue.elementAt(0).path.toString() == '')
+          print('Path was null');
+
         NowPlayingProvider.of(context).audioPlayer.play(
           NowPlayingProvider.of(context).playQueue.elementAt(0).path
         );
@@ -133,7 +136,7 @@ class NowPlayingMenuState extends State<NowPlayingMenu> {
               children: <Widget>[
                 SeekBar(
                   trackProgressPercent: NowPlayingProvider.of(context).trackProgressPercent,
-                  onSeekRequested: (double seekPercent) {//seekPercent is sometimes null
+                  onSeekRequested: (double seekPercent) {
                     setState(() {
                       final seekMils = (NowPlayingProvider.of(context).endTime.inMilliseconds.toDouble() * seekPercent).round();//source of toDouble called on null error
                       widget.audioPlayer.seek(Duration(milliseconds: seekMils));
@@ -186,20 +189,28 @@ class NowPlayingMenuState extends State<NowPlayingMenu> {
                             size: 40.0,
                           ),
                           onPressed: () {
-                            if(NowPlayingProvider.of(context).playQueue != null)
-                            {
+                            // if(NowPlayingProvider.of(context).playedQueue.isEmpty)
+                            // {
+                              // NowPlayingProvider.of(context).audioPlayer.pause();
+                              // NowPlayingProvider.of(context).audioPlayer.setUrl(
+                              //   NowPlayingProvider.of(context).playedQueue.elementAt(0).path
+                              // );
+                              print('####### HERE #######');
+                              NowPlayingProvider.of(context).audioPlayer.seek(Duration(milliseconds: 0));
+                              
                               NowPlayingProvider.of(context).audioPlayer.play(
-                                NowPlayingProvider.of(context).playQueue.elementAt(0).path
+                                NowPlayingProvider.of(context).playedQueue.elementAt(0).path
                               );
-                              setState(() {
-                                NowPlayingProvider.of(context).track = NowPlayingProvider.of(context).playQueue.elementAt(0);
-                              });
-                              NowPlayingProvider.of(context).playQueue.removeAt(0);
-                            }
+                              NowPlayingProvider.of(context).track = NowPlayingProvider.of(context).playedQueue.elementAt(0);
+                              NowPlayingProvider.of(context).playQueue.add(
+                                NowPlayingProvider.of(context).playedQueue.elementAt(0)
+                              );
+                              NowPlayingProvider.of(context).playedQueue.removeAt(0);
+                              
+                            // }
                             
                             setState(() {
-                              NowPlayingProvider.of(context).trackProgressPercent = 1.0;
-                              NowPlayingProvider.of(context).playing = true;
+                              NowPlayingProvider.of(context).trackProgressPercent = 0.0;
                             });
                           },
                         ),
@@ -245,20 +256,14 @@ class NowPlayingMenuState extends State<NowPlayingMenu> {
                             size: 40.0,
                           ),
                           onPressed: () {
-                            if(NowPlayingProvider.of(context).playQueue != null)
-                            {
-                              NowPlayingProvider.of(context).audioPlayer.play(
-                                NowPlayingProvider.of(context).playQueue.elementAt(0).path
-                              );
-                              setState(() {
-                                NowPlayingProvider.of(context).track = NowPlayingProvider.of(context).playQueue.elementAt(0);
-                              });
-                              NowPlayingProvider.of(context).playQueue.removeAt(0);
-                            }
-                            
+                            NowPlayingProvider.of(context).audioPlayer.seek(
+                              NowPlayingProvider.of(context).endTime
+                            );
+                            NowPlayingProvider.of(context).playedQueue.add(
+                              NowPlayingProvider.of(context).track
+                            );
                             setState(() {
-                              // NowPlayingProvider.of(context).trackProgressPercent = 1.0;
-                              NowPlayingProvider.of(context).playing = true;
+                              NowPlayingProvider.of(context).trackProgressPercent = 1.0;
                             });
                           },
                         ),
