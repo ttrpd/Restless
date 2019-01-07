@@ -75,41 +75,41 @@ class NowPlayingMenuState extends State<NowPlayingMenu> {
       ),
     );
 
-    widget.audioPlayer.durationHandler = (Duration d) {
-      if(NowPlayingProvider.of(context).endTime != null)
-        setState(() {
-          NowPlayingProvider.of(context).endTime = d;
-        });
-    };
+    // widget.audioPlayer.durationHandler = (Duration d) {
+    //   if(NowPlayingProvider.of(context).endTime != null)
+    //     setState(() {
+    //       NowPlayingProvider.of(context).endTime = d;
+    //     });
+    // };
     
-    widget.audioPlayer.positionHandler = (Duration d) {
-      setState(() {
-        NowPlayingProvider.of(context).currentTime = d;
-      });
-      NowPlayingProvider.of(context).trackProgressPercent = NowPlayingProvider.of(context).currentTime.inMilliseconds / NowPlayingProvider.of(context).endTime.inMilliseconds;
-    };
+    // widget.audioPlayer.positionHandler = (Duration d) {
+    //   setState(() {
+    //     NowPlayingProvider.of(context).currentTime = d;
+    //   });
+    //   NowPlayingProvider.of(context).trackProgressPercent = NowPlayingProvider.of(context).currentTime.inMilliseconds / NowPlayingProvider.of(context).endTime.inMilliseconds;
+    // };
     
-    widget.audioPlayer.completionHandler = () {
-      if(NowPlayingProvider.of(context).playQueue != null)
-      {
-        if(NowPlayingProvider.of(context).playQueue.elementAt(0).path.toString() == '')
-          print('Path was null');
+    // widget.audioPlayer.completionHandler = () {
+    //   if(NowPlayingProvider.of(context).playQueue != null)
+    //   {
+    //     if(NowPlayingProvider.of(context).playQueue.elementAt(0).path.toString() == '')
+    //       print('Path was null');
 
-        NowPlayingProvider.of(context).audioPlayer.play(
-          NowPlayingProvider.of(context).playQueue.elementAt(0).path
-        );
-        setState(() {
-          NowPlayingProvider.of(context).track = NowPlayingProvider.of(context).playQueue.elementAt(0);
-        });
-        NowPlayingProvider.of(context).playQueue.removeAt(0);
-      }
+    //     NowPlayingProvider.of(context).audioPlayer.play(
+    //       NowPlayingProvider.of(context).playQueue.elementAt(0).path
+    //     );
+    //     setState(() {
+    //       NowPlayingProvider.of(context).track = NowPlayingProvider.of(context).playQueue.elementAt(0);
+    //     });
+    //     NowPlayingProvider.of(context).playQueue.removeAt(0);
+    //   }
       
-      setState(() {
-        NowPlayingProvider.of(context).trackProgressPercent = 1.0;
-        NowPlayingProvider.of(context).playing = true;
-      });
+    //   setState(() {
+    //     NowPlayingProvider.of(context).trackProgressPercent = 1.0;
+    //     NowPlayingProvider.of(context).playing = true;
+    //   });
       
-    };
+    // };
     
 
 
@@ -195,7 +195,6 @@ class NowPlayingMenuState extends State<NowPlayingMenu> {
                               // NowPlayingProvider.of(context).audioPlayer.setUrl(
                               //   NowPlayingProvider.of(context).playedQueue.elementAt(0).path
                               // );
-                              print('####### HERE #######');
                               NowPlayingProvider.of(context).audioPlayer.seek(Duration(milliseconds: 0));
                               
                               NowPlayingProvider.of(context).audioPlayer.play(

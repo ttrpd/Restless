@@ -108,6 +108,48 @@ class HomeState extends State<Home> {
   @override
   Widget build(BuildContext context)
   {
+
+    NowPlayingProvider.of(context).audioPlayer.durationHandler = (Duration d) {
+      if(NowPlayingProvider.of(context).endTime != null)
+        setState(() {
+          NowPlayingProvider.of(context).endTime = d;
+        });
+    };
+    
+    NowPlayingProvider.of(context).audioPlayer.positionHandler = (Duration d) {
+      setState(() {
+        NowPlayingProvider.of(context).currentTime = d;
+      });
+      NowPlayingProvider.of(context).trackProgressPercent = NowPlayingProvider.of(context).currentTime.inMilliseconds / NowPlayingProvider.of(context).endTime.inMilliseconds;
+    };
+    
+    NowPlayingProvider.of(context).audioPlayer.completionHandler = () {
+      if(NowPlayingProvider.of(context).playQueue != null)
+      {
+        // if(NowPlayingProvider.of(context).playQueue.elementAt(0).path.toString() == '')
+        //   print('Path was null');
+
+        NowPlayingProvider.of(context).audioPlayer.play(
+          NowPlayingProvider.of(context).playQueue.elementAt(0).path
+        );
+        setState(() {
+          NowPlayingProvider.of(context).track = NowPlayingProvider.of(context).playQueue.elementAt(0);
+        });
+        NowPlayingProvider.of(context).playedQueue.add(NowPlayingProvider.of(context).playQueue.elementAt(0));        
+        NowPlayingProvider.of(context).playQueue.removeAt(0);
+        NowPlayingProvider.of(context).playing = true;
+      }
+      else
+      {
+        NowPlayingProvider.of(context).playing = false;
+      }
+      
+      setState(() {
+        NowPlayingProvider.of(context).trackProgressPercent = 1.0;
+      });
+      
+    };
+
     // NowPlayingProvider.of(context).audioPlayer.setUrl(_path, isLocal: true);
     NowPlayingProvider.of(context).audioPlayer.setReleaseMode(ReleaseMode.STOP);
 

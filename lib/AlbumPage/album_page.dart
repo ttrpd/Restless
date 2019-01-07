@@ -2,7 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:restless/NowPlaying/now_playing_provider.dart';
+import 'package:restless/AlbumPage/song_sliver.dart';
 import 'package:restless/artist_data.dart';
 
 
@@ -27,34 +27,6 @@ class _AlbumPageState extends State<AlbumPage> {
   int i = 0;
   @override
   Widget build(BuildContext context) {
-
-    NowPlayingProvider.of(context).audioPlayer.durationHandler = (Duration d) {
-      if(NowPlayingProvider.of(context).endTime != null)
-      setState(() {
-        NowPlayingProvider.of(context).endTime = d;
-      });
-    };
-    
-    NowPlayingProvider.of(context).audioPlayer.positionHandler = (Duration d) {
-      setState(() {
-        NowPlayingProvider.of(context).currentTime = d;
-      });
-      NowPlayingProvider.of(context).trackProgressPercent = NowPlayingProvider.of(context).currentTime.inMilliseconds / NowPlayingProvider.of(context).endTime.inMilliseconds;
-    };
-    NowPlayingProvider.of(context).audioPlayer.completionHandler = () {
-      if(NowPlayingProvider.of(context).playQueue != null)
-      {
-        NowPlayingProvider.of(context).audioPlayer.play(
-          NowPlayingProvider.of(context).playQueue.elementAt(0).path
-        );
-        NowPlayingProvider.of(context).playQueue.removeAt(0);
-      }
-
-      setState(() {
-        NowPlayingProvider.of(context).trackProgressPercent = 1.0;
-        NowPlayingProvider.of(context).playing = false;
-      });
-    };
 
     return Scaffold(
       backgroundColor: Theme.of(context).primaryColor,
@@ -162,98 +134,7 @@ class AlbumSongsPageState extends State<AlbumSongsPage> {
                 physics: NeverScrollableScrollPhysics(),
                 itemCount: widget.widget.artist.albums[widget.index].songs.length,
                 itemBuilder: (BuildContext context, int j) {
-                  return Padding(
-                    padding: const EdgeInsets.all(2.0),
-                    child: Container(
-                      height: 40.0,
-                      color: Theme.of(context).primaryColor,
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: <Widget>[
-                          IconButton(
-                            iconSize: 18,
-                            icon: Icon((NowPlayingProvider.of(context).playing && NowPlayingProvider.of(context).track.name == widget.widget.artist.albums[widget.index].songs[j].name)?Icons.pause:Icons.play_arrow, color: Theme.of(context).accentColor), 
-                            onPressed: () {
-                              setState(() {
-                                if(NowPlayingProvider.of(context).track == widget.widget.artist.albums[widget.index].songs[j])
-                                {
-                                  if(NowPlayingProvider.of(context).playing) {
-                                    NowPlayingProvider.of(context).audioPlayer.pause();
-                                  }
-                                  else {
-                                    NowPlayingProvider.of(context).audioPlayer.resume();
-                                  }
-                                  setState(() {
-                                    NowPlayingProvider.of(context).playing = !NowPlayingProvider.of(context).playing;
-                                  });
-                                }
-                                else
-                                {
-                                  NowPlayingProvider.of(context).playing = false;
-                                  NowPlayingProvider.of(context).audioPlayer.setUrl(
-                                    widget.widget.artist.albums[widget.index].songs[j].path
-                                  );
-                                  NowPlayingProvider.of(context).track = widget.widget.artist.albums[widget.index].songs[j];
-                                  NowPlayingProvider.of(context).audioPlayer.play(
-                                    widget.widget.artist.albums[widget.index].songs[j].path
-                                  );
-                                  NowPlayingProvider.of(context).playing = true;
-                                  if(NowPlayingProvider.of(context).playQueue != null)
-                                  {
-                                    NowPlayingProvider.of(context).playQueue.clear();
-                                    NowPlayingProvider.of(context).playQueue.addAll(
-                                      widget.widget.artist.albums[widget.index].songs.sublist(j+1)
-                                    );
-                                  }
-                                  else
-                                  {
-                                    // NowPlayingProvider.of(context).playQueue = new List<TrackData>();
-                                    NowPlayingProvider.of(context).playQueue += widget.widget.artist.albums[widget.index].songs.sublist(j+1);
-                                  }
-
-                                  if(NowPlayingProvider.of(context).playedQueue.length < 1)
-                                  {
-                                    NowPlayingProvider.of(context).playedQueue += widget.widget.artist.albums[widget.index].songs.sublist(0,j-1);
-                                  }
-                                }
-                              });
-                            },
-                          ),
-                          Expanded(
-                            child: RichText(
-                              overflow: TextOverflow.ellipsis,
-                              text: TextSpan(
-                                text: widget.widget.artist.albums[widget.index].songs[j].name,
-                                style: TextStyle(
-                                  color: Theme.of(context).accentColor,
-                                  fontSize: 14.0,
-                                  fontWeight: FontWeight.w400,
-                                  letterSpacing: 1.0,
-                                  height: 1.0
-                                ),
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 12.0, right: 16.0),
-                            child: RichText(
-                              overflow: TextOverflow.ellipsis,
-                              text: TextSpan(
-                                text: '0:00',
-                                style: TextStyle(
-                                  color: Theme.of(context).accentColor,
-                                  fontSize: 14.0,
-                                  fontWeight: FontWeight.normal,
-                                  letterSpacing: 1.0,
-                                  height: 1.0
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      )
-                    ),
-                  );
+                  return SongSliver(albumIndex: widget.index, songIndex: j, artist: widget.widget.artist,);
                 },
               ),
             ),
@@ -263,18 +144,3 @@ class AlbumSongsPageState extends State<AlbumSongsPage> {
     );
   }
 }
-
-
-  // Future _getTrackInfo(String path) async {
-  //   TagProcessor tp = TagProcessor();
-  //   File f = File(path);
-  //   var img = await tp.getTagsFromByteArray(f.readAsBytes());
-
-
-  //   setState(() {
-  //     NowPlayingProvider.of(context).track = img.last.tags['title'];
-  //     NowPlayingProvider.of(context).album = img.last.tags['album'];
-  //     NowPlayingProvider.of(context).artist = img.last.tags['artist'];
-  //     NowPlayingProvider.of(context).albumArt = Image.memory(Uint8List.fromList(img.last.tags['APIC'].imageData)).image;
-  //   });
-  // }
