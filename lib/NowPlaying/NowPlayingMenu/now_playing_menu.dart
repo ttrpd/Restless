@@ -1,9 +1,9 @@
 
-import 'dart:io';
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
-import 'package:restless/Neighbors/neighbor.dart';
+import 'package:restless/NowPlaying/NowPlayingMenu/tag_area.dart';
+import 'package:restless/NowPlaying/NowPlayingMenu/up_next_list.dart';
 import 'package:restless/NowPlaying/progress_bar.dart';
 import 'package:restless/NowPlaying/now_playing_provider.dart';
 
@@ -75,49 +75,12 @@ class NowPlayingMenuState extends State<NowPlayingMenu> {
       ),
     );
 
-    // widget.audioPlayer.durationHandler = (Duration d) {
-    //   if(NowPlayingProvider.of(context).endTime != null)
-    //     setState(() {
-    //       NowPlayingProvider.of(context).endTime = d;
-    //     });
-    // };
-    
-    // widget.audioPlayer.positionHandler = (Duration d) {
-    //   setState(() {
-    //     NowPlayingProvider.of(context).currentTime = d;
-    //   });
-    //   NowPlayingProvider.of(context).trackProgressPercent = NowPlayingProvider.of(context).currentTime.inMilliseconds / NowPlayingProvider.of(context).endTime.inMilliseconds;
-    // };
-    
-    // widget.audioPlayer.completionHandler = () {
-    //   if(NowPlayingProvider.of(context).playQueue != null)
-    //   {
-    //     if(NowPlayingProvider.of(context).playQueue.elementAt(0).path.toString() == '')
-    //       print('Path was null');
-
-    //     NowPlayingProvider.of(context).audioPlayer.play(
-    //       NowPlayingProvider.of(context).playQueue.elementAt(0).path
-    //     );
-    //     setState(() {
-    //       NowPlayingProvider.of(context).track = NowPlayingProvider.of(context).playQueue.elementAt(0);
-    //     });
-    //     NowPlayingProvider.of(context).playQueue.removeAt(0);
-    //   }
-      
-    //   setState(() {
-    //     NowPlayingProvider.of(context).trackProgressPercent = 1.0;
-    //     NowPlayingProvider.of(context).playing = true;
-    //   });
-      
-    // };
-    
-
 
     return Container(
       color: Theme.of(context).primaryColor,
       child: Container(
         width: double.maxFinite,
-        height: 860.0,
+        height: 760.0,
         decoration: BoxDecoration(
           color: Theme.of(context).primaryColor,
             boxShadow: [
@@ -189,12 +152,6 @@ class NowPlayingMenuState extends State<NowPlayingMenu> {
                             size: 40.0,
                           ),
                           onPressed: () {
-                            // if(NowPlayingProvider.of(context).playedQueue.isEmpty)
-                            // {
-                              // NowPlayingProvider.of(context).audioPlayer.pause();
-                              // NowPlayingProvider.of(context).audioPlayer.setUrl(
-                              //   NowPlayingProvider.of(context).playedQueue.elementAt(0).path
-                              // );
                               NowPlayingProvider.of(context).audioPlayer.seek(Duration(milliseconds: 0));
                               
                               NowPlayingProvider.of(context).audioPlayer.play(
@@ -206,7 +163,6 @@ class NowPlayingMenuState extends State<NowPlayingMenu> {
                               );
                               NowPlayingProvider.of(context).playedQueue.removeAt(0);
                               
-                            // }
                             
                             setState(() {
                               NowPlayingProvider.of(context).trackProgressPercent = 0.0;
@@ -273,190 +229,16 @@ class NowPlayingMenuState extends State<NowPlayingMenu> {
                   ),
                 ),
 
-                // Volume Slider //
+                
                 Padding(
-                  padding: const EdgeInsets.only(top: 40.0),
-                  child: Slider(// volume slider
-                    value: _volumeValue,
-                    activeColor: Theme.of(context).accentColor,
-                    inactiveColor: Theme.of(context).primaryColorDark,
-                    min: 0.0,
-                    max: 200.0,
-                    divisions: 200,
-                    onChanged: (double value) {
-                      setState(() {
-                        print(NowPlayingProvider.of(context).volumeValue);
-                        widget.audioPlayer.setVolume(value / 200.0);
-                        NowPlayingProvider.of(context).volumeValue = value;
-                        _volumeValue = value;
-                      });
-                    },
-                  ),
-                ),
-
-                Padding(
-                  padding: const EdgeInsets.only(top: 40.0, left: 20.0, right: 20.0, bottom: 0.0),
+                  padding: const EdgeInsets.only(top: 20.0, left: 20.0, right: 20.0, bottom: 0.0),
                   child: Divider(
                     color: Theme.of(context).accentColor,
                   ),
                 ),
 
-                Padding(// tags area
-                  padding: const EdgeInsets.only(top: 20.0),
-                  child: Container(
-                    width: double.maxFinite,
-                    height: 186.0,
-                    child: Column(
-                      children: <Widget>[
-                        Container(
-                          alignment: Alignment.topLeft,
-                          child: FlatButton(
-                            splashColor: Colors.transparent,
-                            child: RichText(
-                              text: TextSpan(
-                                text: 'Tags',
-                                style: TextStyle(
-                                  color: Theme.of(context).accentColor,
-                                  fontSize: 24.0,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                            onPressed: () {
-                              print('tags!');
-                            },
-                          ),
-
-                        ),
-                        Flexible(
-                          child: Wrap(
-                            spacing: 3.0,
-                            children: tags,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-
-
-                //up next list
-                Padding(
-                  padding: const EdgeInsets.only(top: 20.0),
-                  child: Row(
-                    children: <Widget>[
-                      Container(
-                        alignment: Alignment.topLeft,
-                        child: FlatButton(
-                          splashColor: Colors.transparent,
-                          child: RichText(
-                            text: TextSpan(
-                              text: 'Up Next',
-                              style: TextStyle(
-                                color: Theme.of(context).accentColor,
-                                fontSize: 24.0,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                          onPressed: (){},
-                        ),
-
-                      ),
-
-                      Expanded(child: Container(),),
-
-                    ],
-                  ),
-                ),
-                Container(//Up Next List
-                  height: 280.0,
-                  child: ListView.builder(
-                    physics: BouncingScrollPhysics(),
-                    itemCount: (NowPlayingProvider.of(context).playQueue==null)?0:NowPlayingProvider.of(context).playQueue.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return Column(
-                        children: <Widget>[
-                          Divider(
-                            color: Theme.of(context).accentColor,
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 4.0, right: 4.0),
-                            child: Container(
-                              alignment: Alignment.center,
-                              height: 40.0,
-                              width: double.maxFinite,
-                              color: Theme.of(context).primaryColor,
-                              child: Padding(
-                                padding: const EdgeInsets.only(left: 8.0, right: 8.0),
-                                child: Row(
-                                  children: <Widget>[
-                                    RichText(
-                                      overflow: TextOverflow.clip,
-                                      text: TextSpan(
-                                        text: (NowPlayingProvider.of(context).playQueue==null)?'':NowPlayingProvider.of(context).playQueue[index].tags['track'],
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.normal,
-                                          fontSize: 18.0,
-                                          height: 1.0,
-                                          letterSpacing: 0.0,
-                                          color: Theme.of(context).accentColor
-                                        ),
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(left: 8.0, right: 8.0),
-                                      child: RichText(
-                                        overflow: TextOverflow.clip,
-                                        text: TextSpan(
-                                          text: (NowPlayingProvider.of(context).playQueue==null)?'':NowPlayingProvider.of(context).playQueue[index].name,
-                                          style: TextStyle(
-                                            fontSize: 16.0,
-                                            height: 1.0,
-                                            letterSpacing: 0.0,
-                                            fontWeight: FontWeight.bold,
-                                            color: Theme.of(context).accentColor
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    RichText(
-                                      overflow: TextOverflow.clip,
-                                      text: TextSpan(
-                                        text: (NowPlayingProvider.of(context).playQueue==null)?'':NowPlayingProvider.of(context).playQueue[index].artistName,
-                                        style: TextStyle(
-                                          fontSize: 14.0,
-                                          height: 1.0,
-                                          letterSpacing: 0.0,
-                                          fontWeight: FontWeight.normal,
-                                          color: Theme.of(context).accentColor
-                                        ),
-                                      ),
-                                    ),
-                                    Expanded(child: Container(),),
-                                    RichText(
-                                      overflow: TextOverflow.clip,
-                                      text: TextSpan(
-                                        text: '0:00',
-                                        style: TextStyle(
-                                          fontSize: 18.0,
-                                          height: 1.0,
-                                          letterSpacing: 0.0,
-                                          fontWeight: FontWeight.normal,
-                                          color: Theme.of(context).accentColor
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      );
-                    },
-                  ),
-                ),
+                TagArea(tags: tags),
+                UpNextList(),
               ],
             ),
           ),
@@ -465,6 +247,7 @@ class NowPlayingMenuState extends State<NowPlayingMenu> {
     );
   }
 }
+
 
 class SeekBar extends StatefulWidget
 {
