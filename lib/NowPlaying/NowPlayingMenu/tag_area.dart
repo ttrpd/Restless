@@ -18,25 +18,33 @@ class TagArea extends StatelessWidget {
         height: 186.0,
         child: Column(
           children: <Widget>[
-            Container(
-              alignment: Alignment.topLeft,
-              child: FlatButton(
-                splashColor: Colors.transparent,
-                child: RichText(
-                  text: TextSpan(
-                    text: 'Tags',
-                    style: TextStyle(
-                      color: Theme.of(context).accentColor,
-                      fontSize: 24.0,
-                      fontWeight: FontWeight.bold,
+            Row(
+              children: <Widget>[
+                Container(
+                  alignment: Alignment.topLeft,
+                  child: FlatButton(
+                    splashColor: Colors.transparent,
+                    child: RichText(
+                      text: TextSpan(
+                        text: 'Tags',
+                        style: TextStyle(
+                          color: Theme.of(context).accentColor,
+                          fontSize: 24.0,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ),
+                    onPressed: () {
+                      print('tags!');
+                    },
                   ),
                 ),
-                onPressed: () {
-                  print('tags!');
-                },
-              ),
-
+                IconButton(
+                  onPressed: (){},
+                  color: Theme.of(context).accentColor,
+                  icon: Icon(Icons.edit),
+                ),
+              ],
             ),
             Flexible(
               child: Wrap(

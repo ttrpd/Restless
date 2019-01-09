@@ -30,20 +30,6 @@ class NowPlayingState extends State<NowPlaying> with SingleTickerProviderStateMi
     super.initState();
   }
 
-  // Future _getTrackInfo(String path) async {
-  //   TagProcessor tp = TagProcessor();
-  //   File f = File(path);
-  //   var img = await tp.getTagsFromByteArray(f.readAsBytes());
-
-
-  //   setState(() {
-  //     track = img.last.tags['title'];
-  //     NowPlayingProvider.of(context).album = img.last.tags['album'];
-  //     NowPlayingProvider.of(context).artist = img.last.tags['artist'];
-  //     NowPlayingProvider.of(context).albumArt = Image.memory(Uint8List.fromList(img.last.tags['APIC'].imageData)).image;
-  //   });
-  // }
-
   @override
   Widget build(BuildContext context) {
 

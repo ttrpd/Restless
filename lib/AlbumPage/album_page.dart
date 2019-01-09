@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:restless/AlbumPage/song_sliver.dart';
+import 'package:restless/NowPlaying/now_playing_provider.dart';
 import 'package:restless/artist_data.dart';
 
 
@@ -133,8 +134,61 @@ class AlbumSongsPageState extends State<AlbumSongsPage> {
               child: ListView.builder(
                 physics: NeverScrollableScrollPhysics(),
                 itemCount: widget.widget.artist.albums[widget.index].songs.length,
-                itemBuilder: (BuildContext context, int j) {
-                  return SongSliver(albumIndex: widget.index, songIndex: j, artist: widget.widget.artist,);
+                itemBuilder: (BuildContext context, int i) {
+                  return SongSliver(
+                    albumIndex: widget.index, 
+                    songIndex: i, 
+                    artist: widget.widget.artist,
+                    onClick: () {
+                      if(NowPlayingProvider.of(context).track == widget.widget.artist.albums[widget.index].songs[i])
+                      {
+                        if(NowPlayingProvider.of(context).playing) {
+                          NowPlayingProvider.of(context).audioPlayer.pause();
+                        }
+                        else
+                        {
+                          NowPlayingProvider.of(context).audioPlayer.resume();
+                        }
+                        setState(() {
+                          NowPlayingProvider.of(context).playing = !NowPlayingProvider.of(context).playing;
+                        });
+                      }
+                      else
+                      {
+                        NowPlayingProvider.of(context).playing = false;
+                        NowPlayingProvider.of(context).audioPlayer.pause();
+                        NowPlayingProvider.of(context).audioPlayer.setUrl(
+                          widget.widget.artist.albums[widget.index].songs[i].path
+                        );
+                        NowPlayingProvider.of(context).track = widget.widget.artist.albums[widget.index].songs[i];
+                        NowPlayingProvider.of(context).audioPlayer.play(
+                          widget.widget.artist.albums[widget.index].songs[i].path
+                        );
+
+                        setState(() {
+                          NowPlayingProvider.of(context).playing = true;
+                        });
+
+                        if(NowPlayingProvider.of(context).playQueue != null)
+                        {
+                          NowPlayingProvider.of(context).playQueue.clear();
+                          NowPlayingProvider.of(context).playQueue.addAll(
+                            widget.widget.artist.albums[widget.index].songs.sublist(i+1)
+                          );
+                        }
+                        else
+                        {
+                          // NowPlayingProvider.of(context).playQueue = new List<TrackData>();
+                          NowPlayingProvider.of(context).playQueue += widget.widget.artist.albums[widget.index].songs.sublist(i+1).reversed;
+                        }
+
+                        if(NowPlayingProvider.of(context).playedQueue.length < 1)
+                        {
+                          NowPlayingProvider.of(context).playedQueue += widget.widget.artist.albums[widget.index].songs.sublist(i-1).reversed;
+                        }
+                      }
+                    },
+                  );
                 },
               ),
             ),

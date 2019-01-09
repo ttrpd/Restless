@@ -61,9 +61,22 @@ class ArtistPageState extends State<ArtistPage> {
                   controller: _scrl,
                   itemCount: ArtistsPageProvider.of(context).artists.length,
                   itemBuilder: (BuildContext context, int index) {
-                    return ArtistSliver(
-                      artist: ArtistsPageProvider.of(context).artists[index],
-                    );
+                    String artist = ArtistsPageProvider.of(context).artists[index].name;
+                    if(!ArtistsPageProvider.of(context).artistSlivers.containsKey(artist))
+                    {
+                      ArtistSliver artistSliver = ArtistSliver(
+                        artist: ArtistsPageProvider.of(context).artists[index],
+                      );
+                      ArtistsPageProvider.of(context).artistSlivers.putIfAbsent(artist, ()=>artistSliver );
+                      return artistSliver;
+                    }
+                    else
+                    {
+                      return ArtistsPageProvider.of(context).artistSlivers[artist];
+                    }
+                    // return ArtistSliver(
+                    //   artist: ArtistsPageProvider.of(context).artists[index],
+                    // );
                   },
                 ),
                 onNotification: (notification) {

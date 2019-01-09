@@ -12,11 +12,13 @@ class SongSliver extends StatefulWidget {
     @required this.songIndex,
     @required this.albumIndex,
     @required this.artist,
+    @required this.onClick,
   }) : super(key: key);
   
   final int songIndex;
   final int albumIndex;
   final ArtistData artist;
+  final void Function() onClick;
   
   
   @override
@@ -40,56 +42,7 @@ class SongSliverState extends State<SongSliver> {
             IconButton(
               iconSize: 18,
               icon: Icon((NowPlayingProvider.of(context).playing && NowPlayingProvider.of(context).track.name == widget.artist.albums[widget.albumIndex].songs[widget.songIndex].name)?Icons.pause:Icons.play_arrow, color: Theme.of(context).accentColor), 
-              onPressed: () {
-                setState(() {
-                  if(NowPlayingProvider.of(context).track == widget.artist.albums[widget.albumIndex].songs[widget.songIndex])
-                  {
-                    if(NowPlayingProvider.of(context).playing) {
-                      NowPlayingProvider.of(context).audioPlayer.pause();
-                    }
-                    else
-                    {
-                      NowPlayingProvider.of(context).audioPlayer.resume();
-                    }
-                    setState(() {
-                      NowPlayingProvider.of(context).playing = !NowPlayingProvider.of(context).playing;
-                    });
-                  }
-                  else
-                  {
-                    NowPlayingProvider.of(context).playing = false;
-                    NowPlayingProvider.of(context).audioPlayer.setUrl(
-                      widget.artist.albums[widget.albumIndex].songs[widget.songIndex].path
-                    );
-                    NowPlayingProvider.of(context).track = widget.artist.albums[widget.albumIndex].songs[widget.songIndex];
-                    NowPlayingProvider.of(context).audioPlayer.play(
-                      widget.artist.albums[widget.albumIndex].songs[widget.songIndex].path
-                    );
-
-                    setState(() {
-                      NowPlayingProvider.of(context).playing = true;
-                    });
-
-                    if(NowPlayingProvider.of(context).playQueue != null)
-                    {
-                      NowPlayingProvider.of(context).playQueue.clear();
-                      NowPlayingProvider.of(context).playQueue.addAll(
-                        widget.artist.albums[widget.albumIndex].songs.sublist(widget.songIndex+1)
-                      );
-                    }
-                    else
-                    {
-                      // NowPlayingProvider.of(context).playQueue = new List<TrackData>();
-                      NowPlayingProvider.of(context).playQueue += widget.artist.albums[widget.albumIndex].songs.sublist(widget.songIndex+1).reversed;
-                    }
-
-                    if(NowPlayingProvider.of(context).playedQueue.length < 1)
-                    {
-                      NowPlayingProvider.of(context).playedQueue += widget.artist.albums[widget.albumIndex].songs.sublist(widget.songIndex-1).reversed;
-                    }
-                  }
-                });
-              },
+              onPressed: widget.onClick,
             ),
             Expanded(
               child: RichText(

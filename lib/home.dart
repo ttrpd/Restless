@@ -162,7 +162,7 @@ class HomeState extends State<Home> {
     return FutureBuilder(
       future: _ftr,
       builder: (BuildContext context, AsyncSnapshot snapshot) {
-        print('building future');
+        
         for(int i = 0; i < artists.length ;i++)
         {
           artists[i].albums.sort( (a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));// sort albums

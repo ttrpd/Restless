@@ -25,9 +25,9 @@ class ArtistSliverState extends State<ArtistSliver> {
   Widget build(BuildContext context)
   {
     return Container(
-      height: MediaQuery.of(context).size.height / 4.75,
+      height: MediaQuery.of(context).size.height / 5.0,
       child: Padding(
-        padding: const EdgeInsets.only(left: 0.0, right: 0.0, top: 6.0, bottom: 6.0),
+        padding: const EdgeInsets.only(left: 0.0, right: 0.0, top: 3.0, bottom: 3.0),
         child: GestureDetector(
           onTap: () {
             print(widget.artist);
@@ -43,7 +43,13 @@ class ArtistSliverState extends State<ArtistSliver> {
               Container(
                 width: double.maxFinite,
                 // height: MediaQuery.of(context).size.height / 2.0,
-                color: Theme.of(context).primaryColor,
+                // color: Theme.of(context).primaryColor,
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    fit: BoxFit.cover,
+                    image: AssetImage('lib/assets/default.jpg'),
+                  )
+                ),
                 child: Stack(
                   children: _buildAlbumArtStack(context, MediaQuery.of(context).size.height),
                 ),

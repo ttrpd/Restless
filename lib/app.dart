@@ -15,6 +15,7 @@ class App extends StatelessWidget
   {
     SimplePermissions.requestPermission(Permission.ReadExternalStorage);
     return ArtistsPageProvider(
+      artistSlivers: {'':null},
       child: NowPlayingProvider(
         playing: false,
         blurValue: 0.0,
