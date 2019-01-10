@@ -6,6 +6,7 @@ import 'package:restless/NowPlaying/NowPlayingMenu/tag_area.dart';
 import 'package:restless/NowPlaying/NowPlayingMenu/up_next_list.dart';
 import 'package:restless/NowPlaying/progress_bar.dart';
 import 'package:restless/NowPlaying/now_playing_provider.dart';
+import 'package:restless/artist_data.dart';
 
 class NowPlayingMenu extends StatefulWidget
 {
@@ -135,7 +136,7 @@ class NowPlayingMenuState extends State<NowPlayingMenu> {
 
                 // Player Controls //
                 Padding(
-                  padding: const EdgeInsets.only(top: 40.0),
+                  padding: const EdgeInsets.only(top: 10.0, bottom: 15.0),
                   child: Row(
                     children: <Widget>[
                       Expanded(child: Container(),),
@@ -152,21 +153,17 @@ class NowPlayingMenuState extends State<NowPlayingMenu> {
                             size: 40.0,
                           ),
                           onPressed: () {
-                              NowPlayingProvider.of(context).audioPlayer.seek(Duration(milliseconds: 0));
-                              
-                              NowPlayingProvider.of(context).audioPlayer.play(
-                                NowPlayingProvider.of(context).playedQueue.elementAt(0).path
-                              );
-                              NowPlayingProvider.of(context).track = NowPlayingProvider.of(context).playedQueue.elementAt(0);
-                              NowPlayingProvider.of(context).playQueue.add(
-                                NowPlayingProvider.of(context).playedQueue.elementAt(0)
-                              );
-                              NowPlayingProvider.of(context).playedQueue.removeAt(0);
-                              
-                            
+                            NowPlayingProvider.of(context).audioPlayer.seek(Duration(milliseconds: 0));
+
                             setState(() {
                               NowPlayingProvider.of(context).trackProgressPercent = 0.0;
                             });
+
+                            setState(() {
+                              NowPlayingProvider.of(context).previousTrack();                           
+                            });
+
+                            NowPlayingProvider.of(context).playCurrentTrack();
                           },
                         ),
                       ),
@@ -214,12 +211,15 @@ class NowPlayingMenuState extends State<NowPlayingMenu> {
                             NowPlayingProvider.of(context).audioPlayer.seek(
                               NowPlayingProvider.of(context).endTime
                             );
-                            NowPlayingProvider.of(context).playedQueue.add(
-                              NowPlayingProvider.of(context).track
-                            );
                             setState(() {
                               NowPlayingProvider.of(context).trackProgressPercent = 1.0;
                             });
+
+                            setState(() {
+                              NowPlayingProvider.of(context).nextTrack();                           
+                            });
+
+                            NowPlayingProvider.of(context).playCurrentTrack();
                           },
                         ),
                       ),
@@ -231,9 +231,53 @@ class NowPlayingMenuState extends State<NowPlayingMenu> {
 
                 
                 Padding(
-                  padding: const EdgeInsets.only(top: 20.0, left: 20.0, right: 20.0, bottom: 0.0),
-                  child: Divider(
-                    color: Theme.of(context).accentColor,
+                  padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
+                  child: Row(
+                    children: <Widget>[
+                      Expanded(child: Container(),),
+                      Container(
+                        width: 40.0,
+                        height: 40.0,
+                        child: RawMaterialButton(
+                          shape: CircleBorder(),
+                          fillColor: Theme.of(context).accentColor,
+                          onPressed: (){},
+                          child: Icon(
+                            Icons.shuffle,
+                            color: Theme.of(context).primaryColor,
+                          ),
+                        ),
+                      ),
+                      Expanded(child: Container(),),
+                      Container(
+                        width: 40.0,
+                        height: 40.0,
+                        child: RawMaterialButton(
+                          shape: CircleBorder(),
+                          fillColor: Theme.of(context).accentColor,
+                          onPressed: (){},
+                          child: Icon(
+                            Icons.repeat,
+                            color: Theme.of(context).primaryColor,
+                          ),
+                        ),
+                      ),
+                      Expanded(child: Container(),),
+                      Container(
+                        width: 40.0,
+                        height: 40.0,
+                        child: RawMaterialButton(
+                          shape: CircleBorder(),
+                          fillColor: Theme.of(context).accentColor,
+                          onPressed: (){},
+                          child: Icon(
+                            Icons.repeat_one,
+                            color: Theme.of(context).primaryColor,
+                          ),
+                        ),
+                      ),
+                      Expanded(child: Container(),),
+                    ],
                   ),
                 ),
 

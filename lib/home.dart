@@ -124,20 +124,15 @@ class HomeState extends State<Home> {
     };
     
     NowPlayingProvider.of(context).audioPlayer.completionHandler = () {
-      if(NowPlayingProvider.of(context).playQueue != null)
+      if(NowPlayingProvider.of(context).playQueue != null && NowPlayingProvider.of(context).getQueuePos() < NowPlayingProvider.of(context).playQueue.length-1)
       {
-        // if(NowPlayingProvider.of(context).playQueue.elementAt(0).path.toString() == '')
-        //   print('Path was null');
-
-        NowPlayingProvider.of(context).audioPlayer.play(
-          NowPlayingProvider.of(context).playQueue.elementAt(0).path
-        );
-        setState(() {
-          NowPlayingProvider.of(context).track = NowPlayingProvider.of(context).playQueue.elementAt(0);
-        });
-        NowPlayingProvider.of(context).playedQueue.add(NowPlayingProvider.of(context).playQueue.elementAt(0));        
-        NowPlayingProvider.of(context).playQueue.removeAt(0);
-        NowPlayingProvider.of(context).playing = true;
+        if(NowPlayingProvider.of(context).track != NowPlayingProvider.of(context).playQueue.last)
+        {
+          setState(() {
+            NowPlayingProvider.of(context).nextTrack();
+          });
+          NowPlayingProvider.of(context).playCurrentTrack();
+        }
       }
       else
       {
@@ -162,7 +157,7 @@ class HomeState extends State<Home> {
     return FutureBuilder(
       future: _ftr,
       builder: (BuildContext context, AsyncSnapshot snapshot) {
-        
+
         for(int i = 0; i < artists.length ;i++)
         {
           artists[i].albums.sort( (a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));// sort albums

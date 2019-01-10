@@ -31,15 +31,6 @@ class _AlbumPageState extends State<AlbumPage> {
 
     return Scaffold(
       backgroundColor: Theme.of(context).primaryColor,
-      // appBar: AppBar(
-      //   backgroundColor: Colors.transparent,
-      //   leading: IconButton(
-      //     icon: Icon(Icons.chevron_left),
-      //     onPressed: () {
-      //       Navigator.of(context).pop();
-      //     },
-      //   ),
-      // ),
       body: Stack(
         children: <Widget>[
           AnimatedContainer(
@@ -155,37 +146,24 @@ class AlbumSongsPageState extends State<AlbumSongsPage> {
                       }
                       else
                       {
-                        NowPlayingProvider.of(context).playing = false;
-                        NowPlayingProvider.of(context).audioPlayer.pause();
-                        NowPlayingProvider.of(context).audioPlayer.setUrl(
-                          widget.widget.artist.albums[widget.index].songs[i].path
-                        );
+                        NowPlayingProvider.of(context).pause();
+                        // NowPlayingProvider.of(context).audioPlayer.setUrl(
+                        //   widget.widget.artist.albums[widget.index].songs[i].path
+                        // );
                         NowPlayingProvider.of(context).track = widget.widget.artist.albums[widget.index].songs[i];
-                        NowPlayingProvider.of(context).audioPlayer.play(
-                          widget.widget.artist.albums[widget.index].songs[i].path
+                        
+                        NowPlayingProvider.of(context).playQueue.clear();
+                        NowPlayingProvider.of(context).playQueue.add(
+                          NowPlayingProvider.of(context).track
+                        );
+
+                        NowPlayingProvider.of(context).playQueue.addAll(
+                          widget.widget.artist.albums[widget.index].songs.sublist(i+1)
                         );
 
                         setState(() {
-                          NowPlayingProvider.of(context).playing = true;
+                          NowPlayingProvider.of(context).playCurrentTrack();
                         });
-
-                        if(NowPlayingProvider.of(context).playQueue != null)
-                        {
-                          NowPlayingProvider.of(context).playQueue.clear();
-                          NowPlayingProvider.of(context).playQueue.addAll(
-                            widget.widget.artist.albums[widget.index].songs.sublist(i+1)
-                          );
-                        }
-                        else
-                        {
-                          // NowPlayingProvider.of(context).playQueue = new List<TrackData>();
-                          NowPlayingProvider.of(context).playQueue += widget.widget.artist.albums[widget.index].songs.sublist(i+1).reversed;
-                        }
-
-                        if(NowPlayingProvider.of(context).playedQueue.length < 1)
-                        {
-                          NowPlayingProvider.of(context).playedQueue += widget.widget.artist.albums[widget.index].songs.sublist(i-1).reversed;
-                        }
                       }
                     },
                   );
