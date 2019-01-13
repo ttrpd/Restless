@@ -2,8 +2,6 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 
 import 'package:restless/home.dart';
-import 'package:restless/Neighbors/neighbor_page.dart';
-import 'package:restless/AlbumPage/album_page.dart';
 import 'package:restless/Artists/artists_page_provider.dart';
 import 'package:restless/NowPlaying/now_playing_provider.dart';
 import 'package:simple_permissions/simple_permissions.dart';
@@ -15,6 +13,7 @@ class App extends StatelessWidget
   {
     SimplePermissions.requestPermission(Permission.ReadExternalStorage);
     return ArtistsPageProvider(
+      artistSlivers: {'':null},
       child: NowPlayingProvider(
         playing: false,
         blurValue: 0.0,
@@ -29,11 +28,10 @@ class App extends StatelessWidget
             primaryColorDark: Color.fromARGB(255, 103, 103, 103),
             accentColor: Color.fromARGB(255, 240, 240, 240),
           ),
-          title: 'MyApp',
+          title: 'Restless',
           debugShowCheckedModeBanner: false,
           routes: <String, WidgetBuilder> {
-            '/neighbor_page': (BuildContext context) => NeighborPage(),
-            '/albums_page': (BuildContext context) => AlbumPage(),
+            // '/albums_page': (BuildContext context) => AlbumPage(),
           },
           home: Home(),
         ),

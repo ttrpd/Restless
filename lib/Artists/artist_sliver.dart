@@ -7,11 +7,13 @@ import 'package:restless/AlbumPage/album_page.dart';
 
 class ArtistSliver extends StatefulWidget
 {
-  ArtistData artist;
+  final ArtistData artist;
+  final double height;
 
   ArtistSliver({
     Key key,
     @required this.artist,
+    @required this.height,
   }) : super(key: key);
 
   @override
@@ -25,9 +27,9 @@ class ArtistSliverState extends State<ArtistSliver> {
   Widget build(BuildContext context)
   {
     return Container(
-      height: MediaQuery.of(context).size.height / 4.75,
+      height: widget.height,
       child: Padding(
-        padding: const EdgeInsets.only(left: 0.0, right: 0.0, top: 6.0, bottom: 6.0),
+        padding: const EdgeInsets.only(left: 0.0, right: 0.0, top: 3.0, bottom: 3.0),
         child: GestureDetector(
           onTap: () {
             print(widget.artist);
@@ -43,7 +45,13 @@ class ArtistSliverState extends State<ArtistSliver> {
               Container(
                 width: double.maxFinite,
                 // height: MediaQuery.of(context).size.height / 2.0,
-                color: Theme.of(context).primaryColor,
+                // color: Theme.of(context).primaryColor,
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    fit: BoxFit.cover,
+                    image: AssetImage('lib/assets/default.jpg'),
+                  )
+                ),
                 child: Stack(
                   children: _buildAlbumArtStack(context, MediaQuery.of(context).size.height),
                 ),
@@ -54,7 +62,7 @@ class ArtistSliverState extends State<ArtistSliver> {
                   padding: const EdgeInsets.only(top: 12.5, left: 10.0, right: 5.0, bottom: 5.0),
                   child: RichText(
                     text: TextSpan(
-                      text: widget.artist.name,
+                      text: widget.artist.name.replaceAll('"', '/').replaceAll('∕', '/').replaceAll('"', ''),
                       style: TextStyle(
                         color: Theme.of(context).accentColor,
                         background: Paint()..color = Theme.of(context).primaryColor,

@@ -1,6 +1,6 @@
+import 'dart:convert';
 import 'dart:core';
 import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:dart_tags/dart_tags.dart';
@@ -26,7 +26,6 @@ class HomeState extends State<Home> {
 
   List<ArtistData> artists = new List<ArtistData>();
   String _musicDirectoryPath = '/storage/emulated/0/Music';//'/storage/emulated/0/Music/TestMusic';
-  String _path = '/storage/emulated/0/Music/Carousel Casualties/Madison/Bright Red Lights.mp3';
   double artistsListOffset = 0.0;
   Future _ftr;
 
@@ -45,57 +44,50 @@ class HomeState extends State<Home> {
       {
         _getMusicData(entity.path);// recurse
       }
-      else
+      else if(entity.path.contains('.mp3'))
       {
-        if(entity.path.contains('.mp3'))
+        TagProcessor tp = TagProcessor();
+        var img = await tp.getTagsFromByteArray(File(entity.path).readAsBytes());
+        if(img.last.tags != null && img.last.tags['APIC'] != null)
         {
-          TagProcessor tp = TagProcessor();
-          // File f = File(entity.path);
-          var img = await tp.getTagsFromByteArray(File(entity.path).readAsBytes());
-          // print(img.toString());
-          // print(img.last.tags);
-          if(img.last.tags != null && img.last.tags['APIC'] != null)
+          // AttachedPicture
+          ImageProvider albumArt;
+          albumArt = Image.memory(base64.decode(img.last.tags['APIC'].imageData64)).image;
+
+          TrackData track = TrackData(
+            name: (img.last.tags['title']!=null)?img.last.tags['title'].trim():entity.path.split('/').last.substring(0,entity.path.split('/').last.indexOf('.')).trim(), 
+            path: entity.path, 
+            tags: img.last.tags,
+            artistName: img.last.tags['TPE2'].trim(),
+            albumName: img.last.tags['album'].trim(), 
+            albumArt: albumArt
+          );
+          AlbumData album = AlbumData(name: track.albumName, albumArt: albumArt, songs: [track],);
+          ArtistData artist = ArtistData(name: track.artistName, albums: [album],);
+          print(artist.name + " - " + album.name);
+          if(artists.firstWhere( (a) => a.name.toUpperCase().trim() == track.artistName.toUpperCase().trim(), orElse: ()=>null) == null)
           {
-            // print('trying to add'+img.last.tags['album']+' by '+img.last.tags['artist']);
-            ImageProvider albumArt;
-            albumArt = Image.memory(Uint8List.fromList(img.last.tags['APIC'].imageData)).image;
-
-            print(img.last.tags);
-            TrackData track = TrackData(
-              name: img.last.tags['title'].trim(), 
-              path: entity.path, 
-              tags: img.last.tags,
-              artistName: img.last.tags['artist'].trim(),
-              albumName: img.last.tags['album'].trim(), 
-              albumArt: albumArt
-            );
-            AlbumData album = AlbumData(name: track.albumName, albumArt: albumArt, songs: [track],);
-            ArtistData artist = ArtistData(name: track.artistName,albums: [album],);
-
-            if(artists.firstWhere( (a) => a.name.toUpperCase().trim() == img.last.tags['artist'].toString().toUpperCase().trim(), orElse: ()=>null) == null)
-            {
-              artists.add(artist);
-            }
-            
-            if(artists.firstWhere( (a) => a.name.toUpperCase().trim() == img.last.tags['artist'].toString().toUpperCase().trim(), orElse: ()=>null)
-              .albums.firstWhere( (al) => al.name.toUpperCase().trim() == img.last.tags['album'].toString().toUpperCase().trim(), orElse: ()=>null) == null)
-            {
-              artists.firstWhere( (a) => a.name.toUpperCase().trim() == img.last.tags['artist'].toString().toUpperCase().trim(), orElse: ()=>null)
-              .albums.add(album);
-            }
-
-            if(artists.firstWhere( (a) => a.name.toUpperCase().trim() == img.last.tags['artist'].toString().toUpperCase().trim(), orElse: ()=>null)
-              .albums.firstWhere( (al) => al.name.toUpperCase().trim() == img.last.tags['album'].toString().toUpperCase().trim(), orElse: ()=>null)
-              .songs.firstWhere( (s) => s.name.toUpperCase().trim() == img.last.tags['track'].toString().toUpperCase().trim(), orElse: ()=>null) == null)
-            {
-              artists.firstWhere( (a) => a.name.toUpperCase().trim() == img.last.tags['artist'].toString().toUpperCase().trim(), orElse: ()=>null)
-              .albums.firstWhere( (al) => al.name.toUpperCase().trim() == img.last.tags['album'].toString().toUpperCase().trim(), orElse:()=>null)
-              .songs.add(track);
-            }
+            artists.add(artist);
           }
           
-          // return Future.delayed(Duration(milliseconds: 1));
+          if(artists.firstWhere( (a) => a.name.toUpperCase().trim() == track.artistName.toUpperCase().trim(), orElse: ()=>null)
+            .albums.firstWhere( (al) => al.name.toUpperCase().trim() == track.albumName.toUpperCase().trim(), orElse: ()=>null) == null)
+          {
+            artists.firstWhere( (a) => a.name.toUpperCase().trim() == track.artistName.toUpperCase().trim(), orElse: ()=>null)
+            .albums.add(album);
+          }
+
+          if(artists.firstWhere( (a) => a.name.toUpperCase().trim() == track.artistName.toUpperCase().trim(), orElse: ()=>null)
+            .albums.firstWhere( (al) => al.name.toUpperCase().trim() == track.albumName.toUpperCase().trim(), orElse: ()=>null)
+            .songs.firstWhere( (s) => s.name.toUpperCase().trim() == track.name.toUpperCase().trim(), orElse: ()=>null) == null)
+          {
+            artists.firstWhere( (a) => a.name.toUpperCase().trim() == track.artistName.toUpperCase().trim(), orElse: ()=>null)
+            .albums.firstWhere( (al) => al.name.toUpperCase().trim() == track.albumName.toUpperCase().trim(), orElse:()=>null)
+            .songs.add(track);
+          }
         }
+        
+        // return Future.delayed(Duration(milliseconds: 1));
       }
     }
   }
@@ -114,25 +106,86 @@ class HomeState extends State<Home> {
   @override
   Widget build(BuildContext context)
   {
+
+    NowPlayingProvider.of(context).audioPlayer.durationHandler = (Duration d) {
+      if(NowPlayingProvider.of(context).endTime != null)
+        setState(() {
+          NowPlayingProvider.of(context).endTime = d;
+        });
+    };
+    
+    NowPlayingProvider.of(context).audioPlayer.positionHandler = (Duration d) {
+      setState(() {
+        NowPlayingProvider.of(context).currentTime = d;
+      });
+      NowPlayingProvider.of(context).trackProgressPercent = NowPlayingProvider.of(context).currentTime.inMilliseconds / NowPlayingProvider.of(context).endTime.inMilliseconds;
+    };
+    
+    NowPlayingProvider.of(context).audioPlayer.completionHandler = () {
+      if(NowPlayingProvider.of(context).playQueue != null && NowPlayingProvider.of(context).getQueuePos() < NowPlayingProvider.of(context).playQueue.length-1)
+      {
+        if(NowPlayingProvider.of(context).track != NowPlayingProvider.of(context).playQueue.last)
+        {
+          setState(() {
+            NowPlayingProvider.of(context).nextTrack();
+          });
+          NowPlayingProvider.of(context).playCurrentTrack();
+        }
+      }
+      else
+      {
+        switch (NowPlayingProvider.of(context).trackFlow) 
+        {
+          case TrackFlow.natural:
+            NowPlayingProvider.of(context).playing = false;
+            break;
+          case TrackFlow.shuffle:
+            NowPlayingProvider.of(context).randomTrack();
+            NowPlayingProvider.of(context).playCurrentTrack();
+            break;
+          case TrackFlow.repeat:
+            NowPlayingProvider.of(context).track = NowPlayingProvider.of(context).playQueue.elementAt(0);
+            NowPlayingProvider.of(context).playCurrentTrack();
+            break;
+          case TrackFlow.repeatOnce:
+            NowPlayingProvider.of(context).track = NowPlayingProvider.of(context).playQueue.elementAt(0);
+            NowPlayingProvider.of(context).playCurrentTrack();
+            NowPlayingProvider.of(context).trackFlow = TrackFlow.natural;
+            break;
+        }
+      }
+      
+      setState(() {
+        NowPlayingProvider.of(context).trackProgressPercent = 1.0;
+      });
+      
+    };
+
     // NowPlayingProvider.of(context).audioPlayer.setUrl(_path, isLocal: true);
     NowPlayingProvider.of(context).audioPlayer.setReleaseMode(ReleaseMode.STOP);
 
-    artists.sort( (a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()) );//sort artists
+    artists.sort( (a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()) );
 
     ArtistsPageProvider.of(context).artists = artists;
     // _ftr.then((f)=>ArtistsPageProvider.of(context).artists = artists);
     
+    for(int i = 0; i < ArtistsPageProvider.of(context).artists.length ; i++)
+    {
+      ArtistsPageProvider.of(context).artists[i].albums.sort( (a, b) => a.name.compareTo(b.name));// sort albums
+    }
+
+    double sliverHeight = ((MediaQuery.of(context).size.height*58) / MediaQuery.of(context).size.width);//(MediaQuery.of(context).size.height * 0.145);
 
     return FutureBuilder(
       future: _ftr,
       builder: (BuildContext context, AsyncSnapshot snapshot) {
-        print('building future');
+
         for(int i = 0; i < artists.length ;i++)
         {
           artists[i].albums.sort( (a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));// sort albums
           for(int j = 0; j < artists[i].albums.length; j++)
           {
-            artists[i].albums[j].songs.sort( (a, b) => a.tags['track'].toString().compareTo(b.tags['track'].toString()));
+            artists[i].albums[j].songs.sort( (a, b) => int.parse(a.tags['track'].toString()) - int.parse(b.tags['track'].toString()));
           }
         }
         return PageView(
@@ -143,6 +196,7 @@ class HomeState extends State<Home> {
             ArtistPage(
               getOffset: () => artistsListOffset,
               setOffset: (offset) => artistsListOffset = offset,
+              sliverHeight: sliverHeight,
             ),
             NowPlaying(audioPlayer: NowPlayingProvider.of(context).audioPlayer,),
           ],

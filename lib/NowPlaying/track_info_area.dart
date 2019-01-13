@@ -1,23 +1,17 @@
-
-
 import 'dart:math';
-
 import 'package:flutter/material.dart';
-import 'package:dart_tags/dart_tags.dart';
 
 class TrackInfoArea extends StatefulWidget
 {
-  double blurValue;
-//  Future<List<Tag>> tags;
-  String name;
-  String album;
-  String artist;
-  String path;
+  final double blurValue;
+  final String name;
+  final String album;
+  final String artist;
+  final String path;
 
   TrackInfoArea({
     Key key,
     @required this.blurValue,
-//    this.tags,
     @required this.name,
     @required this.album,
     @required this.artist,
@@ -54,7 +48,7 @@ class TrackInfoAreaState extends State<TrackInfoArea> {
                       child: RichText(
                         maxLines: 2,
                         text: TextSpan(
-                          text: widget.name, //?? widget.path.substring(widget.path.lastIndexOf('/')+1, widget.path.lastIndexOf('.')),
+                          text: widget.name.replaceAll('"', '/').replaceAll('∕', '/').replaceAll('"', ''),
                           style: TextStyle(
                             color: Theme.of(context).accentColor,
                             background: Paint()..color = Theme.of(context).primaryColor,
@@ -73,7 +67,7 @@ class TrackInfoAreaState extends State<TrackInfoArea> {
                         child: RichText(
                           maxLines: 2,
                           text: TextSpan(
-                            text: widget.album ?? '(Album)',
+                            text: widget.album.replaceAll('"', '/').replaceAll('∕', '/').replaceAll('"', '') ?? '(Album)',
                             style: TextStyle(
                               color: Theme.of(context).accentColor,
                               background: Paint()..color = Theme.of(context).primaryColor,
@@ -91,7 +85,7 @@ class TrackInfoAreaState extends State<TrackInfoArea> {
                       child: RichText(
                         maxLines: 2,
                         text: TextSpan(
-                          text: widget.artist ?? '(Artist)',
+                          text: widget.artist.replaceAll('"', '/').replaceAll('∕', '/').replaceAll('"', '') ?? '(Artist)',
                           style: TextStyle(
                             color: Theme.of(context).accentColor,
                             background: Paint()..color = Theme.of(context).primaryColor,

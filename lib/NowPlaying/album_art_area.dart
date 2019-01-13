@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 
 class AlbumArtArea extends StatefulWidget {
 
-  double blurValue;
-  ImageProvider img;
+  final double blurValue;
+  final ImageProvider img;
   
   AlbumArtArea({
     Key key,
@@ -58,25 +58,4 @@ class AlbumArtAreaState extends State<AlbumArtArea> {
       ),
     );
   }
-
-  Widget _buildPlaceholder(ImageProvider albumArt) {
-    return Container(
-      decoration: BoxDecoration(
-        image: DecorationImage(// use FutureBuilder here
-          image: AssetImage('lib/assets/art15.jpg'),
-          fit: BoxFit.cover,
-        ),
-      ),
-      child: BackdropFilter(
-        filter: ImageFilter.blur(
-            sigmaX: widget.blurValue,
-            sigmaY: widget.blurValue
-        ),
-        child: Container(
-          decoration: BoxDecoration(color: Colors.transparent),
-        ),
-      ),
-    );
-  }
 }
-

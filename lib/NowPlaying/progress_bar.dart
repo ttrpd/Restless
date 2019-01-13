@@ -5,14 +5,14 @@ import 'package:flutter/material.dart';
 class ProgressBar extends StatefulWidget
 {
 
-  double trackThickness;
-  Color trackColor;
-  double progressThickness;
-  Color progressColor;
-  double progressPercent;
-  double thumbHeight;
-  double thumbWidth;
-  Color thumbColor;
+  final double trackThickness;
+  final Color trackColor;
+  final double progressThickness;
+  final Color progressColor;
+  final double progressPercent;
+  final double thumbHeight;
+  final double thumbWidth;
+  final Color thumbColor;
 
   ProgressBar({
     Key key,
