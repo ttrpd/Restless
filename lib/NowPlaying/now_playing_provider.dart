@@ -1,10 +1,22 @@
+import 'dart:math';
+
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:restless/artist_data.dart';
 
+enum TrackFlow {
+  natural,
+  shuffle, 
+  repeat,
+  repeatOnce,
+}
+
 class NowPlayingProvider extends InheritedWidget
 {
+  
+
   bool playing = false;
+  TrackFlow trackFlow = TrackFlow.natural;
   double blurValue;
   double volumeValue;
   Duration currentTime;
@@ -27,6 +39,7 @@ class NowPlayingProvider extends InheritedWidget
     this.track,
     this.volumeValue,
     this.audioPlayer,
+    this.trackFlow,
   }) : super(key: key, child: child);
 
   @override
@@ -68,6 +81,13 @@ class NowPlayingProvider extends InheritedWidget
     if(this.track != this.playQueue.last)
       this.track = this.playQueue.elementAt(this.getQueuePos()+1);
     
+    return this.track;
+  }
+
+  TrackData randomTrack()
+  {
+    Random rand = Random();
+    this.track = this.playQueue.elementAt(rand.nextInt(this.playQueue.length-1));
     return this.track;
   }
 

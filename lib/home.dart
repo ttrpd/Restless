@@ -134,7 +134,25 @@ class HomeState extends State<Home> {
       }
       else
       {
-        NowPlayingProvider.of(context).playing = false;
+        switch (NowPlayingProvider.of(context).trackFlow) 
+        {
+          case TrackFlow.natural:
+            NowPlayingProvider.of(context).playing = false;
+            break;
+          case TrackFlow.shuffle:
+            NowPlayingProvider.of(context).randomTrack();
+            NowPlayingProvider.of(context).playCurrentTrack();
+            break;
+          case TrackFlow.repeat:
+            NowPlayingProvider.of(context).track = NowPlayingProvider.of(context).playQueue.elementAt(0);
+            NowPlayingProvider.of(context).playCurrentTrack();
+            break;
+          case TrackFlow.repeatOnce:
+            NowPlayingProvider.of(context).track = NowPlayingProvider.of(context).playQueue.elementAt(0);
+            NowPlayingProvider.of(context).playCurrentTrack();
+            NowPlayingProvider.of(context).trackFlow = TrackFlow.natural;
+            break;
+        }
       }
       
       setState(() {
