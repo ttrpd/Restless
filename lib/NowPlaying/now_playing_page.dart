@@ -11,7 +11,7 @@ import 'package:restless/NowPlaying/now_playing_provider.dart';
 
 class NowPlaying extends StatefulWidget
 {
-  AudioPlayer audioPlayer;
+  final AudioPlayer audioPlayer;
 
   NowPlaying({
     Key key,

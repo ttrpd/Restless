@@ -1,23 +1,17 @@
-
-
 import 'dart:math';
-
 import 'package:flutter/material.dart';
-import 'package:dart_tags/dart_tags.dart';
 
 class TrackInfoArea extends StatefulWidget
 {
-  double blurValue;
-//  Future<List<Tag>> tags;
-  String name;
-  String album;
-  String artist;
-  String path;
+  final double blurValue;
+  final String name;
+  final String album;
+  final String artist;
+  final String path;
 
   TrackInfoArea({
     Key key,
     @required this.blurValue,
-//    this.tags,
     @required this.name,
     @required this.album,
     @required this.artist,

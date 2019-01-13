@@ -2,7 +2,6 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 
 import 'package:restless/home.dart';
-import 'package:restless/Neighbors/neighbor_page.dart';
 import 'package:restless/Artists/artists_page_provider.dart';
 import 'package:restless/NowPlaying/now_playing_provider.dart';
 import 'package:simple_permissions/simple_permissions.dart';
@@ -32,7 +31,6 @@ class App extends StatelessWidget
           title: 'Restless',
           debugShowCheckedModeBanner: false,
           routes: <String, WidgetBuilder> {
-            '/neighbor_page': (BuildContext context) => NeighborPage(),
             // '/albums_page': (BuildContext context) => AlbumPage(),
           },
           home: Home(),

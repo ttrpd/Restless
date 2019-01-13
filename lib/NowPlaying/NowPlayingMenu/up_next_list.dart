@@ -88,7 +88,7 @@ class UpNextListState extends State<UpNextList> {
                                         overflow: TextOverflow.ellipsis,
                                         maxLines: 1,
                                         text: TextSpan(
-                                          text: (NowPlayingProvider.of(context).playQueue==null)?'':NowPlayingProvider.of(context).playQueue[NowPlayingProvider.of(context).getQueuePos()+index].name,
+                                          text: (NowPlayingProvider.of(context).playQueue==null)?'':NowPlayingProvider.of(context).playQueue[NowPlayingProvider.of(context).getQueuePos()+index+1].name,
                                           style: TextStyle(
                                             fontSize: 16.0,
                                             height: 1.0,
@@ -103,7 +103,7 @@ class UpNextListState extends State<UpNextList> {
                                         overflow: TextOverflow.ellipsis,
                                         maxLines: 1,
                                         text: TextSpan(
-                                          text: (NowPlayingProvider.of(context).playQueue==null)?'':NowPlayingProvider.of(context).playQueue[NowPlayingProvider.of(context).getQueuePos()+index].artistName,
+                                          text: (NowPlayingProvider.of(context).playQueue==null)?'':NowPlayingProvider.of(context).playQueue[NowPlayingProvider.of(context).getQueuePos()+index+1].artistName,
                                           style: TextStyle(
                                             fontSize: 14.0,
                                             height: 1.0,

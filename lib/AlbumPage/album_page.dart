@@ -9,9 +9,9 @@ import 'package:restless/artist_data.dart';
 
 class AlbumPage extends StatefulWidget {
 
-  ArtistData artist;
+  final ArtistData artist;
 
-  AlbumPage({
+  const AlbumPage({
     Key key,
     @required this.artist,
   }) : super(key: key);
@@ -38,7 +38,7 @@ class _AlbumPageState extends State<AlbumPage> {
             child: Container(//blurred background image
               decoration: BoxDecoration(
                 image: DecorationImage(
-                  image: widget.artist.albums[i].albumArt ?? AssetImage('lib/assets/art8.jpg'),
+                  image: widget.artist.albums[i].albumArt ?? AssetImage('lib/assets/default.jpg'),
                   fit: BoxFit.fitHeight,
                 )
               ),

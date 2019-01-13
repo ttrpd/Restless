@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:restless/NowPlaying/now_playing_provider.dart';
 
 class TagArea extends StatelessWidget {
   const TagArea({

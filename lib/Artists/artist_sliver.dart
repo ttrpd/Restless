@@ -7,11 +7,13 @@ import 'package:restless/AlbumPage/album_page.dart';
 
 class ArtistSliver extends StatefulWidget
 {
-  ArtistData artist;
+  final ArtistData artist;
+  final double height;
 
   ArtistSliver({
     Key key,
     @required this.artist,
+    @required this.height,
   }) : super(key: key);
 
   @override
@@ -25,7 +27,7 @@ class ArtistSliverState extends State<ArtistSliver> {
   Widget build(BuildContext context)
   {
     return Container(
-      height: MediaQuery.of(context).size.height / 5.0,
+      height: widget.height,
       child: Padding(
         padding: const EdgeInsets.only(left: 0.0, right: 0.0, top: 3.0, bottom: 3.0),
         child: GestureDetector(

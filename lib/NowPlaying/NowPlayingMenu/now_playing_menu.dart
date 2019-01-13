@@ -6,12 +6,11 @@ import 'package:restless/NowPlaying/NowPlayingMenu/tag_area.dart';
 import 'package:restless/NowPlaying/NowPlayingMenu/up_next_list.dart';
 import 'package:restless/NowPlaying/progress_bar.dart';
 import 'package:restless/NowPlaying/now_playing_provider.dart';
-import 'package:restless/artist_data.dart';
 
 class NowPlayingMenu extends StatefulWidget
 {
 
-  AudioPlayer audioPlayer;
+  final AudioPlayer audioPlayer;
 
   NowPlayingMenu({
     Key key,
@@ -26,7 +25,6 @@ class NowPlayingMenu extends StatefulWidget
 
 class NowPlayingMenuState extends State<NowPlayingMenu> {
 
-  double _volumeValue;
 
   List<Widget> tags = List<Widget>();
 
@@ -37,7 +35,6 @@ class NowPlayingMenuState extends State<NowPlayingMenu> {
   @override
   Widget build(BuildContext context)
   {
-    _volumeValue = NowPlayingProvider.of(context).volumeValue;
 
     tags.add(
       Chip(
@@ -295,10 +292,8 @@ class NowPlayingMenuState extends State<NowPlayingMenu> {
 
 class SeekBar extends StatefulWidget
 {
-  double trackProgressPercent;
-//  double thumbHeight;
-//  double thumbWidth;
-  Function(double) onSeekRequested;
+  final double trackProgressPercent;
+  final Function(double) onSeekRequested;
 
   SeekBar({
     Key key,

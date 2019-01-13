@@ -4,7 +4,7 @@ import 'package:restless/artist_data.dart';
 
 class NowPlayingProvider extends InheritedWidget
 {
-  bool playing;
+  bool playing = false;
   double blurValue;
   double volumeValue;
   Duration currentTime;
@@ -66,7 +66,7 @@ class NowPlayingProvider extends InheritedWidget
   TrackData nextTrack()
   {
     if(this.track != this.playQueue.last)
-      this.track = this.playQueue.elementAt(this.getQueuePos()+2);
+      this.track = this.playQueue.elementAt(this.getQueuePos()+1);
     
     return this.track;
   }

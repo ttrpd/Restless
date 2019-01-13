@@ -1,8 +1,6 @@
-import 'dart:collection';
 import 'dart:convert';
 import 'dart:core';
 import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:dart_tags/dart_tags.dart';
@@ -153,6 +151,12 @@ class HomeState extends State<Home> {
     ArtistsPageProvider.of(context).artists = artists;
     // _ftr.then((f)=>ArtistsPageProvider.of(context).artists = artists);
     
+    for(int i = 0; i < ArtistsPageProvider.of(context).artists.length ; i++)
+    {
+      ArtistsPageProvider.of(context).artists[i].albums.sort( (a, b) => a.name.compareTo(b.name));// sort albums
+    }
+
+    double sliverHeight = ((MediaQuery.of(context).size.height*58) / MediaQuery.of(context).size.width);//(MediaQuery.of(context).size.height * 0.145);
 
     return FutureBuilder(
       future: _ftr,
@@ -174,6 +178,7 @@ class HomeState extends State<Home> {
             ArtistPage(
               getOffset: () => artistsListOffset,
               setOffset: (offset) => artistsListOffset = offset,
+              sliverHeight: sliverHeight,
             ),
             NowPlaying(audioPlayer: NowPlayingProvider.of(context).audioPlayer,),
           ],

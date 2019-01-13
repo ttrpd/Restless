@@ -10,14 +10,16 @@ typedef void SetOffsetMethod(double offset);
 
 class ArtistPage extends StatefulWidget
 {
-  GetOffsetMethod getOffset;
-  SetOffsetMethod setOffset;
+  final GetOffsetMethod getOffset;
+  final SetOffsetMethod setOffset;
+  final double sliverHeight;
 
 
   ArtistPage({
     Key key,
     @required this.getOffset,
     @required this.setOffset,
+    @required this.sliverHeight,
   }) : super(key: key);
 
   @override
@@ -39,12 +41,6 @@ class ArtistPageState extends State<ArtistPage> {
 
   @override
   Widget build(BuildContext context) {
-    print('artistPage');
-
-    for(int i = 0; i < ArtistsPageProvider.of(context).artists.length ; i++)
-    {
-      ArtistsPageProvider.of(context).artists[i].albums.sort( (a, b) => a.name.compareTo(b.name));// sort albums
-    }
 
     return Scaffold(
       
@@ -66,6 +62,7 @@ class ArtistPageState extends State<ArtistPage> {
                     {
                       ArtistSliver artistSliver = ArtistSliver(
                         artist: ArtistsPageProvider.of(context).artists[index],
+                        height: widget.sliverHeight,
                       );
                       ArtistsPageProvider.of(context).artistSlivers.putIfAbsent(artist, ()=>artistSliver );
                       return artistSliver;
@@ -74,9 +71,6 @@ class ArtistPageState extends State<ArtistPage> {
                     {
                       return ArtistsPageProvider.of(context).artistSlivers[artist];
                     }
-                    // return ArtistSliver(
-                    //   artist: ArtistsPageProvider.of(context).artists[index],
-                    // );
                   },
                 ),
                 onNotification: (notification) {
@@ -89,10 +83,10 @@ class ArtistPageState extends State<ArtistPage> {
           AlphabetArtistPicker(
             opacityValue: opacityValue,
             scrolltoLetter: (l) {
-              _scrl.jumpTo(// *
+              _scrl.jumpTo(
                   ArtistsPageProvider.of(context).artists.indexOf(
                       ArtistsPageProvider.of(context).artists.where((a) => a.name.trim().toUpperCase()[0] == l).first
-                  ) * ((MediaQuery.of(context).size.height / 4.0))
+                  ) * widget.sliverHeight
               );
               opacityValue = 0.0;
             },

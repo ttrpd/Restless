@@ -3,7 +3,6 @@ import 'package:restless/artist_data.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:restless/NowPlaying/now_playing_provider.dart';
-import 'package:restless/AlbumPage/album_page.dart';
 
 class SongSliver extends StatefulWidget {
 
