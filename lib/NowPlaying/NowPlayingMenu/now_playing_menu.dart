@@ -221,18 +221,12 @@ class NowPlayingMenuState extends State<NowPlayingMenu> {
                                 size: 40.0,
                               ),
                               onPressed: () {
-                                NowPlayingProvider.of(context).audioPlayer.seek(
-                                  NowPlayingProvider.of(context).endTime
-                                );
                                 setState(() {
+                                  NowPlayingProvider.of(context).audioPlayer.seek(
+                                    NowPlayingProvider.of(context).endTime
+                                  );
                                   NowPlayingProvider.of(context).trackProgressPercent = 1.0;
                                 });
-
-                                setState(() {
-                                  NowPlayingProvider.of(context).nextTrack();                           
-                                });
-
-                                NowPlayingProvider.of(context).playCurrentTrack();
                               },
                             ),
                           ),

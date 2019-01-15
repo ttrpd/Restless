@@ -122,22 +122,28 @@ class HomeState extends State<Home> {
     };
     
     NowPlayingProvider.of(context).audioPlayer.completionHandler = () {
-      if(NowPlayingProvider.of(context).playQueue != null && NowPlayingProvider.of(context).getQueuePos() < NowPlayingProvider.of(context).playQueue.length-1)
+      if(NowPlayingProvider.of(context).track != NowPlayingProvider.of(context).playQueue.last)
       {
-        if(NowPlayingProvider.of(context).track != NowPlayingProvider.of(context).playQueue.last)
+        if(NowPlayingProvider.of(context).trackFlow == TrackFlow.shuffle)
         {
-          setState(() {
-            NowPlayingProvider.of(context).nextTrack();
-          });
-          NowPlayingProvider.of(context).playCurrentTrack();
+          NowPlayingProvider.of(context).randomTrack();
         }
+        else
+        {
+          NowPlayingProvider.of(context).nextTrack();
+        }
+        setState(() {
+          NowPlayingProvider.of(context).playCurrentTrack();
+        });
       }
       else
       {
         switch (NowPlayingProvider.of(context).trackFlow) 
         {
           case TrackFlow.natural:
-            NowPlayingProvider.of(context).playing = false;
+            setState(() {
+              NowPlayingProvider.of(context).pause();              
+            });
             break;
           case TrackFlow.shuffle:
             NowPlayingProvider.of(context).randomTrack();
