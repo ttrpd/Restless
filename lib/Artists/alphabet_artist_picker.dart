@@ -7,7 +7,7 @@ typedef void ScrolltoLetter(String letter);
 
 class AlphabetArtistPicker extends StatefulWidget {
   double opacityValue;
-  ScrolltoLetter scrolltoLetter;
+  final ScrolltoLetter scrolltoLetter;
 
   AlphabetArtistPicker({
     Key key,

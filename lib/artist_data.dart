@@ -30,12 +30,18 @@ class TrackData
 {
   String name;
   String path;
-  List<String> tags = new List<String>();
+  String artistName;
+  String albumName;
+  ImageProvider albumArt;
+  Map<String, Object> tags = Map<String, dynamic>();
 
   TrackData({
     @required this.path,
     this.name,
     this.tags,
+    this.artistName,
+    this.albumName,
+    this.albumArt,
   });
 }
 
