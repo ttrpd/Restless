@@ -33,7 +33,7 @@ class TrackData
   String artistName;
   String albumName;
   ImageProvider albumArt;
-  Map<String, Object> tags = Map<String, dynamic>();
+  Set<TrackTag> tags = Set<TrackTag>();
 
   TrackData({
     @required this.path,
@@ -42,6 +42,17 @@ class TrackData
     this.artistName,
     this.albumName,
     this.albumArt,
+  });
+}
+
+class TrackTag
+{
+  String content;
+  String name;
+
+  TrackTag({
+    @required this.content,
+    this.name = '',
   });
 }
 

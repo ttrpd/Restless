@@ -1,5 +1,3 @@
-
-
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:restless/NowPlaying/NowPlayingMenu/tag_area.dart';
@@ -25,9 +23,6 @@ class NowPlayingMenu extends StatefulWidget
 
 class NowPlayingMenuState extends State<NowPlayingMenu> {
 
-
-  List<Widget> tags = List<Widget>();
-
   @override
   void initState() {
     super.initState();
@@ -35,47 +30,7 @@ class NowPlayingMenuState extends State<NowPlayingMenu> {
   @override
   Widget build(BuildContext context)
   {
-
-    tags.add(
-      Chip(
-        backgroundColor: Theme.of(context).accentColor,
-        label: Text(
-          NowPlayingProvider.of(context).track.name, 
-          style: TextStyle(color: Theme.of(context).primaryColor),
-        ),
-      ),
-    );
-    tags.add(
-      Chip(
-        backgroundColor: Theme.of(context).accentColor,
-        label: Text(
-          NowPlayingProvider.of(context).track.albumName, 
-          style: TextStyle(color: Theme.of(context).primaryColor),
-        ),
-      ),
-    );
-    tags.add(
-      Chip(
-        backgroundColor: Theme.of(context).accentColor,
-        label: Text(
-          NowPlayingProvider.of(context).track.artistName, 
-          style: TextStyle(color: Theme.of(context).primaryColor),
-        ),
-      ),
-    );
-    tags.add(
-      Chip(
-        backgroundColor: Theme.of(context).accentColor,
-        label: Text(
-          NowPlayingProvider.of(context).track.tags['track'], 
-          style: TextStyle(color: Theme.of(context).primaryColor),
-        ),
-      ),
-    );
-
-
     return Container(
-      // color: Theme.of(context).primaryColor,
       height: 860.0,
       child: Stack(
         children: <Widget>[
@@ -309,7 +264,7 @@ class NowPlayingMenuState extends State<NowPlayingMenu> {
                       ),
                     ),
 
-                    TagArea(tags: tags),
+                    TagArea(tags: NowPlayingProvider.of(context).track.tags),
                     UpNextList(),
                   ],
                 ),

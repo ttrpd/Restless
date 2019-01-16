@@ -33,23 +33,7 @@ class _AlbumPageState extends State<AlbumPage> {
       backgroundColor: Theme.of(context).primaryColor,
       body: Stack(
         children: <Widget>[
-          AnimatedContainer(
-            duration: Duration(milliseconds: 3000),
-            child: Container(//blurred background image
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: widget.artist.albums[i].albumArt ?? AssetImage('lib/assets/default.jpg'),
-                  fit: BoxFit.fitHeight,
-                )
-              ),
-              child: BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
-                child: Container(
-                  decoration: BoxDecoration(color: Colors.white.withOpacity(0.0)),
-                ),
-              ),
-            ),
-          ),
+          _buildBlurredBackground(),
           PageView.builder(
             physics: BouncingScrollPhysics(),
             itemCount: widget.artist.albums.length,
@@ -59,13 +43,29 @@ class _AlbumPageState extends State<AlbumPage> {
               });
             },
             itemBuilder: (BuildContext context, int index) {
-              
               return AlbumSongsPage(widget: widget, index: index,);
             },
           )
         ],
       ),
     );
+  }
+
+  Container _buildBlurredBackground() {
+    return Container(//blurred background image
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: widget.artist.albums[i].albumArt ?? AssetImage('lib/assets/default.jpg'),
+              fit: BoxFit.fitHeight,
+            )
+          ),
+          child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
+            child: Container(
+              decoration: BoxDecoration(color: Colors.white.withOpacity(0.0)),
+            ),
+          ),
+        );
   }
 }
 
@@ -92,30 +92,7 @@ class AlbumSongsPageState extends State<AlbumSongsPage> {
     return ListView(
       physics: BouncingScrollPhysics(),
       children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.only(left: 40.0, right: 40.0),
-          child: Container(
-            alignment: Alignment.center,
-            child: Padding(
-              padding: const EdgeInsets.only(top: 70.0, bottom: 50.0),
-              child: RichText(
-                textAlign: TextAlign.center,
-                maxLines: 3,
-                text: TextSpan(
-                  text: widget.widget.artist.albums[widget.index].name.replaceAll('"', '/').replaceAll('∕', '/').replaceAll('"', ''),
-                  style: TextStyle(
-                    color: Theme.of(context).accentColor,
-                    background: Paint()..color = Theme.of(context).primaryColor,
-                    fontSize: 26.0,
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: 2.0,
-                    height: 1.0
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ),
+        _buildAlbumName(context),
         Container(
           child: Padding(
             padding: const EdgeInsets.only(left: 35.0, right: 35.0, bottom: 20.0),
@@ -132,14 +109,12 @@ class AlbumSongsPageState extends State<AlbumSongsPage> {
                     artist: widget.widget.artist,
                     onClick: () {
                       if(NowPlayingProvider.of(context).track == widget.widget.artist.albums[widget.index].songs[i])
-                      {
-                        if(NowPlayingProvider.of(context).playing) {
+                      {//if track is currently playing
+                        if(NowPlayingProvider.of(context).playing)
                           NowPlayingProvider.of(context).audioPlayer.pause();
-                        }
                         else
-                        {
                           NowPlayingProvider.of(context).audioPlayer.resume();
-                        }
+
                         setState(() {
                           NowPlayingProvider.of(context).playing = !NowPlayingProvider.of(context).playing;
                         });
@@ -147,20 +122,14 @@ class AlbumSongsPageState extends State<AlbumSongsPage> {
                       else
                       {
                         NowPlayingProvider.of(context).pause();
-                        // NowPlayingProvider.of(context).audioPlayer.setUrl(
-                        //   widget.widget.artist.albums[widget.index].songs[i].path
-                        // );
                         NowPlayingProvider.of(context).track = widget.widget.artist.albums[widget.index].songs[i];
-                        
                         NowPlayingProvider.of(context).playQueue.clear();
                         NowPlayingProvider.of(context).playQueue.add(
                           NowPlayingProvider.of(context).track
                         );
-
                         NowPlayingProvider.of(context).playQueue.addAll(
                           widget.widget.artist.albums[widget.index].songs.sublist(i+1)
                         );
-
                         setState(() {
                           NowPlayingProvider.of(context).playCurrentTrack();
                         });
@@ -174,5 +143,32 @@ class AlbumSongsPageState extends State<AlbumSongsPage> {
         ),
       ],
     );
+  }
+
+  Padding _buildAlbumName(BuildContext context) {
+    return Padding(
+        padding: const EdgeInsets.only(left: 40.0, right: 40.0),
+        child: Container(
+          alignment: Alignment.center,
+          child: Padding(
+            padding: const EdgeInsets.only(top: 70.0, bottom: 50.0),
+            child: RichText(
+              textAlign: TextAlign.center,
+              maxLines: 3,
+              text: TextSpan(
+                text: widget.widget.artist.albums[widget.index].name.replaceAll('"', '/').replaceAll('∕', '/').replaceAll('"', ''),
+                style: TextStyle(
+                  color: Theme.of(context).accentColor,
+                  background: Paint()..color = Theme.of(context).primaryColor,
+                  fontSize: 26.0,
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 2.0,
+                  height: 1.0
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
   }
 }

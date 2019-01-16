@@ -51,8 +51,11 @@ class ArtistPageState extends State<ArtistPage> {
             behavior: MyScrollBehavior(),
             child: Container(
               color: Theme.of(context).primaryColor,
-
               child: NotificationListener(
+                onNotification: (notification) {//preserves the scroll position in list
+                  if(notification is ScrollNotification)
+                    widget.setOffset(notification.metrics.pixels);
+                },
                 child: ListView.builder(
                   controller: _scrl,
                   itemCount: ArtistsPageProvider.of(context).artists.length,
@@ -73,10 +76,6 @@ class ArtistPageState extends State<ArtistPage> {
                     }
                   },
                 ),
-                onNotification: (notification) {
-                  if(notification is ScrollNotification)
-                    widget.setOffset(notification.metrics.pixels);
-                },
               ),
             ),
           ),
@@ -84,9 +83,9 @@ class ArtistPageState extends State<ArtistPage> {
             opacityValue: opacityValue,
             scrolltoLetter: (l) {
               _scrl.jumpTo(
-                  ArtistsPageProvider.of(context).artists.indexOf(
-                      ArtistsPageProvider.of(context).artists.where((a) => a.name.trim().toUpperCase()[0] == l).first
-                  ) * widget.sliverHeight
+                ArtistsPageProvider.of(context).artists.indexOf(
+                    ArtistsPageProvider.of(context).artists.where((a) => a.name.trim().toUpperCase()[0] == l).first
+                ) * widget.sliverHeight
               );
               opacityValue = 0.0;
             },

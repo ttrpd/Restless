@@ -14,8 +14,6 @@ import 'package:restless/Artists/artists_page_provider.dart';
 
 class Home extends StatefulWidget
 {
-
-
   @override
   HomeState createState() {
     return new HomeState();
@@ -28,6 +26,16 @@ class HomeState extends State<Home> {
   String _musicDirectoryPath = '/storage/emulated/0/Music';//'/storage/emulated/0/Music/TestMusic';
   double artistsListOffset = 0.0;
   Future _ftr;
+
+  Set<TrackTag> extractBasicTags(Map<String, dynamic> tags, String trackName)
+  {
+    Set<TrackTag> tagOutput = Set<TrackTag>();
+    tagOutput.add(TrackTag(name: 'name', content: trackName));
+    tagOutput.add(TrackTag(name: 'artist', content: tags['TPE2'].trim()));
+    tagOutput.add(TrackTag(name: 'album', content: tags['album'].trim()));
+    tagOutput.add(TrackTag(name: 'number', content: tags['track'].trim()));
+    return tagOutput;
+  }
 
   Future _getMusicData(String directoryPath) async 
   {
@@ -53,13 +61,14 @@ class HomeState extends State<Home> {
           // AttachedPicture
           ImageProvider albumArt;
           albumArt = Image.memory(base64.decode(img.last.tags['APIC'].imageData64)).image;
+          String name = (img.last.tags['title']!=null)?img.last.tags['title'].trim():entity.path.split('/').last.substring(0,entity.path.split('/').last.indexOf('.')).trim();
 
           TrackData track = TrackData(
-            name: (img.last.tags['title']!=null)?img.last.tags['title'].trim():entity.path.split('/').last.substring(0,entity.path.split('/').last.indexOf('.')).trim(), 
-            path: entity.path, 
-            tags: img.last.tags,
+            name: name,
+            path: entity.path,
+            tags: extractBasicTags(img.last.tags, name),
             artistName: img.last.tags['TPE2'].trim(),
-            albumName: img.last.tags['album'].trim(), 
+            albumName: img.last.tags['album'].trim(),
             albumArt: albumArt
           );
           AlbumData album = AlbumData(name: track.albumName, albumArt: albumArt, songs: [track],);
@@ -86,8 +95,6 @@ class HomeState extends State<Home> {
             .songs.add(track);
           }
         }
-        
-        // return Future.delayed(Duration(milliseconds: 1));
       }
     }
   }
@@ -97,7 +104,6 @@ class HomeState extends State<Home> {
   void initState() {
     super.initState();
     _ftr = _getMusicData(_musicDirectoryPath);
-    
     print('Initialized'); 
   }
 
@@ -109,9 +115,9 @@ class HomeState extends State<Home> {
 
     NowPlayingProvider.of(context).audioPlayer.durationHandler = (Duration d) {
       if(NowPlayingProvider.of(context).endTime != null)
-        setState(() {
-          NowPlayingProvider.of(context).endTime = d;
-        });
+      setState(() {
+        NowPlayingProvider.of(context).endTime = d;
+      });
     };
     
     NowPlayingProvider.of(context).audioPlayer.positionHandler = (Duration d) {
@@ -142,7 +148,7 @@ class HomeState extends State<Home> {
         {
           case TrackFlow.natural:
             setState(() {
-              NowPlayingProvider.of(context).pause();              
+              NowPlayingProvider.of(context).playing = false;              
             });
             break;
           case TrackFlow.shuffle:
@@ -167,7 +173,6 @@ class HomeState extends State<Home> {
       
     };
 
-    // NowPlayingProvider.of(context).audioPlayer.setUrl(_path, isLocal: true);
     NowPlayingProvider.of(context).audioPlayer.setReleaseMode(ReleaseMode.STOP);
 
     artists.sort( (a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()) );
@@ -191,7 +196,7 @@ class HomeState extends State<Home> {
           artists[i].albums.sort( (a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));// sort albums
           for(int j = 0; j < artists[i].albums.length; j++)
           {
-            artists[i].albums[j].songs.sort( (a, b) => int.parse(a.tags['track'].toString()) - int.parse(b.tags['track'].toString()));
+            artists[i].albums[j].songs.sort( (a, b) => int.parse(a.tags.firstWhere((a)=>a.name == 'number').content) - int.parse(b.tags.firstWhere((a)=>a.name == 'number').content));
           }
         }
         return PageView(
