@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 
-class ZoomDrawer extends StatefulWidget {
-  const ZoomDrawer({
+class HiddenDrawer extends StatefulWidget {
+  const HiddenDrawer({
     Key key,
     @required this.child,
     this.maxSlidePercent = 0.8,
@@ -12,12 +12,12 @@ class ZoomDrawer extends StatefulWidget {
   final double maxSlidePercent;
 
   @override
-  ZoomDrawerState createState() {
-    return new ZoomDrawerState();
+  HiddenDrawerState createState() {
+    return new HiddenDrawerState();
   }
 }
 
-class ZoomDrawerState extends State<ZoomDrawer> {
+class HiddenDrawerState extends State<HiddenDrawer> {
 
   double slidePercent = 0.0;
   Offset startDrag;

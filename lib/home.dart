@@ -9,7 +9,7 @@ import 'package:restless/NowPlaying/now_playing_provider.dart';
 import 'package:restless/artist_data.dart';
 import 'package:restless/Artists/artist_page.dart';
 import 'package:restless/Artists/artists_page_provider.dart';
-import 'package:restless/zoom_drawer.dart';
+import 'package:restless/hidden_drawer.dart';
 
 
 class Home extends StatefulWidget
@@ -201,7 +201,7 @@ class HomeState extends State<Home> {
             artists[i].albums[j].songs.sort( (a, b) => int.parse(a.tags.firstWhere((a)=>a.name == 'number').content) - int.parse(b.tags.firstWhere((a)=>a.name == 'number').content));
           }
         }
-        return ZoomDrawer(
+        return HiddenDrawer(
           child: ArtistPage(
             getOffset: () => artistsListOffset,
             setOffset: (offset) => artistsListOffset = offset,
