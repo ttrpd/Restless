@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 
 
@@ -17,7 +19,7 @@ class HiddenDrawer extends StatefulWidget {
   }
 }
 
-class HiddenDrawerState extends State<HiddenDrawer> {
+class HiddenDrawerState extends State<HiddenDrawer> with TickerProviderStateMixin{
 
   double slidePercent = 0.0;
   Offset startDrag;
@@ -36,7 +38,7 @@ class HiddenDrawerState extends State<HiddenDrawer> {
   {
     final currentSlide = details.globalPosition;
     final slideDistance = currentSlide.dx - startDrag.dx;
-    final fullSlidePercent = slideDistance / widget.maxSlidePercent;
+    final fullSlidePercent = slideDistance / (widget.maxSlidePercent * MediaQuery.of(context).size.width);
 
     setState(() {
       slidePercent = (startDragPercentSlide + fullSlidePercent).clamp(0.0, widget.maxSlidePercent);//clamping just in case   
@@ -45,9 +47,28 @@ class HiddenDrawerState extends State<HiddenDrawer> {
 
   horizontalDragEnd(DragEndDetails details)
   {
+    finishSlideStart = slidePercent;
+    finishSlideEnd = slidePercent.roundToDouble() * (widget.maxSlidePercent);
+    finishSlideController.forward(from: 0.0);
+
     setState(() {
       startDrag = null;
       startDragPercentSlide = null;      
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    finishSlideController = AnimationController(
+      duration: Duration(milliseconds: 150),
+      vsync: this,
+    )
+    ..addListener(() {
+      setState(() {
+        slidePercent = lerpDouble(finishSlideStart, finishSlideEnd, finishSlideController.value);
+      });
     });
   }
 
@@ -60,7 +81,18 @@ class HiddenDrawerState extends State<HiddenDrawer> {
           alignment: Alignment.centerLeft,
           width: double.infinity,
           height: double.infinity,
-          color: Color.fromARGB(255, 50, 50, 50),
+          // color: Color.fromARGB(255, 50, 50, 50),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.bottomLeft,
+              end: Alignment.topRight,
+
+              colors: [
+                Color.fromARGB(255, 30, 30, 30),
+                Color.fromARGB(255, 80, 80, 80),
+              ],
+            ),
+          ),
           child: Padding(
             padding: const EdgeInsets.only(left: 40.0),
             child: Container(
@@ -80,7 +112,7 @@ class HiddenDrawerState extends State<HiddenDrawer> {
         ),
         Transform(
           alignment: Alignment.centerLeft,
-          transform: Matrix4.translationValues( (MediaQuery.of(context).size.width * 0.9) * slidePercent , 0.0, 0.0)..scale(1-(0.2 * slidePercent)),
+          transform: Matrix4.translationValues( (MediaQuery.of(context).size.width * 0.8) * slidePercent , 0.0, 0.0)..scale(1-(0.3 * slidePercent)),
           child: GestureDetector(
             onHorizontalDragStart: horizontalDragStart,
             onHorizontalDragUpdate: horizontalDragUpdate,

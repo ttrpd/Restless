@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:dart_tags/dart_tags.dart';
 import 'package:flutter/material.dart';
+import 'package:restless/NowPlaying/now_playing_page.dart';
 import 'package:restless/NowPlaying/now_playing_provider.dart';
 import 'package:restless/artist_data.dart';
 import 'package:restless/Artists/artist_page.dart';
@@ -201,15 +202,23 @@ class HomeState extends State<Home> {
             artists[i].albums[j].songs.sort( (a, b) => int.parse(a.tags.firstWhere((a)=>a.name == 'number').content) - int.parse(b.tags.firstWhere((a)=>a.name == 'number').content));
           }
         }
-        return HiddenDrawer(
-          child: ArtistPage(
-            getOffset: () => artistsListOffset,
-            setOffset: (offset) => artistsListOffset = offset,
-            sliverHeight: sliverHeight,
-            dragMenu: (DragUpdateDetails d){},
-          ),
+        return PageView(
+          controller: PageController(initialPage: 2),
+          
+          scrollDirection: Axis.horizontal,
+          children: <Widget>[
+            ClipRect(child: NowPlaying(audioPlayer: NowPlayingProvider.of(context).audioPlayer,)),
+            HiddenDrawer(
+              child: ArtistPage(
+                getOffset: () => artistsListOffset,
+                setOffset: (offset) => artistsListOffset = offset,
+                sliverHeight: sliverHeight,
+                dragMenu: (DragUpdateDetails d){},
+              ),
+            ),
+            
+          ],
         );
-            // NowPlaying(audioPlayer: NowPlayingProvider.of(context).audioPlayer,),
       },
     );
   }
