@@ -2,10 +2,8 @@
 import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
 
-import 'package:restless/NowPlaying/album_art_area.dart';
 import 'package:restless/my_scroll_behavior.dart';
 import 'package:restless/NowPlaying/NowPlayingMenu/now_playing_menu.dart';
-import 'package:restless/NowPlaying/track_info_area.dart';
 import 'package:restless/NowPlaying/now_playing_provider.dart';
 
 
