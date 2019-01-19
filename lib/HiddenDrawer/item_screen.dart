@@ -56,7 +56,7 @@ class ItemScreenState extends State<ItemScreen> {
           onHorizontalDragEnd: (widget.slidePercent != 1.0)?widget.dragEnd:null,
           onTap: widget.onTap,
           behavior: HitTestBehavior.opaque,
-          child: (widget.slidePercent > 0)?Stack(
+          child: (widget.slidePercent > 0)?Stack(//TODO: may slow down navigation animations
             children: <Widget>[
               widget.child,
               Container(height: double.infinity, width: double.infinity, color: Colors.transparent,),

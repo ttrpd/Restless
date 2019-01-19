@@ -43,6 +43,9 @@ class MenuItemState extends State<MenuItem> {
           text: TextSpan(
             text: widget.text,
             style: TextStyle(
+              fontFamily: 'Anton',
+              fontStyle: FontStyle.normal,
+              // fontWeight: FontWeight.w100,
               color: textColor,
               fontSize: 28.0,
             ),
