@@ -43,7 +43,7 @@ class MenuItemState extends State<MenuItem> {
           text: TextSpan(
             text: widget.text,
             style: TextStyle(
-              fontFamily: 'Anton',
+              fontFamily: 'Oswald',
               fontStyle: FontStyle.normal,
               // fontWeight: FontWeight.w100,
               color: textColor,

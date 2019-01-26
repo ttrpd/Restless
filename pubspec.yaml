@@ -64,19 +64,10 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   fonts:
-    - family: Anton
+    - family: Oswald
       fonts:
-       - asset: lib/assets/fonts/Anton-Regular.ttf
+       - asset: lib/assets/fonts/Oswald-Regular.ttf
          style: normal
-    - family: Dosis
-      fonts:
-       - asset: lib/assets/fonts/Dosis-Regular.ttf
-       - asset: lib/assets/fonts/Dosis-SemiBold.ttf
-         style: italic
-    - family: OpenSans
-      fonts:
-       - asset: lib/assets/fonts/OpenSans-Regular.ttf
-       - asset: lib/assets/fonts/OpenSans-SemiBold.ttf
-         style: italic
+
   # For details regarding fonts from package dependencies,
   # see https://flutter.io/custom-fonts/#from-packages
