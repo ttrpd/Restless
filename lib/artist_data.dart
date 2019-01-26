@@ -32,16 +32,27 @@ class TrackData
   String path;
   String artistName;
   String albumName;
-  ImageProvider albumArt;
-  Map<String, Object> tags = Map<String, dynamic>();
+  ImageProvider albumArt = AssetImage('lib/assets/default.jpg');
+  Set<TrackTag> tags = Set<TrackTag>();
 
   TrackData({
-    @required this.path,
-    this.name,
+    this.path = '',
+    this.name = '',
     this.tags,
-    this.artistName,
-    this.albumName,
+    this.artistName = '',
+    this.albumName = '',
     this.albumArt,
+  });
+}
+
+class TrackTag
+{
+  String content = '';
+  String name;
+
+  TrackTag({
+    @required this.content,
+    this.name = '',
   });
 }
 

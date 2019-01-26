@@ -13,6 +13,7 @@ class ArtistPage extends StatefulWidget
   final GetOffsetMethod getOffset;
   final SetOffsetMethod setOffset;
   final double sliverHeight;
+  final Function(DragUpdateDetails) dragMenu;
 
 
   ArtistPage({
@@ -20,6 +21,7 @@ class ArtistPage extends StatefulWidget
     @required this.getOffset,
     @required this.setOffset,
     @required this.sliverHeight,
+    @required this.dragMenu,
   }) : super(key: key);
 
   @override
@@ -43,16 +45,29 @@ class ArtistPageState extends State<ArtistPage> {
   Widget build(BuildContext context) {
 
     return Scaffold(
-      
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Theme.of(context).primaryColor,
+        foregroundColor: Theme.of(context).accentColor,
+        child: Icon(Icons.sort_by_alpha),
+        onPressed: () {
+          print(opacityValue);
+          setState(() {
+            opacityValue = (opacityValue > 0.0)?0.0:1.0;
+          });
+        },
+      ),
       body: Stack(
-        alignment: Alignment.bottomRight,
+        alignment: Alignment.center,
         children: <Widget>[
           ScrollConfiguration(
             behavior: MyScrollBehavior(),
             child: Container(
               color: Theme.of(context).primaryColor,
-
               child: NotificationListener(
+                onNotification: (notification) {//preserves the scroll position in list
+                  if(notification is ScrollNotification)
+                    widget.setOffset(notification.metrics.pixels);
+                },
                 child: ListView.builder(
                   controller: _scrl,
                   itemCount: ArtistsPageProvider.of(context).artists.length,
@@ -73,10 +88,6 @@ class ArtistPageState extends State<ArtistPage> {
                     }
                   },
                 ),
-                onNotification: (notification) {
-                  if(notification is ScrollNotification)
-                    widget.setOffset(notification.metrics.pixels);
-                },
               ),
             ),
           ),
@@ -84,26 +95,12 @@ class ArtistPageState extends State<ArtistPage> {
             opacityValue: opacityValue,
             scrolltoLetter: (l) {
               _scrl.jumpTo(
-                  ArtistsPageProvider.of(context).artists.indexOf(
-                      ArtistsPageProvider.of(context).artists.where((a) => a.name.trim().toUpperCase()[0] == l).first
-                  ) * widget.sliverHeight
+                ArtistsPageProvider.of(context).artists.indexOf(
+                    ArtistsPageProvider.of(context).artists.where((a) => a.name.trim().toUpperCase()[0] == l).first
+                ) * widget.sliverHeight
               );
               opacityValue = 0.0;
             },
-          ),
-          Padding(
-            padding: const EdgeInsets.only(right: 10.0, bottom: 24.0),
-            child: FloatingActionButton(
-              backgroundColor: Theme.of(context).primaryColor,
-              foregroundColor: Theme.of(context).accentColor,
-              child: Icon(Icons.sort_by_alpha),
-              onPressed: () {
-                print(opacityValue);
-                setState(() {
-                  opacityValue = (opacityValue > 0.0)?0.0:1.0;
-                });
-              },
-            ),
           ),
         ],
       ),

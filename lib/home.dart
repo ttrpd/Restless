@@ -5,17 +5,16 @@ import 'dart:io';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:dart_tags/dart_tags.dart';
 import 'package:flutter/material.dart';
+import 'package:restless/Artists/artist_page.dart';
+import 'package:restless/HiddenDrawer/hidden_drawer.dart';
+import 'package:restless/NowPlaying/now_playing_page.dart';
 import 'package:restless/NowPlaying/now_playing_provider.dart';
 import 'package:restless/artist_data.dart';
-import 'package:restless/Artists/artist_page.dart';
-import 'package:restless/NowPlaying/now_playing_page.dart';
 import 'package:restless/Artists/artists_page_provider.dart';
 
 
 class Home extends StatefulWidget
 {
-
-
   @override
   HomeState createState() {
     return new HomeState();
@@ -26,8 +25,17 @@ class HomeState extends State<Home> {
 
   List<ArtistData> artists = new List<ArtistData>();
   String _musicDirectoryPath = '/storage/emulated/0/Music';//'/storage/emulated/0/Music/TestMusic';
-  double artistsListOffset = 0.0;
   Future _ftr;
+
+  Set<TrackTag> extractBasicTags(Map<String, dynamic> tags, String trackName)
+  {
+    Set<TrackTag> tagOutput = Set<TrackTag>();
+    tagOutput.add(TrackTag(name: 'name', content: trackName));
+    tagOutput.add(TrackTag(name: 'artist', content: tags['TPE2'].trim()));
+    tagOutput.add(TrackTag(name: 'album', content: tags['album'].trim()));
+    tagOutput.add(TrackTag(name: 'number', content: tags['track'].trim()));
+    return tagOutput;
+  }
 
   Future _getMusicData(String directoryPath) async 
   {
@@ -53,13 +61,14 @@ class HomeState extends State<Home> {
           // AttachedPicture
           ImageProvider albumArt;
           albumArt = Image.memory(base64.decode(img.last.tags['APIC'].imageData64)).image;
+          String name = (img.last.tags['title']!=null)?img.last.tags['title'].trim():entity.path.split('/').last.substring(0,entity.path.split('/').last.indexOf('.')).trim();
 
           TrackData track = TrackData(
-            name: (img.last.tags['title']!=null)?img.last.tags['title'].trim():entity.path.split('/').last.substring(0,entity.path.split('/').last.indexOf('.')).trim(), 
-            path: entity.path, 
-            tags: img.last.tags,
+            name: name,
+            path: entity.path,
+            tags: extractBasicTags(img.last.tags, name),
             artistName: img.last.tags['TPE2'].trim(),
-            albumName: img.last.tags['album'].trim(), 
+            albumName: img.last.tags['album'].trim(),
             albumArt: albumArt
           );
           AlbumData album = AlbumData(name: track.albumName, albumArt: albumArt, songs: [track],);
@@ -86,8 +95,6 @@ class HomeState extends State<Home> {
             .songs.add(track);
           }
         }
-        
-        // return Future.delayed(Duration(milliseconds: 1));
       }
     }
   }
@@ -97,7 +104,6 @@ class HomeState extends State<Home> {
   void initState() {
     super.initState();
     _ftr = _getMusicData(_musicDirectoryPath);
-    
     print('Initialized'); 
   }
 
@@ -109,9 +115,9 @@ class HomeState extends State<Home> {
 
     NowPlayingProvider.of(context).audioPlayer.durationHandler = (Duration d) {
       if(NowPlayingProvider.of(context).endTime != null)
-        setState(() {
-          NowPlayingProvider.of(context).endTime = d;
-        });
+      setState(() {
+        NowPlayingProvider.of(context).endTime = d;
+      });
     };
     
     NowPlayingProvider.of(context).audioPlayer.positionHandler = (Duration d) {
@@ -122,22 +128,28 @@ class HomeState extends State<Home> {
     };
     
     NowPlayingProvider.of(context).audioPlayer.completionHandler = () {
-      if(NowPlayingProvider.of(context).playQueue != null && NowPlayingProvider.of(context).getQueuePos() < NowPlayingProvider.of(context).playQueue.length-1)
+      if(NowPlayingProvider.of(context).track != NowPlayingProvider.of(context).playQueue.last)
       {
-        if(NowPlayingProvider.of(context).track != NowPlayingProvider.of(context).playQueue.last)
+        if(NowPlayingProvider.of(context).trackFlow == TrackFlow.shuffle)
         {
-          setState(() {
-            NowPlayingProvider.of(context).nextTrack();
-          });
-          NowPlayingProvider.of(context).playCurrentTrack();
+          NowPlayingProvider.of(context).randomTrack();
         }
+        else
+        {
+          NowPlayingProvider.of(context).nextTrack();
+        }
+        setState(() {
+          NowPlayingProvider.of(context).playCurrentTrack();
+        });
       }
       else
       {
         switch (NowPlayingProvider.of(context).trackFlow) 
         {
           case TrackFlow.natural:
-            NowPlayingProvider.of(context).playing = false;
+            setState(() {
+              NowPlayingProvider.of(context).playing = false;              
+            });
             break;
           case TrackFlow.shuffle:
             NowPlayingProvider.of(context).randomTrack();
@@ -161,7 +173,6 @@ class HomeState extends State<Home> {
       
     };
 
-    // NowPlayingProvider.of(context).audioPlayer.setUrl(_path, isLocal: true);
     NowPlayingProvider.of(context).audioPlayer.setReleaseMode(ReleaseMode.STOP);
 
     artists.sort( (a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()) );
@@ -174,7 +185,10 @@ class HomeState extends State<Home> {
       ArtistsPageProvider.of(context).artists[i].albums.sort( (a, b) => a.name.compareTo(b.name));// sort albums
     }
 
-    double sliverHeight = ((MediaQuery.of(context).size.height*58) / MediaQuery.of(context).size.width);//(MediaQuery.of(context).size.height * 0.145);
+    double artistsListOffset = 0.0;
+
+    double sliverHeight = ((MediaQuery.of(context).size.height*64) / MediaQuery.of(context).size.width);//(MediaQuery.of(context).size.height * 0.145);
+
 
     return FutureBuilder(
       future: _ftr,
@@ -185,23 +199,29 @@ class HomeState extends State<Home> {
           artists[i].albums.sort( (a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));// sort albums
           for(int j = 0; j < artists[i].albums.length; j++)
           {
-            artists[i].albums[j].songs.sort( (a, b) => int.parse(a.tags['track'].toString()) - int.parse(b.tags['track'].toString()));
+            artists[i].albums[j].songs.sort( (a, b) => int.parse(a.tags.firstWhere((a)=>a.name == 'number').content) - int.parse(b.tags.firstWhere((a)=>a.name == 'number').content));
           }
         }
-        return PageView(
-          pageSnapping: true,
-          physics: BouncingScrollPhysics(),
-          scrollDirection: Axis.horizontal,
-          children: <Widget>[
-            ArtistPage(
-              getOffset: () => artistsListOffset,
-              setOffset: (offset) => artistsListOffset = offset,
-              sliverHeight: sliverHeight,
-            ),
-            NowPlaying(audioPlayer: NowPlayingProvider.of(context).audioPlayer,),
-          ],
+        return HiddenDrawer(
+          artists: ArtistPage(
+            getOffset: () => artistsListOffset,
+            setOffset: (offset) => artistsListOffset = offset,
+            sliverHeight: sliverHeight,
+            dragMenu: (DragUpdateDetails d){},
+          ),
+          albums: Container(color: Colors.green[100],),
+          nowPlaying: ClipRect(child: NowPlaying(audioPlayer: NowPlayingProvider.of(context).audioPlayer,)),
+          playlists: Container(color: Colors.blue[100],),
+          settings: Container(color: Colors.amber[100],),
         );
       },
     );
   }
 }
+
+// ArtistPage(
+//   getOffset: () => artistsListOffset,
+//   setOffset: (offset) => artistsListOffset = offset,
+//   sliverHeight: sliverHeight,
+//   dragMenu: (DragUpdateDetails d){},
+// ),

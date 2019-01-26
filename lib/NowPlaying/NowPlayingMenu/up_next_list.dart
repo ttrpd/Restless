@@ -59,8 +59,13 @@ class UpNextListState extends State<UpNextList> {
               ).length,
             itemBuilder: (BuildContext context, int index) {
               return InkWell(
-                splashColor: Color.fromARGB(10, 255, 255, 255),
-                onTap: (){},
+                splashColor: Color.fromARGB(200, 255, 255, 255),
+                onTap: (){
+                  NowPlayingProvider.of(context).track = NowPlayingProvider.of(context).playQueue.elementAt(NowPlayingProvider.of(context).getQueuePos()+index+1);
+                  setState(() {
+                    NowPlayingProvider.of(context).playCurrentTrack();                    
+                  });
+                },
                 child: Column(
                   children: <Widget>[
                     // Divider(
