@@ -5,10 +5,11 @@ import 'dart:io';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:dart_tags/dart_tags.dart';
 import 'package:flutter/material.dart';
+import 'package:restless/Artists/artist_page.dart';
+import 'package:restless/HiddenDrawer/hidden_drawer.dart';
+import 'package:restless/NowPlaying/now_playing_page.dart';
 import 'package:restless/NowPlaying/now_playing_provider.dart';
 import 'package:restless/artist_data.dart';
-import 'package:restless/Artists/artist_page.dart';
-import 'package:restless/NowPlaying/now_playing_page.dart';
 import 'package:restless/Artists/artists_page_provider.dart';
 
 
@@ -24,7 +25,6 @@ class HomeState extends State<Home> {
 
   List<ArtistData> artists = new List<ArtistData>();
   String _musicDirectoryPath = '/storage/emulated/0/Music';//'/storage/emulated/0/Music/TestMusic';
-  double artistsListOffset = 0.0;
   Future _ftr;
 
   Set<TrackTag> extractBasicTags(Map<String, dynamic> tags, String trackName)
@@ -185,7 +185,10 @@ class HomeState extends State<Home> {
       ArtistsPageProvider.of(context).artists[i].albums.sort( (a, b) => a.name.compareTo(b.name));// sort albums
     }
 
-    double sliverHeight = ((MediaQuery.of(context).size.height*58) / MediaQuery.of(context).size.width);//(MediaQuery.of(context).size.height * 0.145);
+    double artistsListOffset = 0.0;
+
+    double sliverHeight = ((MediaQuery.of(context).size.height*64) / MediaQuery.of(context).size.width);//(MediaQuery.of(context).size.height * 0.145);
+
 
     return FutureBuilder(
       future: _ftr,
@@ -199,20 +202,26 @@ class HomeState extends State<Home> {
             artists[i].albums[j].songs.sort( (a, b) => int.parse(a.tags.firstWhere((a)=>a.name == 'number').content) - int.parse(b.tags.firstWhere((a)=>a.name == 'number').content));
           }
         }
-        return PageView(
-          pageSnapping: true,
-          physics: BouncingScrollPhysics(),
-          scrollDirection: Axis.horizontal,
-          children: <Widget>[
-            ArtistPage(
-              getOffset: () => artistsListOffset,
-              setOffset: (offset) => artistsListOffset = offset,
-              sliverHeight: sliverHeight,
-            ),
-            NowPlaying(audioPlayer: NowPlayingProvider.of(context).audioPlayer,),
-          ],
+        return HiddenDrawer(
+          artists: ArtistPage(
+            getOffset: () => artistsListOffset,
+            setOffset: (offset) => artistsListOffset = offset,
+            sliverHeight: sliverHeight,
+            dragMenu: (DragUpdateDetails d){},
+          ),
+          albums: Container(color: Colors.green[100],),
+          nowPlaying: ClipRect(child: NowPlaying(audioPlayer: NowPlayingProvider.of(context).audioPlayer,)),
+          playlists: Container(color: Colors.blue[100],),
+          settings: Container(color: Colors.amber[100],),
         );
       },
     );
   }
 }
+
+// ArtistPage(
+//   getOffset: () => artistsListOffset,
+//   setOffset: (offset) => artistsListOffset = offset,
+//   sliverHeight: sliverHeight,
+//   dragMenu: (DragUpdateDetails d){},
+// ),
