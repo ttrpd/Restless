@@ -202,7 +202,7 @@ class NowPlayingMenuState extends State<NowPlayingMenu> {
                             height: 40.0,
                             child: RawMaterialButton(
                               shape: CircleBorder(),
-                              fillColor: (NowPlayingProvider.of(context).trackFlow==TrackFlow.shuffle)?Theme.of(context).accentColor:Colors.black12,
+                              fillColor: Colors.black12,
                               onPressed: (){
                                 setState(() {
                                   if(NowPlayingProvider.of(context).trackFlow == TrackFlow.shuffle)
@@ -213,7 +213,7 @@ class NowPlayingMenuState extends State<NowPlayingMenu> {
                               },
                               child: Icon(
                                 Icons.shuffle,
-                                color: (NowPlayingProvider.of(context).trackFlow==TrackFlow.shuffle)?Theme.of(context).primaryColor:Theme.of(context).primaryColorDark,
+                                color: (NowPlayingProvider.of(context).trackFlow==TrackFlow.shuffle)?Theme.of(context).accentColor:Theme.of(context).primaryColorDark,
                               ),
                             ),
                           ),
@@ -223,7 +223,7 @@ class NowPlayingMenuState extends State<NowPlayingMenu> {
                             height: 40.0,
                             child: RawMaterialButton(
                               shape: CircleBorder(),
-                              fillColor: (NowPlayingProvider.of(context).trackFlow==TrackFlow.repeat)?Theme.of(context).accentColor:Colors.black12,
+                              fillColor: Colors.black12,
                               onPressed: (){
                                 setState(() {
                                   if(NowPlayingProvider.of(context).trackFlow == TrackFlow.repeat)
@@ -234,7 +234,7 @@ class NowPlayingMenuState extends State<NowPlayingMenu> {
                               },
                               child: Icon(
                                 Icons.repeat,
-                                color: (NowPlayingProvider.of(context).trackFlow==TrackFlow.repeat)?Theme.of(context).primaryColor:Theme.of(context).primaryColorDark,
+                                color: (NowPlayingProvider.of(context).trackFlow==TrackFlow.repeat)?Theme.of(context).accentColor:Theme.of(context).primaryColorDark,
                               ),
                             ),
                           ),
@@ -244,7 +244,7 @@ class NowPlayingMenuState extends State<NowPlayingMenu> {
                             height: 40.0,
                             child: RawMaterialButton(
                               shape: CircleBorder(),
-                              fillColor: (NowPlayingProvider.of(context).trackFlow==TrackFlow.repeatOnce)?Theme.of(context).accentColor:Colors.black12,
+                              fillColor: Colors.black12,
                               onPressed: (){
                                 setState(() {
                                   if(NowPlayingProvider.of(context).trackFlow == TrackFlow.repeatOnce)
@@ -255,7 +255,7 @@ class NowPlayingMenuState extends State<NowPlayingMenu> {
                               },
                               child: Icon(
                                 Icons.repeat_one,
-                                color: (NowPlayingProvider.of(context).trackFlow==TrackFlow.repeatOnce)?Theme.of(context).primaryColor:Theme.of(context).primaryColorDark,
+                                color: (NowPlayingProvider.of(context).trackFlow==TrackFlow.repeatOnce)?Theme.of(context).accentColor:Theme.of(context).primaryColorDark,
                               ),
                             ),
                           ),

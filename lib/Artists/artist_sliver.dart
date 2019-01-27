@@ -18,7 +18,7 @@ class ArtistSliver extends StatefulWidget
 
   @override
   ArtistSliverState createState() {
-    return new ArtistSliverState();
+    return ArtistSliverState();
   }
 }
 
@@ -26,53 +26,47 @@ class ArtistSliverState extends State<ArtistSliver> {
   @override
   Widget build(BuildContext context)
   {
-    return Container(
-      alignment: Alignment.center,
-      height: widget.height,
-      width: MediaQuery.of(context).size.width * 0.95,
-      child: Padding(
-        padding: const EdgeInsets.only(left: 0.0, right: 0.0, top: 3.0, bottom: 3.0),
-        child: GestureDetector(
-          onTap: () {//navigate to album page
-            print(widget.artist);
-            Navigator.of(context, rootNavigator: true).push(
-              CupertinoPageRoute<void>(
-                builder: (BuildContext context) => AlbumPage(artist: widget.artist,),
-              ),
-            );
-          },
-          child: Stack(
-            children: <Widget>[
-              _albums(context),
-              // Container(
-              //   alignment: Alignment.bottomLeft,
-              //   width: MediaQuery.of(context).size.width * 0.95,
-              //   decoration: BoxDecoration(
-              //     gradient: LinearGradient(
-              //       begin: Alignment.bottomCenter,
-              //       end: Alignment.topCenter,
-              //       colors: [const Color.fromARGB(120, 0, 0, 0), Colors.transparent],
-              //       tileMode: TileMode.repeated,
-              //     ),
-              //   ),
-              //   child: Padding(
-              //     padding: const EdgeInsets.only(left: 10.0, bottom: 4.0),
-              //     child: RichText(
-              //       text: TextSpan(
-              //         text: widget.artist.name.replaceAll('"', '/').replaceAll('∕', '/').replaceAll('"', ''),
-              //         style: TextStyle(
-              //           fontFamily: 'sans serif',
-              //           fontStyle: ,
-              //           color: Theme.of(context).accentColor,
-              //           fontSize: 24.0,
-              //         ),
-              //       ),
-              //     ),
-              //   ),
-              // ),
-              _buildArtistName(context),
-            ],
+    return GestureDetector(
+      onTap: () {//navigate to album page
+        print(widget.artist);
+        Navigator.of(context, rootNavigator: true).push(
+          CupertinoPageRoute<void>(
+            builder: (BuildContext context) => AlbumPage(artist: widget.artist,),
           ),
+        );
+      },
+      child: Container(
+        alignment: Alignment.center,
+        height: widget.height,
+        width: MediaQuery.of(context).size.width * 0.95,
+        color: Theme.of(context).primaryColor,
+        child: Column(
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+              child: Divider(
+                color: Theme.of(context).accentColor,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 0.0, right: 0.0, top: 3.0, bottom: 3.0),
+              child: Row(
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.only(left:16.0, right:8.0),
+                    child: Container(
+                      width: widget.height * 0.8,
+                      height: widget.height * 0.8,
+                      child: ClipOval(
+                        child: _albums(context)
+                      ),
+                    ),
+                  ),
+                  Flexible(child: _buildArtistName(context)),
+                ],
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -80,9 +74,14 @@ class ArtistSliverState extends State<ArtistSliver> {
 
   Container _buildArtistName(BuildContext context) {
     return Container(
+      constraints: BoxConstraints(
+
+      ),
       child: Padding(
         padding: const EdgeInsets.only(top: 12.5, left: 10.0, right: 5.0, bottom: 5.0),
         child: RichText(
+          textAlign: TextAlign.start,
+          overflow: TextOverflow.ellipsis,
           text: TextSpan(
             text: widget.artist.name.replaceAll('"', '/').replaceAll('∕', '/').replaceAll('"', ''),
             style: TextStyle(
@@ -110,14 +109,14 @@ class ArtistSliverState extends State<ArtistSliver> {
         )
       ),
       child: Stack(
-        children: _buildAlbumArtStack(context, MediaQuery.of(context).size.height),
+        children: _buildAlbumArtStack(context, widget.height * 0.8),
       ),
     );
   }
 
   List<Widget> _buildAlbumArtStack(BuildContext context, double height)
   {
-    double width = MediaQuery.of(context).size.width;// * 0.95;
+    double width = height;// * 0.95;
 
     List<Widget> artStack = List<Widget>();
     if(widget.artist.albums == null)

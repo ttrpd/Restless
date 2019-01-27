@@ -43,6 +43,15 @@ class TrackData
     this.albumName = '',
     this.albumArt,
   });
+
+  operator ==(Object track)
+  {
+    return ( track is TrackData
+      && this.name == track.name
+      && this.artistName == track.artistName
+      && this.albumName == track.albumName
+    );
+  }
 }
 
 class TrackTag
