@@ -29,7 +29,7 @@ class UpNextListState extends State<UpNextList> {
                     text: TextSpan(
                       text: 'Up Next',
                       style: TextStyle(
-                        color: (NowPlayingProvider.of(context).playQueue.length<1)?Colors.red:Theme.of(context).accentColor,
+                        color: Theme.of(context).accentColor,
                         fontSize: 24.0,
                         fontWeight: FontWeight.bold,
                       ),

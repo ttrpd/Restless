@@ -40,7 +40,7 @@ class SongSliverState extends State<SongSliver> {
           children: <Widget>[
             IconButton(
               iconSize: 18,
-              icon: Icon((NowPlayingProvider.of(context).playing && NowPlayingProvider.of(context).track.name == widget.artist.albums[widget.albumIndex].songs[widget.songIndex].name)?Icons.pause:Icons.play_arrow, color: Theme.of(context).accentColor), 
+              icon: Icon((NowPlayingProvider.of(context).playing && NowPlayingProvider.of(context).track == widget.artist.albums[widget.albumIndex].songs[widget.songIndex])?Icons.pause:Icons.play_arrow, color: Theme.of(context).accentColor), 
               onPressed: widget.onClick,
             ),
             Expanded(

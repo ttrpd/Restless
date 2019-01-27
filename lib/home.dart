@@ -187,7 +187,7 @@ class HomeState extends State<Home> {
 
     double artistsListOffset = 0.0;
 
-    double sliverHeight = ((MediaQuery.of(context).size.height*64) / MediaQuery.of(context).size.width);//(MediaQuery.of(context).size.height * 0.145);
+    double sliverHeight = ((MediaQuery.of(context).size.height*57) / MediaQuery.of(context).size.width);//(MediaQuery.of(context).size.height * 0.145);
 
 
     return FutureBuilder(
