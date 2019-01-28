@@ -27,9 +27,9 @@ class MenuItemState extends State<MenuItem> {
 
   @override
   Widget build(BuildContext context) {
-    textColor = Theme.of(context).accentColor;
+    textColor = Theme.of(context).primaryColor;
     if(widget.selected)
-      textColor = Colors.red;
+      textColor = Colors.orange;
     
     if(!widget.enabled)
       textColor = Theme.of(context).primaryColorDark;

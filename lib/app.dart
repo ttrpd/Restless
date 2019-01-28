@@ -24,7 +24,7 @@ class App extends StatelessWidget
         audioPlayer: AudioPlayer(),
         child: MaterialApp(
           theme: ThemeData(
-            primaryColor: Color.fromARGB(255, 25, 25, 25),
+            primaryColor: Color.fromARGB(255, 36, 36, 36),
             primaryColorDark: Color.fromARGB(255, 103, 103, 103),
             accentColor: Color.fromARGB(255, 240, 240, 240),
           ),

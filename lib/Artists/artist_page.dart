@@ -45,6 +45,7 @@ class ArtistPageState extends State<ArtistPage> {
   Widget build(BuildContext context) {
 
     return Scaffold(
+      backgroundColor: Theme.of(context).accentColor,
       floatingActionButton: FloatingActionButton(
         backgroundColor: Theme.of(context).primaryColor,
         foregroundColor: Theme.of(context).accentColor,
@@ -62,7 +63,7 @@ class ArtistPageState extends State<ArtistPage> {
           ScrollConfiguration(
             behavior: MyScrollBehavior(),
             child: Container(
-              color: Theme.of(context).primaryColor,
+              color: Theme.of(context).accentColor,
               child: NotificationListener(
                 onNotification: (notification) {//preserves the scroll position in list
                   if(notification is ScrollNotification)

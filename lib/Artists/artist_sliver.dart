@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 
 import 'package:restless/artist_data.dart';
 import 'package:restless/AlbumPage/album_page.dart';
+import 'package:restless/diamond_frame.dart';
 
 
 class ArtistSliver extends StatefulWidget
@@ -39,28 +40,23 @@ class ArtistSliverState extends State<ArtistSliver> {
         alignment: Alignment.center,
         height: widget.height,
         width: MediaQuery.of(context).size.width * 0.95,
-        color: Theme.of(context).primaryColor,
+        color: Theme.of(context).accentColor,
         child: Column(
           children: <Widget>[
             Padding(
               padding: const EdgeInsets.only(left: 8.0, right: 8.0),
               child: Divider(
-                color: Theme.of(context).accentColor,
+                color: Theme.of(context).primaryColor,
               ),
             ),
             Padding(
               padding: const EdgeInsets.only(left: 0.0, right: 0.0, top: 3.0, bottom: 3.0),
               child: Row(
                 children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.only(left:16.0, right:8.0),
-                    child: Container(
-                      width: widget.height * 0.8,
-                      height: widget.height * 0.8,
-                      child: ClipOval(
-                        child: _albums(context)
-                      ),
-                    ),
+                  DiamondFrame(
+                    height: widget.height * 0.8,
+                    padding: 7.0,
+                    child: _albums(context),
                   ),
                   Flexible(child: _buildArtistName(context)),
                 ],
@@ -85,8 +81,8 @@ class ArtistSliverState extends State<ArtistSliver> {
           text: TextSpan(
             text: widget.artist.name.replaceAll('"', '/').replaceAll('∕', '/').replaceAll('"', ''),
             style: TextStyle(
-              color: Theme.of(context).accentColor,
-              background: Paint()..color = Theme.of(context).primaryColor,
+              color: Theme.of(context).primaryColor,
+              // background: Paint()..color = Theme.of(context).accentColor,
               fontSize: 26.0,
               fontWeight: FontWeight.bold,
               letterSpacing: 2.0,
@@ -162,6 +158,7 @@ class ArtistSliverState extends State<ArtistSliver> {
 }
 
 
+
 class RhombusClipper extends CustomClipper<Path>
 {
   double divideOffset;
@@ -190,3 +187,4 @@ class RhombusClipper extends CustomClipper<Path>
   }
 
 }
+

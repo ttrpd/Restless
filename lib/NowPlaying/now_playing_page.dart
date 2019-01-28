@@ -1,6 +1,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
+import 'package:restless/NowPlaying/Visualizer/visualizer.dart';
+import 'package:restless/diamond_frame.dart';
 
 import 'package:restless/my_scroll_behavior.dart';
 import 'package:restless/NowPlaying/NowPlayingMenu/now_playing_menu.dart';
@@ -40,14 +42,15 @@ class NowPlayingState extends State<NowPlaying> with SingleTickerProviderStateMi
       child: ScrollConfiguration(
         behavior: MyScrollBehavior(),
         child: Container(
-          color: Theme.of(context).primaryColor,
+          color: Theme.of(context).accentColor,
           child: Stack(
             children: <Widget>[
-              buildMovingBackground(context),
+              
               ListView(// info/control layer
                 physics: ScrollPhysics(),
                 children: <Widget>[
                   buildTrackInfoArea(context),
+                  Visualizer(height: MediaQuery.of(context).size.height, width: MediaQuery.of(context).size.width,),
                   NowPlayingMenu(
                     audioPlayer: widget.audioPlayer,
                   ),
@@ -62,41 +65,57 @@ class NowPlayingState extends State<NowPlaying> with SingleTickerProviderStateMi
 
   Container buildTrackInfoArea(BuildContext context) {
     return Container(
-      height: 500.0,
-      width: 500.0,
-      color: Colors.transparent,
+      alignment: Alignment.topCenter,
+      height: 320.0,
+      width: 320.0,
+      color: Theme.of(context).accentColor,
       child:  Padding(
-        padding: const EdgeInsets.only(top: 40.0, left: 20.0),
+        padding: const EdgeInsets.only(top: 50.0,),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            Align(
-              alignment: Alignment.topLeft,
-              child: RichText(
-                maxLines: 2,
-                text: TextSpan(
-                  text: stringBeautify(NowPlayingProvider.of(context).track.name),
-                  style: TextStyle(
-                    color: Theme.of(context).accentColor,
-                    fontSize: 32.0,
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: 2.0,
-                    height: 1.0,
+            DiamondFrame(
+              height: 130.0,
+              padding: 8.0,
+              child: Container(
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: NowPlayingProvider.of(context).track.albumArt,
                   ),
                 ),
               ),
             ),
             Align(
-              alignment: Alignment.topLeft,
+              alignment: Alignment.center,
               child: Padding(
-                padding: const EdgeInsets.only(top: 20.0),
+                padding: const EdgeInsets.only(top: 10.0, left: 20.0, right: 20.0),
                 child: RichText(
-                  maxLines: 2,
+                  maxLines: 1,
+                  text: TextSpan(
+                    text: stringBeautify(NowPlayingProvider.of(context).track.name),
+                    style: TextStyle(
+                      color: Theme.of(context).primaryColor,
+                      fontSize: 32.0,
+                      fontFamily: 'Inconsolata',
+                      letterSpacing: 2.0,
+                      height: 1.0,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            Align(
+              alignment: Alignment.center,
+              child: Padding(
+                padding: const EdgeInsets.only(top: 20.0, left: 20.0, right: 20.0),
+                child: RichText(
+                  maxLines: 1,
                   text: TextSpan(
                     text: stringBeautify(NowPlayingProvider.of(context).track.albumName) ?? '(Album)',
                     style: TextStyle(
-                      color: Theme.of(context).accentColor,
+                      color: Theme.of(context).primaryColor,
                       fontSize: 20.0,
-                      fontWeight: FontWeight.normal,
+                      fontFamily: 'Inconsolata',
                       letterSpacing: 4.0,
                       height: 1.0
                     ),
@@ -105,17 +124,20 @@ class NowPlayingState extends State<NowPlaying> with SingleTickerProviderStateMi
               ),
             ),
             Align(
-              alignment: Alignment.topLeft,
-              child: RichText(
-                maxLines: 2,
-                text: TextSpan(
-                  text: stringBeautify(NowPlayingProvider.of(context).track.artistName) ?? '(Artist)',
-                  style: TextStyle(
-                    color: Theme.of(context).accentColor,
-                    fontSize: 14.0,
-                    fontWeight: FontWeight.normal,
-                    letterSpacing: 4.0,
-                    height: 3.0
+              alignment: Alignment.center,
+              child: Padding(
+                padding: const EdgeInsets.only(left: 20.0, right: 20.0),
+                child: RichText(
+                  maxLines: 1,
+                  text: TextSpan(
+                    text: stringBeautify(NowPlayingProvider.of(context).track.artistName) ?? '(Artist)',
+                    style: TextStyle(
+                      color: Theme.of(context).primaryColor,
+                      fontSize: 14.0,
+                      fontFamily: 'Inconsolata',
+                      letterSpacing: 4.0,
+                      height: 3.0
+                    ),
                   ),
                 ),
               ),
@@ -164,28 +186,3 @@ class NowPlayingState extends State<NowPlaying> with SingleTickerProviderStateMi
   }
 }
 
-
-// GestureDetector(// TrackInfoArea
-//   onVerticalDragUpdate: (DragUpdateDetails details) {
-//     //TODO: add animation curve based on scroll
-//     setState(() {
-//       if(NowPlayingProvider.of(context).blurValue > 0.0 && details.delta.dy < 0)NowPlayingProvider.of(context).blurValue -= 0.75;
-//       if(NowPlayingProvider.of(context).blurValue < 15 && details.delta.dy > 0)NowPlayingProvider.of(context).blurValue += 0.75;
-//     });
-//   },
-//   onVerticalDragEnd: (DragEndDetails details) {
-//     setState(() {
-//       if(NowPlayingProvider.of(context).blurValue < 8)
-//         NowPlayingProvider.of(context).blurValue = 0.0;
-//       else
-//         NowPlayingProvider.of(context).blurValue = 15.0;
-//     });
-//   },
-//   child: TrackInfoArea(
-//     blurValue: NowPlayingProvider.of(context).blurValue,
-//     name: (NowPlayingProvider.of(context).track==null)?'':NowPlayingProvider.of(context).track.name,
-//     album: (NowPlayingProvider.of(context).track==null)?'':NowPlayingProvider.of(context).track.albumName,
-//     artist: (NowPlayingProvider.of(context).track==null)?'':NowPlayingProvider.of(context).track.artistName, 
-//     path: (NowPlayingProvider.of(context).track==null)?'':NowPlayingProvider.of(context).track.path,//'/storage/emulated/0/Music/TestMusic/Carousel Casualties/Madison/Bright Red Lights.mp3',
-//   ),
-// ),

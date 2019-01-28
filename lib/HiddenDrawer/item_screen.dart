@@ -37,33 +37,37 @@ class ItemScreenState extends State<ItemScreen> {
         MediaQuery.of(context).size.height * (widget.index),
         0.0
       )..scale(1-(0.3 * widget.slidePercent)),
-      child: ClipRRect(
-        borderRadius: BorderRadius.all(Radius.circular(20.0 * widget.slidePercent)),
-        child: Container(
-          width: double.infinity,
-          height: double.infinity,
-          decoration: BoxDecoration(
-            boxShadow: [
-              BoxShadow(
-                color: Color.fromARGB(68, 0, 0, 0),
-                offset: Offset(0.0, 0.0),
-                blurRadius: 20.0,
-                spreadRadius: 10.0,
-              ),
-            ],
-          ),
-          child: GestureDetector(
-            onHorizontalDragStart: (widget.slidePercent != 1.0)?widget.dragStart:null,
-            onHorizontalDragUpdate: (widget.slidePercent != 1.0)?widget.dragUpdate:null,
-            onHorizontalDragEnd: (widget.slidePercent != 1.0)?widget.dragEnd:null,
-            onTap: widget.onTap,
-            behavior: HitTestBehavior.opaque,
-            child: (widget.slidePercent > 0)?Stack(//TODO: may slow down navigation animations
-              children: <Widget>[
-                widget.child,
-                Container(height: double.infinity, width: double.infinity, color: Colors.transparent,),
+      child: Material(
+        color: Colors.transparent,
+        elevation: 20.0,
+        child: ClipRRect(
+          borderRadius: BorderRadius.all(Radius.circular(20.0 * widget.slidePercent)),
+          child: Container(
+            width: double.infinity,
+            height: double.infinity,
+            decoration: BoxDecoration(
+              boxShadow: [
+                BoxShadow(
+                  color: Color.fromARGB(68, 0, 0, 0),
+                  offset: Offset(0.0, 0.0),
+                  blurRadius: 20.0,
+                  spreadRadius: 10.0,
+                ),
               ],
-            ) : widget.child,
+            ),
+            child: GestureDetector(
+              onHorizontalDragStart: (widget.slidePercent != 1.0)?widget.dragStart:null,
+              onHorizontalDragUpdate: (widget.slidePercent != 1.0)?widget.dragUpdate:null,
+              onHorizontalDragEnd: (widget.slidePercent != 1.0)?widget.dragEnd:null,
+              onTap: widget.onTap,
+              behavior: HitTestBehavior.opaque,
+              child: (widget.slidePercent > 0)?Stack(//TODO: may slow down navigation animations
+                children: <Widget>[
+                  widget.child,
+                  Container(height: double.infinity, width: double.infinity, color: Colors.transparent,),
+                ],
+              ) : widget.child,
+            ),
           ),
         ),
       ),

@@ -111,8 +111,8 @@ class HiddenDrawerState extends State<HiddenDrawer> with TickerProviderStateMixi
               begin: Alignment.bottomLeft,
               end: Alignment.topRight,
               colors: [
-                Color.fromARGB(255, 30, 30, 30),
-                Color.fromARGB(255, 80, 80, 80),
+                Color.fromARGB(255, 220, 220, 220),
+                Theme.of(context).accentColor,
               ],
             ),
           ),
