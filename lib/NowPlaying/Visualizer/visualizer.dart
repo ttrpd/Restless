@@ -20,7 +20,8 @@ class VisualizerState extends State<Visualizer> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 180.0,
+      height: widget.height,
+      width: widget.width,
       color: Colors.transparent,
       child: CustomPaint(
         painter: VisualizerPainter(context: context),
@@ -48,18 +49,18 @@ class VisualizerPainter extends CustomPainter
     Paint paint2 = Paint()..color=Color.fromARGB(220, 25, 25, 25)..style=PaintingStyle.fill..strokeWidth=10.0;
 
     path1.moveTo(0.0, 0.0);
-    path1.lineTo(0.0, -(rand.nextDouble()*100)-10);
+    path1.lineTo(0.0, -(rand.nextDouble()*size.height)-(size.height/10));
     for (double i = size.width/6; i < size.width+1; i+=size.width/6) {
-      path1.lineTo( i, -(rand.nextDouble()*100)-10);
+      path1.lineTo( i, -(rand.nextDouble()*size.height)-(size.height/10));
     }
     path1.lineTo(size.width, 0.0);
     path1.close();
     canvas.drawPath(path1, paint1);
 
     path2.moveTo(0.0, 0.0);
-    path2.lineTo(0.0, -(rand.nextDouble()*100)-10);
+    path2.lineTo(0.0, -(rand.nextDouble()*size.height)-(size.height/10));
     for (double i = size.width/5; i < size.width+1; i+=size.width/5) {
-      path2.lineTo( i, -(rand.nextDouble()*100)-10);
+      path2.lineTo( i, -(rand.nextDouble()*size.height)-(size.height/10));
     }
     path2.lineTo(size.width, 0.0);
     path2.close();

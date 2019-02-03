@@ -127,7 +127,7 @@ class HiddenDrawerState extends State<HiddenDrawer> with TickerProviderStateMixi
                     text: 'Artists',
                     onPressed: (){
                       setState(() {
-                        selectedItem = 0;                        
+                        selectedItem = 0;
                       });
                     },
                     selected: (selectedItem == 0)?true:false,

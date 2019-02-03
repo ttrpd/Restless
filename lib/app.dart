@@ -2,7 +2,7 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 
 import 'package:restless/home.dart';
-import 'package:restless/Artists/artists_page_provider.dart';
+import 'package:restless/Artists/music_provider.dart';
 import 'package:restless/NowPlaying/now_playing_provider.dart';
 import 'package:simple_permissions/simple_permissions.dart';
 
@@ -12,7 +12,7 @@ class App extends StatelessWidget
   Widget build(BuildContext context)
   {
     SimplePermissions.requestPermission(Permission.ReadExternalStorage);
-    return ArtistsPageProvider(
+    return MusicProvider(
       artistSlivers: {'':null},
       child: NowPlayingProvider(
         playing: false,

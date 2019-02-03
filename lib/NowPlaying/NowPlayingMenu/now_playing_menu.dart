@@ -27,6 +27,12 @@ class NowPlayingMenuState extends State<NowPlayingMenu> {
   void initState() {
     super.initState();
   }
+
+  String stringBeautify(String s)
+  {
+    return s.replaceAll('"', '/').replaceAll('∕', '/').replaceAll('"', '');
+  }
+
   @override
   Widget build(BuildContext context)
   {
@@ -42,42 +48,112 @@ class NowPlayingMenuState extends State<NowPlayingMenu> {
             type: MaterialType.transparency,
             child: Column(
               children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 30.0),
+                  child: Column(
+                    children: <Widget>[
+                      Align(
+                        alignment: Alignment.center,
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 10.0, left: 20.0, right: 20.0),
+                          child: RichText(
+                            textAlign: TextAlign.center,
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                            text: TextSpan(
+                              text: stringBeautify(NowPlayingProvider.of(context).track.name),
+                              style: TextStyle(
+                                color: Theme.of(context).accentColor,
+                                fontSize: 20.0,
+                                fontFamily: 'Inconsolata',
+                                letterSpacing: 2.0,
+                                height: 1.0,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Align(
+                        alignment: Alignment.center,
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 20.0, left: 20.0, right: 20.0),
+                          child: RichText(
+                            textAlign: TextAlign.center,
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                            text: TextSpan(
+                              text: stringBeautify(NowPlayingProvider.of(context).track.albumName) ?? '(Album)',
+                              style: TextStyle(
+                                color: Theme.of(context).accentColor,
+                                fontSize: 14.0,
+                                fontFamily: 'Inconsolata',
+                                letterSpacing: 4.0,
+                                height: 1.0
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Align(
+                        alignment: Alignment.center,
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 20.0, right: 20.0),
+                          child: RichText(
+                            textAlign: TextAlign.center,
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                            text: TextSpan(
+                              text: stringBeautify(NowPlayingProvider.of(context).track.artistName) ?? '(Artist)',
+                              style: TextStyle(
+                                color: Theme.of(context).accentColor,
+                                fontSize: 12.0,
+                                fontFamily: 'Inconsolata',
+                                letterSpacing: 4.0,
+                                height: 3.0
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
                 _buildPlayerControls(),
-                SeekBar(
-                  trackProgressPercent: NowPlayingProvider.of(context).trackProgressPercent,
-                  onSeekRequested: (double seekPercent) {
-                    setState(() {
-                      final seekMils = (NowPlayingProvider.of(context).endTime.inMilliseconds.toDouble() * seekPercent).round();//source of toDouble called on null error
-                      widget.audioPlayer.seek(Duration(milliseconds: seekMils));
-                      NowPlayingProvider.of(context).trackProgressPercent = seekMils.toDouble() / NowPlayingProvider.of(context).endTime.inMilliseconds.toDouble();
-                      NowPlayingProvider.of(context).currentTime = Duration(milliseconds: seekMils);
-                    });
-                  },
-                ),
+                // SeekBar(
+                //   trackProgressPercent: NowPlayingProvider.of(context).trackProgressPercent,
+                //   onSeekRequested: (double seekPercent) {
+                //     setState(() {
+                //       final seekMils = (NowPlayingProvider.of(context).endTime.inMilliseconds.toDouble() * seekPercent).round();//source of toDouble called on null error
+                //       widget.audioPlayer.seek(Duration(milliseconds: seekMils));
+                //       NowPlayingProvider.of(context).trackProgressPercent = seekMils.toDouble() / NowPlayingProvider.of(context).endTime.inMilliseconds.toDouble();
+                //       NowPlayingProvider.of(context).currentTime = Duration(milliseconds: seekMils);
+                //     });
+                //   },
+                // ),
                 // Track Times //
-                Row(
-                  children: <Widget>[
-                    RichText(
-                      text: TextSpan(
-                        text: NowPlayingProvider.of(context).currentTime.toString().substring(NowPlayingProvider.of(context).currentTime.toString().indexOf(':')+1,NowPlayingProvider.of(context).currentTime.toString().lastIndexOf('.')),
-                        style: TextStyle(
-                          color: Theme.of(context).accentColor,
-                          fontSize: 18.0,
-                        ),
-                      ),
-                    ),
-                    Expanded(child: Container(),),
-                    RichText(
-                      text: TextSpan(
-                        text: NowPlayingProvider.of(context).endTime.toString().substring(NowPlayingProvider.of(context).endTime.toString().indexOf(':')+1,NowPlayingProvider.of(context).endTime.toString().lastIndexOf('.')),
-                        style: TextStyle(
-                          color: Theme.of(context).accentColor,
-                          fontSize: 18.0,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+                // Row(
+                //   children: <Widget>[
+                //     RichText(
+                //       text: TextSpan(
+                //         text: NowPlayingProvider.of(context).currentTime.toString().substring(NowPlayingProvider.of(context).currentTime.toString().indexOf(':')+1,NowPlayingProvider.of(context).currentTime.toString().lastIndexOf('.')),
+                //         style: TextStyle(
+                //           color: Theme.of(context).accentColor,
+                //           fontSize: 18.0,
+                //         ),
+                //       ),
+                //     ),
+                //     Expanded(child: Container(),),
+                //     RichText(
+                //       text: TextSpan(
+                //         text: NowPlayingProvider.of(context).endTime.toString().substring(NowPlayingProvider.of(context).endTime.toString().indexOf(':')+1,NowPlayingProvider.of(context).endTime.toString().lastIndexOf('.')),
+                //         style: TextStyle(
+                //           color: Theme.of(context).accentColor,
+                //           fontSize: 18.0,
+                //         ),
+                //       ),
+                //     ),
+                //   ],
+                // ),
 
                 // track flow buttons //
                 Padding(// shuffle
@@ -89,8 +165,9 @@ class NowPlayingMenuState extends State<NowPlayingMenu> {
                         width: 40.0,
                         height: 40.0,
                         child: RawMaterialButton(
+                          elevation: 0.0,
                           shape: CircleBorder(),
-                          fillColor: Colors.black12,
+                          fillColor: Colors.transparent,
                           onPressed: (){
                             setState(() {
                               if(NowPlayingProvider.of(context).trackFlow == TrackFlow.shuffle)
@@ -110,8 +187,9 @@ class NowPlayingMenuState extends State<NowPlayingMenu> {
                         width: 40.0,
                         height: 40.0,
                         child: RawMaterialButton(
+                          elevation: 0.0,
                           shape: CircleBorder(),
-                          fillColor: Colors.black12,
+                          fillColor: Colors.transparent,
                           onPressed: (){
                             setState(() {
                               if(NowPlayingProvider.of(context).trackFlow == TrackFlow.repeat)
@@ -131,8 +209,9 @@ class NowPlayingMenuState extends State<NowPlayingMenu> {
                         width: 40.0,
                         height: 40.0,
                         child: RawMaterialButton(
+                          elevation: 0.0,
                           shape: CircleBorder(),
-                          fillColor: Colors.black12,
+                          fillColor: Colors.transparent,
                           onPressed: (){
                             setState(() {
                               if(NowPlayingProvider.of(context).trackFlow == TrackFlow.repeatOnce)

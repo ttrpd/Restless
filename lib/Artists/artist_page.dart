@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:restless/Artists/alphabet_artist_picker.dart';
-import 'package:restless/Artists/artists_page_provider.dart';
+import 'package:restless/Artists/music_provider.dart';
 
 import 'package:restless/Artists/artist_sliver.dart';
 import 'package:restless/my_scroll_behavior.dart';
@@ -13,7 +13,6 @@ class ArtistPage extends StatefulWidget
   final GetOffsetMethod getOffset;
   final SetOffsetMethod setOffset;
   final double sliverHeight;
-  final Function(DragUpdateDetails) dragMenu;
 
 
   ArtistPage({
@@ -21,7 +20,6 @@ class ArtistPage extends StatefulWidget
     @required this.getOffset,
     @required this.setOffset,
     @required this.sliverHeight,
-    @required this.dragMenu,
   }) : super(key: key);
 
   @override
@@ -47,8 +45,8 @@ class ArtistPageState extends State<ArtistPage> {
     return Scaffold(
       backgroundColor: Theme.of(context).accentColor,
       floatingActionButton: FloatingActionButton(
-        backgroundColor: Theme.of(context).primaryColor,
-        foregroundColor: Theme.of(context).accentColor,
+        backgroundColor: Theme.of(context).accentColor,
+        foregroundColor: Theme.of(context).primaryColor,
         child: Icon(Icons.sort_by_alpha),
         onPressed: () {
           print(opacityValue);
@@ -71,21 +69,21 @@ class ArtistPageState extends State<ArtistPage> {
                 },
                 child: ListView.builder(
                   controller: _scrl,
-                  itemCount: ArtistsPageProvider.of(context).artists.length,
+                  itemCount: MusicProvider.of(context).artists.length,
                   itemBuilder: (BuildContext context, int index) {
-                    String artist = ArtistsPageProvider.of(context).artists[index].name;
-                    if(!ArtistsPageProvider.of(context).artistSlivers.containsKey(artist))
+                    String artist = MusicProvider.of(context).artists[index].name;
+                    if(!MusicProvider.of(context).artistSlivers.containsKey(artist))
                     {
                       ArtistSliver artistSliver = ArtistSliver(
-                        artist: ArtistsPageProvider.of(context).artists[index],
+                        artist: MusicProvider.of(context).artists[index],
                         height: widget.sliverHeight,
                       );
-                      ArtistsPageProvider.of(context).artistSlivers.putIfAbsent(artist, ()=>artistSliver );
+                      MusicProvider.of(context).artistSlivers.putIfAbsent(artist, ()=>artistSliver );
                       return artistSliver;
                     }
                     else
                     {
-                      return ArtistsPageProvider.of(context).artistSlivers[artist];
+                      return MusicProvider.of(context).artistSlivers[artist];
                     }
                   },
                 ),
@@ -96,8 +94,8 @@ class ArtistPageState extends State<ArtistPage> {
             opacityValue: opacityValue,
             scrolltoLetter: (l) {
               _scrl.jumpTo(
-                ArtistsPageProvider.of(context).artists.indexOf(
-                    ArtistsPageProvider.of(context).artists.where((a) => a.name.trim().toUpperCase()[0] == l).first
+                MusicProvider.of(context).artists.indexOf(
+                    MusicProvider.of(context).artists.where((a) => a.name.trim().toUpperCase()[0] == l).first
                 ) * widget.sliverHeight
               );
               opacityValue = 0.0;

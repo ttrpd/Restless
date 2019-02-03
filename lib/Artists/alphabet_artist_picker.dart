@@ -1,5 +1,5 @@
 
-import 'package:restless/Artists/artists_page_provider.dart';
+import 'package:restless/Artists/music_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:restless/artist_data.dart';
 
@@ -55,7 +55,7 @@ class AlphabetArtistPickerState extends State<AlphabetArtistPicker> {
   @override
   Widget build(BuildContext context) {
 
-    for(ArtistData artist in ArtistsPageProvider.of(context).artists)
+    for(ArtistData artist in MusicProvider.of(context).artists)
     {
       if(letters.singleWhere((l) => l.letter == artist.name.trim().toUpperCase()[0]) == null)
         letters.singleWhere((l) => l.letter == '*').available = true;

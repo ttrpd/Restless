@@ -1,41 +1,41 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:restless/Artists/music_provider.dart';
 
 import 'package:restless/artist_data.dart';
 import 'package:restless/AlbumPage/album_page.dart';
 import 'package:restless/diamond_frame.dart';
 
 
-class ArtistSliver extends StatefulWidget
+class AlbumSliver extends StatefulWidget
 {
-  final ArtistData artist;
+  final AlbumData album;
   final double height;
 
-  ArtistSliver({
+  AlbumSliver({
     Key key,
-    @required this.artist,
+    @required this.album,
     @required this.height,
   }) : super(key: key);
 
   @override
-  ArtistSliverState createState() {
-    return ArtistSliverState();
+  AlbumSliverState createState() {
+    return AlbumSliverState();
   }
 }
 
-class ArtistSliverState extends State<ArtistSliver> {
+class AlbumSliverState extends State<AlbumSliver> {
   @override
   Widget build(BuildContext context)
   {
     return GestureDetector(
       onTap: () {//navigate to album page
-        print(widget.artist);
         Navigator.of(context, rootNavigator: true).push(
           CupertinoPageRoute<void>(
             settings: RouteSettings(
               isInitialRoute: true,
             ),
-            builder: (BuildContext context) => AlbumPage( artist: widget.artist,),
+            builder: (BuildContext context) => AlbumPage(artist: MusicProvider.of(context).artists.singleWhere((a)=>a.name==widget.album.songs.first.artistName),),
           ),
         );
       },
@@ -61,7 +61,7 @@ class ArtistSliverState extends State<ArtistSliver> {
                     padding: 7.0,
                     child: _albums(context),
                   ),
-                  Flexible(child: _buildArtistName(context)),
+                  Flexible(child: _buildAlbumName(context)),
                 ],
               ),
             ),
@@ -71,7 +71,7 @@ class ArtistSliverState extends State<ArtistSliver> {
     );
   }
 
-  Container _buildArtistName(BuildContext context) {
+  Container _buildAlbumName(BuildContext context) {
     return Container(
       child: Padding(
         padding: const EdgeInsets.only(top: 12.5, left: 10.0, right: 5.0, bottom: 5.0),
@@ -80,7 +80,7 @@ class ArtistSliverState extends State<ArtistSliver> {
           textAlign: TextAlign.start,
           overflow: TextOverflow.clip,
           text: TextSpan(
-            text: widget.artist.name.replaceAll('"', '/').replaceAll('∕', '/').replaceAll('"', ''),
+            text: widget.album.name.replaceAll('"', '/').replaceAll('∕', '/').replaceAll('"', ''),
             style: TextStyle(
               color: Theme.of(context).primaryColor,
               // background: Paint()..color = Theme.of(context).accentColor,
@@ -98,94 +98,21 @@ class ArtistSliverState extends State<ArtistSliver> {
   Container _albums(BuildContext context) {
     return Container(
       alignment: Alignment.center,
-      width: MediaQuery.of(context).size.width, //* 0.95,
+      width: widget.height, //* 0.95,
       decoration: BoxDecoration(
         image: DecorationImage(
           fit: BoxFit.cover,
           image: AssetImage('lib/assets/default.jpg'),
         )
       ),
-      child: Stack(
-        children: _buildAlbumArtStack(context, widget.height * 0.8),
+      child: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: widget.album.albumArt,
+            fit: BoxFit.cover,
+          ),
+        ),
       ),
     );
   }
-
-  List<Widget> _buildAlbumArtStack(BuildContext context, double height)
-  {
-    double width = height;// * 0.95;
-
-    List<Widget> artStack = List<Widget>();
-    if(widget.artist.albums == null)
-      print(widget.artist.name + ' has no albums');
-
-    artStack.add(
-      Container(
-        alignment: Alignment.center,
-        width: width,
-        height: height,
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: widget.artist.albums[0].albumArt ?? AssetImage('lib/assets/default.jpg'),
-            fit: BoxFit.cover,
-          )
-        ),
-      )
-    );
-
-    for(int i = 1; i < widget.artist.albums.length; i++)
-    {
-      artStack.add(
-        ClipPath(//Clipped Art
-          clipper: RhombusClipper(
-              divideOffset: 100.0 / widget.artist.albums.length,
-              slashPos: i * (width / widget.artist.albums.length)
-          ),
-          child: Container(
-            width: width,
-            height: height,
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: widget.artist.albums[i].albumArt ?? AssetImage('lib/assets/art8.jpg'),
-                fit: BoxFit.cover,
-              )
-            ),
-          ),
-        )
-      );
-    }
-    return artStack;
-  }
 }
-
-
-
-class RhombusClipper extends CustomClipper<Path>
-{
-  double divideOffset;
-  double slashPos;
-
-  RhombusClipper({
-    Key key,
-    @required this.divideOffset,
-    @required this.slashPos,
-  });
-
-  @override
-  Path getClip(Size size) {
-    Path path = Path();
-    path.moveTo(slashPos + divideOffset, 0.0);
-    path.lineTo(size.width, 0.0);
-    path.lineTo(size.width, size.height);
-    path.lineTo(slashPos - divideOffset, size.height);
-    path.close();
-    return path;
-  }
-
-  @override
-  bool shouldReclip(CustomClipper<Path> oldClipper) {
-    return false;
-  }
-
-}
-

@@ -5,12 +5,13 @@ import 'dart:io';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:dart_tags/dart_tags.dart';
 import 'package:flutter/material.dart';
+import 'package:restless/Albums/albums_page.dart';
 import 'package:restless/Artists/artist_page.dart';
 import 'package:restless/HiddenDrawer/hidden_drawer.dart';
 import 'package:restless/NowPlaying/now_playing_page.dart';
 import 'package:restless/NowPlaying/now_playing_provider.dart';
 import 'package:restless/artist_data.dart';
-import 'package:restless/Artists/artists_page_provider.dart';
+import 'package:restless/Artists/music_provider.dart';
 
 
 class Home extends StatefulWidget
@@ -31,9 +32,9 @@ class HomeState extends State<Home> {
   {
     Set<TrackTag> tagOutput = Set<TrackTag>();
     tagOutput.add(TrackTag(name: 'name', content: trackName));
-    tagOutput.add(TrackTag(name: 'artist', content: tags['TPE2'].trim()));
-    tagOutput.add(TrackTag(name: 'album', content: tags['album'].trim()));
-    tagOutput.add(TrackTag(name: 'number', content: tags['track'].trim()));
+    tagOutput.add(TrackTag(name: 'artist', content: (tags['TPE2']??'Unknown Artist').trim()));
+    tagOutput.add(TrackTag(name: 'album', content: (tags['album']??'Unknown Album').trim()));
+    tagOutput.add(TrackTag(name: 'number', content: (tags['track']??'0').trim()));
     return tagOutput;
   }
 
@@ -67,13 +68,13 @@ class HomeState extends State<Home> {
             name: name,
             path: entity.path,
             tags: extractBasicTags(img.last.tags, name),
-            artistName: img.last.tags['TPE2'].trim(),
-            albumName: img.last.tags['album'].trim(),
+            artistName: (img.last.tags['TPE2']??'Unknown Artist').trim(),
+            albumName: (img.last.tags['album']??'Unknown Album').trim(),
             albumArt: albumArt
           );
           AlbumData album = AlbumData(name: track.albumName, albumArt: albumArt, songs: [track],);
           ArtistData artist = ArtistData(name: track.artistName, albums: [album],);
-          print(artist.name + " - " + album.name);
+          print(artist.name);// + " - " + album.name + " - " + name + " - " + img.toString());
           if(artists.firstWhere( (a) => a.name.toUpperCase().trim() == track.artistName.toUpperCase().trim(), orElse: ()=>null) == null)
           {
             artists.add(artist);
@@ -177,12 +178,12 @@ class HomeState extends State<Home> {
 
     artists.sort( (a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()) );
 
-    ArtistsPageProvider.of(context).artists = artists;
+    MusicProvider.of(context).artists = artists;
     // _ftr.then((f)=>ArtistsPageProvider.of(context).artists = artists);
     
-    for(int i = 0; i < ArtistsPageProvider.of(context).artists.length ; i++)
+    for(int i = 0; i < MusicProvider.of(context).artists.length ; i++)
     {
-      ArtistsPageProvider.of(context).artists[i].albums.sort( (a, b) => a.name.compareTo(b.name));// sort albums
+      MusicProvider.of(context).artists[i].albums.sort( (a, b) => a.name.compareTo(b.name));// sort albums
     }
 
     double artistsListOffset = 0.0;
@@ -207,9 +208,12 @@ class HomeState extends State<Home> {
             getOffset: () => artistsListOffset,
             setOffset: (offset) => artistsListOffset = offset,
             sliverHeight: sliverHeight,
-            dragMenu: (DragUpdateDetails d){},
           ),
-          albums: Container(color: Colors.green[100],),
+          albums: AlbumsPage(
+            getOffset: () => artistsListOffset,
+            setOffset: (offset) => artistsListOffset = offset,
+            sliverHeight: sliverHeight,
+          ),
           nowPlaying: ClipRect(child: NowPlaying(audioPlayer: NowPlayingProvider.of(context).audioPlayer,)),
           playlists: Container(color: Colors.blue[100],),
           settings: Container(color: Colors.amber[100],),

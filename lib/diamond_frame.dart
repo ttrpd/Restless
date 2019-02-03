@@ -18,20 +18,17 @@ class DiamondFrame extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(left:16.0, right:8.0),
-      child: ClipPath(
-        clipper: DiamondClipper(),
-        child: Container(
-          width: height,
-          height: height,
-          color: Theme.of(context).primaryColor,
-          child: Padding(
-            padding: EdgeInsets.all(padding),
-            child: ClipPath(
-              clipper: DiamondClipper(),
-              child: child,
-            ),
+    return ClipPath(
+      clipper: DiamondClipper(),
+      child: Container(
+        width: height,
+        height: height,
+        color: Theme.of(context).primaryColor,
+        child: Padding(
+          padding: EdgeInsets.all(padding),
+          child: ClipPath(
+            clipper: DiamondClipper(),
+            child: child,
           ),
         ),
       ),
