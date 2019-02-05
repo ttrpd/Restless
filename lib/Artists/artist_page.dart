@@ -67,25 +67,24 @@ class ArtistPageState extends State<ArtistPage> {
                   if(notification is ScrollNotification)
                     widget.setOffset(notification.metrics.pixels);
                 },
-                child: ListView.builder(
-                  controller: _scrl,
-                  itemCount: MusicProvider.of(context).artists.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    String artist = MusicProvider.of(context).artists[index].name;
-                    if(!MusicProvider.of(context).artistSlivers.containsKey(artist))
-                    {
-                      ArtistSliver artistSliver = ArtistSliver(
-                        artist: MusicProvider.of(context).artists[index],
-                        height: widget.sliverHeight,
+                child: SafeArea(
+                  child: ListView.builder(
+                    controller: _scrl,
+                    itemCount: MusicProvider.of(context).artists.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return Column(
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.only(left: 16.0, right: 16.0),
+                            child: Divider(
+                              color: Theme.of(context).primaryColorDark,
+                            ),
+                          ),
+                          _buildSliver(context, index)
+                        ],
                       );
-                      MusicProvider.of(context).artistSlivers.putIfAbsent(artist, ()=>artistSliver );
-                      return artistSliver;
-                    }
-                    else
-                    {
-                      return MusicProvider.of(context).artistSlivers[artist];
-                    }
-                  },
+                    },
+                  ),
                 ),
               ),
             ),
@@ -104,6 +103,23 @@ class ArtistPageState extends State<ArtistPage> {
         ],
       ),
     );
+  }
+
+  ArtistSliver _buildSliver(BuildContext context, int index) {
+    String artist = MusicProvider.of(context).artists[index].name;
+    if(!MusicProvider.of(context).artistSlivers.containsKey(artist))
+    {
+      ArtistSliver artistSliver = ArtistSliver(
+        artist: MusicProvider.of(context).artists[index],
+        height: widget.sliverHeight,
+      );
+      MusicProvider.of(context).artistSlivers.putIfAbsent(artist, ()=>artistSliver );
+      return artistSliver;
+    }
+    else
+    {
+      return MusicProvider.of(context).artistSlivers[artist];
+    }
   }
 }
 

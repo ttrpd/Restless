@@ -18,10 +18,10 @@ class TagArea extends StatelessWidget {
     {
       tagChips.add(
         Chip(
-          backgroundColor: Theme.of(context).accentColor,
+          backgroundColor: Theme.of(context).primaryColor,
           label: Text(
             tag.content, 
-            style: TextStyle(color: Theme.of(context).primaryColor),
+            style: TextStyle(color: Theme.of(context).accentColor),
           ),
         ),
       );
@@ -44,7 +44,7 @@ class TagArea extends StatelessWidget {
                       text: TextSpan(
                         text: 'Tags',
                         style: TextStyle(
-                          color: Theme.of(context).accentColor,
+                          color: Theme.of(context).primaryColor,
                           fontSize: 24.0,
                           fontWeight: FontWeight.bold,
                         ),
@@ -57,7 +57,7 @@ class TagArea extends StatelessWidget {
                 ),
                 IconButton(
                   onPressed: (){},
-                  color: Theme.of(context).accentColor,
+                  color: Theme.of(context).primaryColor,
                   icon: Icon(Icons.edit),
                 ),
               ],

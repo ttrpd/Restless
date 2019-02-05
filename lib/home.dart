@@ -188,7 +188,7 @@ class HomeState extends State<Home> {
 
     double artistsListOffset = 0.0;
 
-    double sliverHeight = ((MediaQuery.of(context).size.height*57) / MediaQuery.of(context).size.width);//(MediaQuery.of(context).size.height * 0.145);
+    double sliverHeight = ((MediaQuery.of(context).size.height*46) / MediaQuery.of(context).size.width);//(MediaQuery.of(context).size.height * 0.145);
 
 
     return FutureBuilder(
@@ -214,7 +214,7 @@ class HomeState extends State<Home> {
             setOffset: (offset) => artistsListOffset = offset,
             sliverHeight: sliverHeight,
           ),
-          nowPlaying: ClipRect(child: NowPlaying(audioPlayer: NowPlayingProvider.of(context).audioPlayer,)),
+          pgCtrl: PageController(initialPage: 0,),
           playlists: Container(color: Colors.blue[100],),
           settings: Container(color: Colors.amber[100],),
         );

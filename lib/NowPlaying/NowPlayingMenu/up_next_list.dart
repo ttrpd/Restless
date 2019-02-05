@@ -29,7 +29,7 @@ class UpNextListState extends State<UpNextList> {
                     text: TextSpan(
                       text: 'Up Next',
                       style: TextStyle(
-                        color: Theme.of(context).accentColor,
+                        color: Theme.of(context).primaryColor,
                         fontSize: 24.0,
                         fontWeight: FontWeight.bold,
                       ),
@@ -41,13 +41,13 @@ class UpNextListState extends State<UpNextList> {
               IconButton(
                 onPressed: (){},
                 icon: Icon(Icons.edit),
-                color: Theme.of(context).accentColor,
+                color: Theme.of(context).primaryColor,
               ),
             ],
           ),
         ),
         Divider(
-          color: Theme.of(context).accentColor,
+          color: Theme.of(context).primaryColor,
         ),
         Container(
           height: 258.0,
@@ -69,7 +69,7 @@ class UpNextListState extends State<UpNextList> {
                 child: Column(
                   children: <Widget>[
                     // Divider(
-                    //   color: Theme.of(context).accentColor,
+                    //   color: Theme.of(context).primaryColor,
                     // ),
                     Padding(
                       padding: const EdgeInsets.only(top: 2.0, bottom: 2.0),
@@ -99,7 +99,7 @@ class UpNextListState extends State<UpNextList> {
                                             height: 1.0,
                                             letterSpacing: 0.0,
                                             fontWeight: FontWeight.bold,
-                                            color: Theme.of(context).accentColor
+                                            color: Theme.of(context).primaryColor
                                           ),
                                         ),
                                       ),    
@@ -114,7 +114,7 @@ class UpNextListState extends State<UpNextList> {
                                             height: 1.0,
                                             letterSpacing: 0.0,
                                             fontWeight: FontWeight.normal,
-                                            color: Theme.of(context).accentColor
+                                            color: Theme.of(context).primaryColor
                                           ),
                                         ),
                                       ),
@@ -131,7 +131,7 @@ class UpNextListState extends State<UpNextList> {
                                     height: 1.0,
                                     letterSpacing: 0.0,
                                     fontWeight: FontWeight.normal,
-                                    color: Theme.of(context).accentColor
+                                    color: Theme.of(context).primaryColor
                                   ),
                                 ),
                               ),

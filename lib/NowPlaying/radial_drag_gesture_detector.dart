@@ -64,6 +64,7 @@ class _RadialDragGestureDetectorState extends State<RadialDragGestureDetector> {
   @override
   Widget build(BuildContext context) {
     return new GestureDetector(
+      behavior: HitTestBehavior.opaque,
       onPanStart: _onPanStart,
       onPanUpdate: _onPanUpdate,
       onPanEnd: _onPanEnd,

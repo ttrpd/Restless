@@ -37,204 +37,189 @@ class NowPlayingMenuState extends State<NowPlayingMenu> {
   Widget build(BuildContext context)
   {
     return Container(
-      height: 860.0,
-      child: Container(
-        width: double.maxFinite,
-        height: 760.0,
-        color: Theme.of(context).primaryColor,
-        child: Padding(
-          padding: const EdgeInsets.only(top: 20.0, bottom: 10.0, left: 10.0, right: 10.0),
-          child: Material(
-            type: MaterialType.transparency,
-            child: Column(
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 30.0),
-                  child: Column(
-                    children: <Widget>[
-                      Align(
-                        alignment: Alignment.center,
-                        child: Padding(
-                          padding: const EdgeInsets.only(top: 10.0, left: 20.0, right: 20.0),
-                          child: RichText(
-                            textAlign: TextAlign.center,
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 1,
-                            text: TextSpan(
-                              text: stringBeautify(NowPlayingProvider.of(context).track.name),
-                              style: TextStyle(
-                                color: Theme.of(context).accentColor,
-                                fontSize: 20.0,
-                                fontFamily: 'Inconsolata',
-                                letterSpacing: 2.0,
-                                height: 1.0,
-                              ),
+      width: double.maxFinite,
+      color: Theme.of(context).primaryColor,
+      child: Padding(
+        padding: const EdgeInsets.only(top: 20.0, bottom: 10.0, left: 10.0, right: 10.0),
+        child: Material(
+          type: MaterialType.transparency,
+          child: Column(
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.only(bottom: 30.0),
+                child: Column(
+                  children: <Widget>[
+                    Align(
+                      alignment: Alignment.center,
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 10.0, left: 20.0, right: 20.0),
+                        child: RichText(
+                          textAlign: TextAlign.center,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                          text: TextSpan(
+                            text: stringBeautify(NowPlayingProvider.of(context).track.name),
+                            style: TextStyle(
+                              color: Theme.of(context).accentColor,
+                              fontSize: 20.0,
+                              fontFamily: 'Inconsolata',
+                              letterSpacing: 2.0,
+                              height: 1.0,
                             ),
                           ),
                         ),
                       ),
-                      Align(
-                        alignment: Alignment.center,
-                        child: Padding(
-                          padding: const EdgeInsets.only(top: 20.0, left: 20.0, right: 20.0),
-                          child: RichText(
-                            textAlign: TextAlign.center,
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 1,
-                            text: TextSpan(
-                              text: stringBeautify(NowPlayingProvider.of(context).track.albumName) ?? '(Album)',
-                              style: TextStyle(
-                                color: Theme.of(context).accentColor,
-                                fontSize: 14.0,
-                                fontFamily: 'Inconsolata',
-                                letterSpacing: 4.0,
-                                height: 1.0
-                              ),
+                    ),
+                    Align(
+                      alignment: Alignment.center,
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 20.0, left: 20.0, right: 20.0),
+                        child: RichText(
+                          textAlign: TextAlign.center,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                          text: TextSpan(
+                            text: stringBeautify(NowPlayingProvider.of(context).track.albumName) ?? '(Album)',
+                            style: TextStyle(
+                              color: Theme.of(context).accentColor,
+                              fontSize: 14.0,
+                              fontFamily: 'Inconsolata',
+                              letterSpacing: 4.0,
+                              height: 1.0
                             ),
                           ),
                         ),
                       ),
-                      Align(
-                        alignment: Alignment.center,
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 20.0, right: 20.0),
-                          child: RichText(
-                            textAlign: TextAlign.center,
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 1,
-                            text: TextSpan(
-                              text: stringBeautify(NowPlayingProvider.of(context).track.artistName) ?? '(Artist)',
-                              style: TextStyle(
-                                color: Theme.of(context).accentColor,
-                                fontSize: 12.0,
-                                fontFamily: 'Inconsolata',
-                                letterSpacing: 4.0,
-                                height: 3.0
-                              ),
+                    ),
+                    Align(
+                      alignment: Alignment.center,
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 20.0, right: 20.0),
+                        child: RichText(
+                          textAlign: TextAlign.center,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                          text: TextSpan(
+                            text: stringBeautify(NowPlayingProvider.of(context).track.artistName) ?? '(Artist)',
+                            style: TextStyle(
+                              color: Theme.of(context).accentColor,
+                              fontSize: 12.0,
+                              fontFamily: 'Inconsolata',
+                              letterSpacing: 4.0,
+                              height: 3.0
                             ),
                           ),
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-                _buildPlayerControls(),
-                // SeekBar(
-                //   trackProgressPercent: NowPlayingProvider.of(context).trackProgressPercent,
-                //   onSeekRequested: (double seekPercent) {
-                //     setState(() {
-                //       final seekMils = (NowPlayingProvider.of(context).endTime.inMilliseconds.toDouble() * seekPercent).round();//source of toDouble called on null error
-                //       widget.audioPlayer.seek(Duration(milliseconds: seekMils));
-                //       NowPlayingProvider.of(context).trackProgressPercent = seekMils.toDouble() / NowPlayingProvider.of(context).endTime.inMilliseconds.toDouble();
-                //       NowPlayingProvider.of(context).currentTime = Duration(milliseconds: seekMils);
-                //     });
-                //   },
-                // ),
-                // Track Times //
-                // Row(
-                //   children: <Widget>[
-                //     RichText(
-                //       text: TextSpan(
-                //         text: NowPlayingProvider.of(context).currentTime.toString().substring(NowPlayingProvider.of(context).currentTime.toString().indexOf(':')+1,NowPlayingProvider.of(context).currentTime.toString().lastIndexOf('.')),
-                //         style: TextStyle(
-                //           color: Theme.of(context).accentColor,
-                //           fontSize: 18.0,
-                //         ),
-                //       ),
-                //     ),
-                //     Expanded(child: Container(),),
-                //     RichText(
-                //       text: TextSpan(
-                //         text: NowPlayingProvider.of(context).endTime.toString().substring(NowPlayingProvider.of(context).endTime.toString().indexOf(':')+1,NowPlayingProvider.of(context).endTime.toString().lastIndexOf('.')),
-                //         style: TextStyle(
-                //           color: Theme.of(context).accentColor,
-                //           fontSize: 18.0,
-                //         ),
-                //       ),
-                //     ),
-                //   ],
-                // ),
+              ),
+              _buildPlayerControls(),
+              // Track Times //
+              // Row(
+              //   children: <Widget>[
+              //     RichText(
+              //       text: TextSpan(
+              //         text: NowPlayingProvider.of(context).currentTime.toString().substring(NowPlayingProvider.of(context).currentTime.toString().indexOf(':')+1,NowPlayingProvider.of(context).currentTime.toString().lastIndexOf('.')),
+              //         style: TextStyle(
+              //           color: Theme.of(context).accentColor,
+              //           fontSize: 18.0,
+              //         ),
+              //       ),
+              //     ),
+              //     Expanded(child: Container(),),
+              //     RichText(
+              //       text: TextSpan(
+              //         text: NowPlayingProvider.of(context).endTime.toString().substring(NowPlayingProvider.of(context).endTime.toString().indexOf(':')+1,NowPlayingProvider.of(context).endTime.toString().lastIndexOf('.')),
+              //         style: TextStyle(
+              //           color: Theme.of(context).accentColor,
+              //           fontSize: 18.0,
+              //         ),
+              //       ),
+              //     ),
+              //   ],
+              // ),
 
-                // track flow buttons //
-                Padding(// shuffle
-                  padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
-                  child: Row(
-                    children: <Widget>[
-                      Expanded(child: Container(),),
-                      Container(
-                        width: 40.0,
-                        height: 40.0,
-                        child: RawMaterialButton(
-                          elevation: 0.0,
-                          shape: CircleBorder(),
-                          fillColor: Colors.transparent,
-                          onPressed: (){
-                            setState(() {
-                              if(NowPlayingProvider.of(context).trackFlow == TrackFlow.shuffle)
-                                NowPlayingProvider.of(context).trackFlow = TrackFlow.natural;
-                              else
-                                NowPlayingProvider.of(context).trackFlow = TrackFlow.shuffle;                                  
-                            });
-                          },
-                          child: Icon(
-                            Icons.shuffle,
-                            color: (NowPlayingProvider.of(context).trackFlow==TrackFlow.shuffle)?Theme.of(context).accentColor:Theme.of(context).primaryColorDark,
-                          ),
+              // track flow buttons //
+              Padding(// shuffle
+                padding: const EdgeInsets.only(top: 10.0, bottom: 30.0),
+                child: Row(
+                  children: <Widget>[
+                    Expanded(child: Container(),),
+                    Container(
+                      width: 40.0,
+                      height: 40.0,
+                      child: RawMaterialButton(
+                        elevation: 0.0,
+                        shape: CircleBorder(),
+                        fillColor: Colors.transparent,
+                        onPressed: (){
+                          setState(() {
+                            if(NowPlayingProvider.of(context).trackFlow == TrackFlow.shuffle)
+                              NowPlayingProvider.of(context).trackFlow = TrackFlow.natural;
+                            else
+                              NowPlayingProvider.of(context).trackFlow = TrackFlow.shuffle;                                  
+                          });
+                        },
+                        child: Icon(
+                          Icons.shuffle,
+                          color: (NowPlayingProvider.of(context).trackFlow==TrackFlow.shuffle)?Theme.of(context).accentColor:Theme.of(context).primaryColorDark,
                         ),
                       ),
-                      Expanded(child: Container(),),
-                      Container(// repeat
-                        width: 40.0,
-                        height: 40.0,
-                        child: RawMaterialButton(
-                          elevation: 0.0,
-                          shape: CircleBorder(),
-                          fillColor: Colors.transparent,
-                          onPressed: (){
-                            setState(() {
-                              if(NowPlayingProvider.of(context).trackFlow == TrackFlow.repeat)
-                                NowPlayingProvider.of(context).trackFlow = TrackFlow.natural;
-                              else
-                                NowPlayingProvider.of(context).trackFlow = TrackFlow.repeat;                                  
-                            });
-                          },
-                          child: Icon(
-                            Icons.repeat,
-                            color: (NowPlayingProvider.of(context).trackFlow==TrackFlow.repeat)?Theme.of(context).accentColor:Theme.of(context).primaryColorDark,
-                          ),
+                    ),
+                    Expanded(child: Container(),),
+                    Container(// repeat
+                      width: 40.0,
+                      height: 40.0,
+                      child: RawMaterialButton(
+                        elevation: 0.0,
+                        shape: CircleBorder(),
+                        fillColor: Colors.transparent,
+                        onPressed: (){
+                          setState(() {
+                            if(NowPlayingProvider.of(context).trackFlow == TrackFlow.repeat)
+                              NowPlayingProvider.of(context).trackFlow = TrackFlow.natural;
+                            else
+                              NowPlayingProvider.of(context).trackFlow = TrackFlow.repeat;                                  
+                          });
+                        },
+                        child: Icon(
+                          Icons.repeat,
+                          color: (NowPlayingProvider.of(context).trackFlow==TrackFlow.repeat)?Theme.of(context).accentColor:Theme.of(context).primaryColorDark,
                         ),
                       ),
-                      Expanded(child: Container(),),
-                      Container(// repeat once
-                        width: 40.0,
-                        height: 40.0,
-                        child: RawMaterialButton(
-                          elevation: 0.0,
-                          shape: CircleBorder(),
-                          fillColor: Colors.transparent,
-                          onPressed: (){
-                            setState(() {
-                              if(NowPlayingProvider.of(context).trackFlow == TrackFlow.repeatOnce)
-                                NowPlayingProvider.of(context).trackFlow = TrackFlow.natural;
-                              else
-                                NowPlayingProvider.of(context).trackFlow = TrackFlow.repeatOnce;                                  
-                            });
-                          },
-                          child: Icon(
-                            Icons.repeat_one,
-                            color: (NowPlayingProvider.of(context).trackFlow==TrackFlow.repeatOnce)?Theme.of(context).accentColor:Theme.of(context).primaryColorDark,
-                          ),
+                    ),
+                    Expanded(child: Container(),),
+                    Container(// repeat once
+                      width: 40.0,
+                      height: 40.0,
+                      child: RawMaterialButton(
+                        elevation: 0.0,
+                        shape: CircleBorder(),
+                        fillColor: Colors.transparent,
+                        onPressed: (){
+                          setState(() {
+                            if(NowPlayingProvider.of(context).trackFlow == TrackFlow.repeatOnce)
+                              NowPlayingProvider.of(context).trackFlow = TrackFlow.natural;
+                            else
+                              NowPlayingProvider.of(context).trackFlow = TrackFlow.repeatOnce;                                  
+                          });
+                        },
+                        child: Icon(
+                          Icons.repeat_one,
+                          color: (NowPlayingProvider.of(context).trackFlow==TrackFlow.repeatOnce)?Theme.of(context).accentColor:Theme.of(context).primaryColorDark,
                         ),
                       ),
-                      Expanded(child: Container(),),
-                    ],
-                  ),
+                    ),
+                    Expanded(child: Container(),),
+                  ],
                 ),
+              ),
 
-                TagArea(tags: NowPlayingProvider.of(context).track.tags),
-                UpNextList(),
-              ],
-            ),
+              // TagArea(tags: NowPlayingProvider.of(context).track.tags),
+              // UpNextList(),
+            ],
           ),
         ),
       ),

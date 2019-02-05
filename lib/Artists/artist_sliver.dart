@@ -40,32 +40,41 @@ class ArtistSliverState extends State<ArtistSliver> {
         );
       },
       child: Container(
-        alignment: Alignment.center,
         height: widget.height,
         width: MediaQuery.of(context).size.width * 0.95,
         color: Theme.of(context).accentColor,
-        child: Column(
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.only(left: 8.0, right: 8.0),
-              child: Divider(
-                color: Theme.of(context).primaryColor,
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 20.0, right: 0.0, top: 3.0, bottom: 3.0),
-              child: Row(
-                children: <Widget>[
-                  DiamondFrame(
-                    height: widget.height * 0.8,
-                    padding: 7.0,
-                    child: _albums(context),
+        child: Center(
+          child: Padding(
+            padding: const EdgeInsets.only(left: 20.0, right: 0.0),
+            child: Row(
+              children: <Widget>[
+                ClipOval(
+                  child: Container(
+                    width: 80,
+                    height: 80,
+                    color: Colors.grey,
+                    child: Padding(
+                      padding: const EdgeInsets.all(2.0),
+                      child: ClipOval(
+                        child: Container(
+                          color: Theme.of(context).accentColor,
+                          child: Padding(
+                            padding: const EdgeInsets.all(2.0),
+                            child: ClipOval(
+                              child: Container(
+                                child: _albums(context),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
                   ),
-                  Flexible(child: _buildArtistName(context)),
-                ],
-              ),
+                ),
+                Flexible(child: _buildArtistName(context)),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );

@@ -1,6 +1,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
+import 'package:restless/NowPlaying/NowPlayingMenu/tag_area.dart';
+import 'package:restless/NowPlaying/NowPlayingMenu/up_next_list.dart';
 import 'package:restless/NowPlaying/Visualizer/visualizer.dart';
 import 'package:restless/NowPlaying/circular_seek_bar.dart';
 import 'package:restless/diamond_frame.dart';
@@ -13,10 +15,11 @@ import 'package:restless/NowPlaying/now_playing_provider.dart';
 class NowPlaying extends StatefulWidget
 {
   final AudioPlayer audioPlayer;
-
+  final PageController pgCtrl;
   NowPlaying({
     Key key,
     @required this.audioPlayer,
+    @required this.pgCtrl,
   }) : super(key: key);
 
   @override
@@ -25,7 +28,7 @@ class NowPlaying extends StatefulWidget
 
 class NowPlayingState extends State<NowPlaying> with SingleTickerProviderStateMixin
 {
-
+  
 
   @override
   void initState() {
@@ -36,6 +39,7 @@ class NowPlayingState extends State<NowPlaying> with SingleTickerProviderStateMi
   Widget build(BuildContext context) {
 
     return Container(
+      height: double.infinity,
       child: ScrollConfiguration(
         behavior: MyScrollBehavior(),
         child: Container(
@@ -43,16 +47,27 @@ class NowPlayingState extends State<NowPlaying> with SingleTickerProviderStateMi
           child: Stack(
             children: <Widget>[
               
-              ListView(// info/control layer
-                physics: ScrollPhysics(),
+              Container(
+                padding: EdgeInsets.only(top: 25.0),
+                height: 360.0,
+                child: PageView(
+                  controller: widget.pgCtrl,
+                  children: <Widget>[
+                    buildTrackProgressArea(context),
+                    buildTrackInfoArea(context,)
+                  ],
+                ),
+              ),
+              Column(
                 children: <Widget>[
-                  buildTrackInfoArea(context),
+                  Expanded(child: Container(),),
                   Visualizer(height: 60.0, width: MediaQuery.of(context).size.width,),
                   NowPlayingMenu(
                     audioPlayer: widget.audioPlayer,
                   ),
                 ],
               ),
+              
             ],
           ),
         ),
@@ -60,11 +75,11 @@ class NowPlayingState extends State<NowPlaying> with SingleTickerProviderStateMi
     );
   }
 
-  Container buildTrackInfoArea(BuildContext context) {
+  Widget buildTrackProgressArea(BuildContext context) {
     return Container(
       alignment: Alignment.topCenter,
       height: 360.0,
-      width: 320.0,
+      width: double.infinity,
       color: Theme.of(context).accentColor,
       child:  Center(
         
@@ -91,39 +106,11 @@ class NowPlayingState extends State<NowPlaying> with SingleTickerProviderStateMi
     );
   }
 
-  Stack buildMovingBackground(BuildContext context) {
-    return Stack(
+  Widget buildTrackInfoArea(BuildContext context) {
+    return ListView(
       children: <Widget>[
-        Transform(
-          alignment: Alignment.topLeft,
-          transform: Matrix4.translationValues(
-            -(NowPlayingProvider.of(context).trackProgressPercent * 
-              (MediaQuery.of(context).size.height - MediaQuery.of(context).size.width)
-             ),
-            0.0,
-            0.0,
-          ),
-          child: OverflowBox(
-            maxWidth: double.infinity,
-            alignment: Alignment.topLeft,
-            child: Container(
-              alignment: Alignment.topLeft,
-              height: MediaQuery.of(context).size.height,
-              width: MediaQuery.of(context).size.height,
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: NowPlayingProvider.of(context).track.albumArt ?? AssetImage('lib/assets/default.jpg'),
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ),
-          ),
-        ),
-        Container(
-          height: double.infinity,
-          width: double.infinity,
-          color: Color.fromARGB(100, 0, 0, 0),
-        ),
+        TagArea(tags: NowPlayingProvider.of(context).track.tags),
+        UpNextList(),
       ],
     );
   }

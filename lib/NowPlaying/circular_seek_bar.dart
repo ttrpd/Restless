@@ -26,7 +26,7 @@ class CircularSeekBar extends StatefulWidget {
 
 class CircularSeekBarState extends State<CircularSeekBar> {
 
-  double _thumbRadius = 3.0;
+  double _thumbRadius = 2.0;
   bool _seeking = false;
   double percentComplete = 0.0;
 
@@ -41,7 +41,7 @@ class CircularSeekBarState extends State<CircularSeekBar> {
       _seeking = true;
       _thumbRadius *= 2;
     });
-    _startDragPercent = _progress;
+    _startDragPercent = (_startDragCoord.angle / (2*pi)) - (pi/4);
   }
 
   void _onDragUpdate(PolarCoord coord) {
