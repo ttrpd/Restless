@@ -27,51 +27,49 @@ class ArtistSliverState extends State<ArtistSliver> {
   @override
   Widget build(BuildContext context)
   {
-    return GestureDetector(
-      onTap: () {//navigate to album page
-        print(widget.artist);
-        Navigator.of(context, rootNavigator: true).push(
-          CupertinoPageRoute<void>(
-            settings: RouteSettings(
-              isInitialRoute: true,
+    return InkWell(
+      splashColor: Colors.white70,
+      child: GestureDetector(
+        onTap: () {//navigate to album page
+          print(widget.artist);
+          Navigator.of(context, rootNavigator: true).push(
+            CupertinoPageRoute<void>(
+              settings: RouteSettings(
+                isInitialRoute: true,
+              ),
+              builder: (BuildContext context) => AlbumPage( artist: widget.artist,),
             ),
-            builder: (BuildContext context) => AlbumPage( artist: widget.artist,),
-          ),
-        );
-      },
-      child: Container(
-        height: widget.height,
-        width: MediaQuery.of(context).size.width * 0.95,
-        color: Theme.of(context).accentColor,
-        child: Center(
+          );
+        },
+        child: Container(
+          height: widget.height,
+          width: double.infinity,
+          color: Colors.transparent,
           child: Padding(
-            padding: const EdgeInsets.only(left: 20.0, right: 0.0),
-            child: Row(
+            padding: const EdgeInsets.only(left: 20.0, right: 20.0),
+            child: Stack(
               children: <Widget>[
-                ClipOval(
-                  child: Container(
-                    width: 80,
-                    height: 80,
-                    color: Colors.grey,
-                    child: Padding(
-                      padding: const EdgeInsets.all(2.0),
-                      child: ClipOval(
-                        child: Container(
-                          color: Theme.of(context).accentColor,
-                          child: Padding(
-                            padding: const EdgeInsets.all(2.0),
-                            child: ClipOval(
-                              child: Container(
-                                child: _albums(context),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
+                Container(
+                  foregroundDecoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        Theme.of(context).primaryColor,
+                        Colors.transparent,
+                      ],
+                      stops: [
+                        0.3,
+                        1.0,
+                      ],
                     ),
                   ),
+                  child: _albums(context),
                 ),
-                Flexible(child: _buildArtistName(context)),
+                Container(
+                  alignment: Alignment.bottomLeft,
+                  child: _buildArtistName(context)
+                ),
               ],
             ),
           ),
@@ -80,20 +78,20 @@ class ArtistSliverState extends State<ArtistSliver> {
     );
   }
 
-  Container _buildArtistName(BuildContext context) {
-    return Container(
-      child: Padding(
-        padding: const EdgeInsets.only(top: 12.5, left: 10.0, right: 5.0, bottom: 5.0),
+  Widget _buildArtistName(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(top: widget.height * 0.15, left: 10.0),
+      child: Container(
         child: RichText(
-          maxLines: 2,
+          maxLines: 1,
           textAlign: TextAlign.start,
           overflow: TextOverflow.clip,
           text: TextSpan(
             text: widget.artist.name.replaceAll('"', '/').replaceAll('∕', '/').replaceAll('"', ''),
             style: TextStyle(
-              color: Theme.of(context).primaryColor,
+              color: Theme.of(context).accentColor,
               // background: Paint()..color = Theme.of(context).accentColor,
-              fontSize: 26.0,
+              fontSize: 16.0,
               fontWeight: FontWeight.bold,
               letterSpacing: 2.0,
               height: 1.0
@@ -106,7 +104,6 @@ class ArtistSliverState extends State<ArtistSliver> {
 
   Container _albums(BuildContext context) {
     return Container(
-      alignment: Alignment.center,
       width: MediaQuery.of(context).size.width, //* 0.95,
       decoration: BoxDecoration(
         image: DecorationImage(
@@ -114,15 +111,17 @@ class ArtistSliverState extends State<ArtistSliver> {
           image: AssetImage('lib/assets/default.jpg'),
         )
       ),
+      foregroundDecoration: BoxDecoration(
+        color: Theme.of(context).primaryColor.withAlpha(200)
+      ),
       child: Stack(
-        children: _buildAlbumArtStack(context, widget.height * 0.8),
+        children: _buildAlbumArtStack(context, MediaQuery.of(context).size.width * 0.8),
       ),
     );
   }
 
   List<Widget> _buildAlbumArtStack(BuildContext context, double height)
   {
-    double width = height;// * 0.95;
 
     List<Widget> artStack = List<Widget>();
     if(widget.artist.albums == null)
@@ -130,8 +129,7 @@ class ArtistSliverState extends State<ArtistSliver> {
 
     artStack.add(
       Container(
-        alignment: Alignment.center,
-        width: width,
+        width: height,
         height: height,
         decoration: BoxDecoration(
           image: DecorationImage(
@@ -148,10 +146,10 @@ class ArtistSliverState extends State<ArtistSliver> {
         ClipPath(//Clipped Art
           clipper: RhombusClipper(
               divideOffset: 100.0 / widget.artist.albums.length,
-              slashPos: i * (width / widget.artist.albums.length)
+              slashPos: i * (height / widget.artist.albums.length)
           ),
           child: Container(
-            width: width,
+            width: height,
             height: height,
             decoration: BoxDecoration(
               image: DecorationImage(

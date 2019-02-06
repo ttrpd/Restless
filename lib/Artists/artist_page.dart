@@ -3,6 +3,8 @@ import 'package:restless/Artists/alphabet_artist_picker.dart';
 import 'package:restless/Artists/music_provider.dart';
 
 import 'package:restless/Artists/artist_sliver.dart';
+import 'package:restless/NowPlaying/Visualizer/visualizer.dart';
+import 'package:restless/NowPlaying/now_playing_provider.dart';
 import 'package:restless/my_scroll_behavior.dart';
 
 typedef double GetOffsetMethod();
@@ -13,13 +15,16 @@ class ArtistPage extends StatefulWidget
   final GetOffsetMethod getOffset;
   final SetOffsetMethod setOffset;
   final double sliverHeight;
-
+  final Function() onArrowTap;
+  final Function() onMenuTap;
 
   ArtistPage({
     Key key,
     @required this.getOffset,
     @required this.setOffset,
     @required this.sliverHeight,
+    @required this.onArrowTap,
+    @required this.onMenuTap,
   }) : super(key: key);
 
   @override
@@ -55,52 +60,111 @@ class ArtistPageState extends State<ArtistPage> {
           });
         },
       ),
-      body: Stack(
-        alignment: Alignment.center,
-        children: <Widget>[
-          ScrollConfiguration(
-            behavior: MyScrollBehavior(),
-            child: Container(
-              color: Theme.of(context).accentColor,
-              child: NotificationListener(
-                onNotification: (notification) {//preserves the scroll position in list
-                  if(notification is ScrollNotification)
-                    widget.setOffset(notification.metrics.pixels);
-                },
-                child: SafeArea(
-                  child: ListView.builder(
-                    controller: _scrl,
-                    itemCount: MusicProvider.of(context).artists.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return Column(
-                        children: <Widget>[
-                          Padding(
-                            padding: const EdgeInsets.only(left: 16.0, right: 16.0),
-                            child: Divider(
-                              color: Theme.of(context).primaryColorDark,
-                            ),
+      body: SafeArea(
+        child: Stack(
+          alignment: Alignment.bottomCenter,
+          children: <Widget>[
+            Column(
+              children: <Widget>[
+                Container(
+                  color: Colors.transparent,
+                  width: MediaQuery.of(context).size.width,
+                  height: 60.0,
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 0.0, left: 10.0, right: 10.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: <Widget>[
+                        IconButton(
+                          icon: Icon(Icons.arrow_back_ios),
+                          iconSize: 30.0,
+                          splashColor: Colors.grey,
+                          color: Colors.grey,
+                          onPressed: widget.onArrowTap,
+                        ),
+                        Expanded(child: Container(),),
+                        IconButton(
+                          icon: Icon(Icons.menu),
+                          iconSize: 30.0,
+                          splashColor: Colors.grey,
+                          color: Colors.grey,
+                          onPressed: widget.onMenuTap,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),                
+                Padding(
+                  padding: const EdgeInsets.only(top: 10.0, left: 30.0, right: 30.0),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.only(topLeft: Radius.circular(20.0), topRight: Radius.circular(20.0)),
+                    child: Container(
+                      padding: EdgeInsets.only(top: 20.0),
+                      width: double.infinity,
+                      height: MediaQuery.of(context).size.height * 0.85,
+                      color: Theme.of(context).primaryColor,
+                      child: ScrollConfiguration(
+                        behavior: MyScrollBehavior(),
+                        child: NotificationListener(
+                          onNotification: (notification) {//preserves the scroll position in list
+                            if(notification is ScrollNotification)
+                              widget.setOffset(notification.metrics.pixels);
+                          },
+                          child: ListView.builder(
+                            controller: _scrl,
+                            itemCount: MusicProvider.of(context).artists.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              return Column(
+                                children: <Widget>[
+                                  _buildSliver(context, index),
+                                  Padding(
+                                    padding: const EdgeInsets.only(left: 16.0, right: 16.0),
+                                    child: Divider(
+                                      height: 1.0,
+                                      color: Theme.of(context).accentColor,
+                                    ),
+                                  ),
+                                ],
+                              );
+                            },
                           ),
-                          _buildSliver(context, index)
-                        ],
-                      );
-                    },
+                        ),
+                      ),
+                    ),
                   ),
                 ),
-              ),
+              ],
             ),
-          ),
-          AlphabetArtistPicker(
-            opacityValue: opacityValue,
-            scrolltoLetter: (l) {
-              _scrl.jumpTo(
-                MusicProvider.of(context).artists.indexOf(
-                    MusicProvider.of(context).artists.where((a) => a.name.trim().toUpperCase()[0] == l).first
-                ) * widget.sliverHeight
-              );
-              opacityValue = 0.0;
-            },
-          ),
-        ],
+            //column: expanded, visualizer
+            Column(
+              children: <Widget>[
+                Expanded(child: Container(),),
+                Visualizer(
+                  width: MediaQuery.of(context).size.width,
+                  height: 50.0,
+                  currentTime: NowPlayingProvider.of(context).currentTime.inMilliseconds.toDouble(),
+                  endTime: NowPlayingProvider.of(context).endTime.inMilliseconds.toDouble(),
+                ),
+                Container(
+                  color: Theme.of(context).primaryColor,
+                  width: double.infinity,
+                  height: 40.0,
+                ),
+              ],
+            ),
+            AlphabetArtistPicker(
+              opacityValue: opacityValue,
+              scrolltoLetter: (l) {
+                _scrl.jumpTo(
+                  MusicProvider.of(context).artists.indexOf(
+                      MusicProvider.of(context).artists.where((a) => a.name.trim().toUpperCase()[0] == l).first
+                  ) * widget.sliverHeight
+                );
+                opacityValue = 0.0;
+              },
+            ),
+          ],
+        ),
       ),
     );
   }

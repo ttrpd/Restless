@@ -186,10 +186,6 @@ class HomeState extends State<Home> {
       MusicProvider.of(context).artists[i].albums.sort( (a, b) => a.name.compareTo(b.name));// sort albums
     }
 
-    double artistsListOffset = 0.0;
-
-    double sliverHeight = ((MediaQuery.of(context).size.height*46) / MediaQuery.of(context).size.width);//(MediaQuery.of(context).size.height * 0.145);
-
 
     return FutureBuilder(
       future: _ftr,
@@ -204,19 +200,8 @@ class HomeState extends State<Home> {
           }
         }
         return HiddenDrawer(
-          artists: ArtistPage(
-            getOffset: () => artistsListOffset,
-            setOffset: (offset) => artistsListOffset = offset,
-            sliverHeight: sliverHeight,
-          ),
-          albums: AlbumsPage(
-            getOffset: () => artistsListOffset,
-            setOffset: (offset) => artistsListOffset = offset,
-            sliverHeight: sliverHeight,
-          ),
-          pgCtrl: PageController(initialPage: 0,),
-          playlists: Container(color: Colors.blue[100],),
-          settings: Container(color: Colors.amber[100],),
+          sliverHeight: ((MediaQuery.of(context).size.height*30) / MediaQuery.of(context).size.width),
+          pgCtrl: PageController(),
         );
       },
     );

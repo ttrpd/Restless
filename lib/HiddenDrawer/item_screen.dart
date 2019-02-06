@@ -7,8 +7,6 @@ class ItemScreen extends StatefulWidget {
     @required this.index,
     @required this.child,
     @required this.slidePercent,
-    @required this.onArrowTap,
-    @required this.onMenuTap,
     @required this.onItemScreenTap,
     this.appBarOpacity = 230,
   }) : super(key: key);
@@ -17,8 +15,6 @@ class ItemScreen extends StatefulWidget {
   final int appBarOpacity;
   final Widget child;
   final double slidePercent;
-  final Function() onArrowTap;
-  final Function() onMenuTap;
   final Function() onItemScreenTap;
 
   @override
@@ -58,45 +54,13 @@ class ItemScreenState extends State<ItemScreen> {
             child: GestureDetector(
               onTap: widget.onItemScreenTap,
               behavior: HitTestBehavior.opaque,
-              child: Stack(
+              child: (widget.slidePercent > 0)?
+              Stack(
                 children: <Widget>[
-                  (widget.slidePercent > 0)?
-                  Stack(
-                    children: <Widget>[
-                      widget.child,
-                      Container(height: double.infinity, width: double.infinity, color: Colors.transparent,),
-                    ],
-                  ) : widget.child,
-                  Container(
-                    color: Color.fromARGB(widget.appBarOpacity, 250, 250, 250),
-                    width: MediaQuery.of(context).size.width,
-                    height: 100.0,
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 30.0, left: 10.0, right: 10.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: <Widget>[
-                          IconButton(
-                            icon: Icon(Icons.arrow_back_ios),
-                            iconSize: 30.0,
-                            splashColor: Colors.grey,
-                            color: Colors.grey,
-                            onPressed: widget.onArrowTap,
-                          ),
-                          Expanded(child: Container(),),
-                          IconButton(
-                            icon: Icon(Icons.menu),
-                            iconSize: 30.0,
-                            splashColor: Colors.grey,
-                            color: Colors.grey,
-                            onPressed: widget.onMenuTap,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
+                  widget.child,
+                  Container(height: double.infinity, width: double.infinity, color: Colors.transparent,),
                 ],
-              ),
+              ) : widget.child,
             ),
           ),
         ),

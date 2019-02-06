@@ -4,10 +4,14 @@ import 'dart:math';
 class Visualizer extends StatefulWidget {
   final double width;
   final double height;
+  final double currentTime;
+  final double endTime;
   const Visualizer({
     Key key,
     @required this.width,
     @required this.height,
+    @required this.currentTime,
+    @required this.endTime,
   }) : super(key: key);
 
   @override

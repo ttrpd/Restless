@@ -16,10 +16,14 @@ class NowPlaying extends StatefulWidget
 {
   final AudioPlayer audioPlayer;
   final PageController pgCtrl;
+  final Function() onArrowTap;
+  final Function() onMenuTap;
   NowPlaying({
     Key key,
     @required this.audioPlayer,
     @required this.pgCtrl,
+    @required this.onArrowTap,
+    @required this.onMenuTap,
   }) : super(key: key);
 
   @override
@@ -48,7 +52,7 @@ class NowPlayingState extends State<NowPlaying> with SingleTickerProviderStateMi
             children: <Widget>[
               
               Container(
-                padding: EdgeInsets.only(top: 25.0),
+                padding: EdgeInsets.only(top: 0.0),
                 height: 360.0,
                 child: PageView(
                   controller: widget.pgCtrl,
@@ -60,8 +64,36 @@ class NowPlayingState extends State<NowPlaying> with SingleTickerProviderStateMi
               ),
               Column(
                 children: <Widget>[
+                  Container(
+                    color: Colors.transparent,
+                    width: MediaQuery.of(context).size.width,
+                    height: 100.0,
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 30.0, left: 10.0, right: 10.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: <Widget>[
+                          IconButton(
+                            icon: Icon(Icons.arrow_back_ios),
+                            iconSize: 30.0,
+                            splashColor: Colors.grey,
+                            color: Colors.grey,
+                            onPressed: widget.onArrowTap,
+                          ),
+                          Expanded(child: Container(),),
+                          IconButton(
+                            icon: Icon(Icons.menu),
+                            iconSize: 30.0,
+                            splashColor: Colors.grey,
+                            color: Colors.grey,
+                            onPressed: widget.onMenuTap,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
                   Expanded(child: Container(),),
-                  Visualizer(height: 60.0, width: MediaQuery.of(context).size.width,),
+                  Visualizer(height: 60.0, width: MediaQuery.of(context).size.width, currentTime: 0.0, endTime: 0.0,),
                   NowPlayingMenu(
                     audioPlayer: widget.audioPlayer,
                   ),

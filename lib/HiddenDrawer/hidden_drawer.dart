@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:restless/Artists/artist_page.dart';
 import 'package:restless/HiddenDrawer/item_screen.dart';
 import 'package:restless/HiddenDrawer/menu_item.dart';
 import 'package:restless/NowPlaying/now_playing_page.dart';
@@ -11,21 +12,16 @@ class HiddenDrawer extends StatefulWidget {
   const HiddenDrawer({
     Key key,
     this.maxSlidePercent = 0.8,
-    @required this.artists,
-    @required this.albums,
-    // @required this.nowPlaying,
-    @required this.playlists,
-    @required this.settings,
+    @required this.sliverHeight,
     @required this.pgCtrl,
   }) : super(key: key);
 
   final double maxSlidePercent;
-  final Widget artists;
-  final Widget albums;
   // final Widget nowPlaying;
-  final Widget playlists;
-  final Widget settings;
+
+  final double sliverHeight;
   final PageController pgCtrl;
+
 
   @override
   HiddenDrawerState createState() {
@@ -41,12 +37,14 @@ class HiddenDrawerState extends State<HiddenDrawer> with TickerProviderStateMixi
   double finishSlideStart;
   double finishSlideEnd;
   AnimationController finishSlideController;
+  double artistsListOffset = 0.0;
   
 
   int selectedItem = 0;
 
   onItemScreenTap()
   {
+    print("onItemScreenTap: " + slidePercent.toString());
     if(slidePercent == 1.0)
     {
       finishSlideStart = 1.0;
@@ -57,6 +55,8 @@ class HiddenDrawerState extends State<HiddenDrawer> with TickerProviderStateMixi
 
   onArrowTap()
   {
+    print("onArrowTap: " + slidePercent.toString());
+
     if(slidePercent == 0.0)
     {
       finishSlideStart = 0.0;
@@ -67,12 +67,7 @@ class HiddenDrawerState extends State<HiddenDrawer> with TickerProviderStateMixi
 
   onMenuTap()
   {
-    widget.pgCtrl.animateToPage(
-      widget.pgCtrl.page==0?1:0,
-      curve: Curves.ease,
-      duration: Duration(milliseconds: 300)
-    );
-    print('yea');
+    
   }
 
 
@@ -174,19 +169,21 @@ class HiddenDrawerState extends State<HiddenDrawer> with TickerProviderStateMixi
         Stack(
           children: <Widget>[
             ItemScreen(
-              child: widget.artists,
+              child: ArtistPage(
+                getOffset: () => artistsListOffset,
+                setOffset: (offset) => artistsListOffset = offset,
+                sliverHeight: widget.sliverHeight,
+                onArrowTap: onArrowTap,
+                onMenuTap: onMenuTap,
+              ),
               slidePercent: slidePercent,
               index: selectedItem - 0,
-              onArrowTap: onArrowTap,
-              onMenuTap: onMenuTap,
               onItemScreenTap: onItemScreenTap,
             ),
             ItemScreen(
-              child: widget.albums,
+              child: Container(color: Colors.tealAccent,),
               slidePercent: slidePercent,
               index: selectedItem - 1,
-              onArrowTap: onArrowTap,
-              onMenuTap: onMenuTap,
               onItemScreenTap: onItemScreenTap,
             ),
             (NowPlayingProvider.of(context).track != null)?ItemScreen(
@@ -194,37 +191,37 @@ class HiddenDrawerState extends State<HiddenDrawer> with TickerProviderStateMixi
                 child: NowPlaying(
                   audioPlayer: NowPlayingProvider.of(context).audioPlayer,
                   pgCtrl: widget.pgCtrl,
+                  onArrowTap: onArrowTap,
+                  onMenuTap: () {//onMenuTap
+                    widget.pgCtrl.animateToPage(
+                      widget.pgCtrl.page==0?1:0,
+                      curve: Curves.ease,
+                      duration: Duration(milliseconds: 300)
+                    );
+                  },
                 )
               ),
               slidePercent: slidePercent,
               index: selectedItem - 2,
-              onArrowTap: onArrowTap,
-              onMenuTap: onMenuTap,
               onItemScreenTap: onItemScreenTap,
               appBarOpacity: 0,
             ):ItemScreen(
               child: Container(color: Colors.black,),
               slidePercent: slidePercent,
               index: selectedItem - 2,
-              onArrowTap: onArrowTap,
-              onMenuTap: onMenuTap,
               onItemScreenTap: onItemScreenTap,
               appBarOpacity: 0,
             ),
             ItemScreen(
-              child: widget.playlists,
+              child: Container(color: Colors.tealAccent,),
               slidePercent: slidePercent,
               index: selectedItem - 3,
-              onArrowTap: onArrowTap,
-              onMenuTap: onMenuTap,
               onItemScreenTap: onItemScreenTap,
             ),
             ItemScreen(
-              child: widget.settings,
+              child: Container(color: Colors.tealAccent,),
               slidePercent: slidePercent,
               index: selectedItem - 4,
-              onArrowTap: onArrowTap,
-              onMenuTap: onMenuTap,
               onItemScreenTap: onItemScreenTap,
             ),
           ],
