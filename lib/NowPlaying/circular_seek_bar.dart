@@ -45,10 +45,10 @@ class CircularSeekBarState extends State<CircularSeekBar> {
   }
 
   void _onDragUpdate(PolarCoord coord) {
-    final dragAngle = coord.angle - _startDragCoord.angle;
+    final dragAngle = (coord.angle - _startDragCoord.angle);
     final dragPercent = dragAngle / (2 * pi);
-
-    setState(() => _currentDragPercent = (_startDragPercent + dragPercent) % 1.0);
+    print((_startDragPercent + dragPercent));
+    setState(() => _currentDragPercent = (_startDragPercent + dragPercent).clamp((3*pi)/4, (2*pi)+((3*pi)/4)));
   }
 
   void _onDragEnd() {

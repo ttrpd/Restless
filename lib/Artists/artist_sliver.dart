@@ -49,23 +49,23 @@ class ArtistSliverState extends State<ArtistSliver> {
             padding: const EdgeInsets.only(left: 20.0, right: 20.0),
             child: Stack(
               children: <Widget>[
-                Container(
-                  foregroundDecoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: [
-                        Theme.of(context).primaryColor,
-                        Colors.transparent,
-                      ],
-                      stops: [
-                        0.3,
-                        1.0,
-                      ],
-                    ),
-                  ),
-                  child: _albums(context),
-                ),
+                // Container(
+                //   foregroundDecoration: BoxDecoration(
+                //     gradient: LinearGradient(
+                //       begin: Alignment.topCenter,
+                //       end: Alignment.bottomCenter,
+                //       colors: [
+                //         Theme.of(context).primaryColor,
+                //         Colors.transparent,
+                //       ],
+                //       stops: [
+                //         0.3,
+                //         1.0,
+                //       ],
+                //     ),
+                //   ),
+                //   child: _albums(context),
+                // ),
                 Container(
                   alignment: Alignment.bottomLeft,
                   child: _buildArtistName(context)

@@ -31,7 +31,7 @@ class TagArea extends StatelessWidget {
       padding: const EdgeInsets.only(top: 20.0),
       child: Container(
         width: double.maxFinite,
-        height: 186.0,
+        height: 60.0,
         child: Column(
           children: <Widget>[
             Row(
@@ -62,9 +62,11 @@ class TagArea extends StatelessWidget {
                 ),
               ],
             ),
-            Flexible(
-              child: Wrap(
-                spacing: 3.0,
+            Container(
+              height: 40.0,
+              width: MediaQuery.of(context).size.width,
+              child: ListView(
+                scrollDirection: Axis.horizontal,
                 children: tagChips.toList(),
               ),
             ),

@@ -136,22 +136,22 @@ class ArtistPageState extends State<ArtistPage> {
               ],
             ),
             //column: expanded, visualizer
-            Column(
-              children: <Widget>[
-                Expanded(child: Container(),),
-                Visualizer(
-                  width: MediaQuery.of(context).size.width,
-                  height: 50.0,
-                  currentTime: NowPlayingProvider.of(context).currentTime.inMilliseconds.toDouble(),
-                  endTime: NowPlayingProvider.of(context).endTime.inMilliseconds.toDouble(),
-                ),
-                Container(
-                  color: Theme.of(context).primaryColor,
-                  width: double.infinity,
-                  height: 40.0,
-                ),
-              ],
-            ),
+            // Column(
+            //   children: <Widget>[
+            //     Expanded(child: Container(),),
+            //     Visualizer(
+            //       width: MediaQuery.of(context).size.width,
+            //       height: 50.0,
+            //       currentTime: NowPlayingProvider.of(context).currentTime.inMilliseconds.toDouble(),
+            //       endTime: NowPlayingProvider.of(context).endTime.inMilliseconds.toDouble(),
+            //     ),
+            //     Container(
+            //       color: Theme.of(context).primaryColor,
+            //       width: double.infinity,
+            //       height: 40.0,
+            //     ),
+            //   ],
+            // ),
             AlphabetArtistPicker(
               opacityValue: opacityValue,
               scrolltoLetter: (l) {

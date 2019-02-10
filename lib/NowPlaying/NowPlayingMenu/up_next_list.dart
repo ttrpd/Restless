@@ -18,7 +18,7 @@ class UpNextListState extends State<UpNextList> {
     return Column(
       children: <Widget>[
         Padding(
-          padding: const EdgeInsets.only(top: 20.0),
+          padding: const EdgeInsets.only(top: 2.0),
           child: Row(
             children: <Widget>[
               Container(
@@ -50,7 +50,7 @@ class UpNextListState extends State<UpNextList> {
           color: Theme.of(context).primaryColor,
         ),
         Container(
-          height: 258.0,
+          height: MediaQuery.of(context).size.height * 0.5,
           width: MediaQuery.of(context).size.width,
           child: ListView.builder(
             physics: BouncingScrollPhysics(),
@@ -68,9 +68,6 @@ class UpNextListState extends State<UpNextList> {
                 },
                 child: Column(
                   children: <Widget>[
-                    // Divider(
-                    //   color: Theme.of(context).primaryColor,
-                    // ),
                     Padding(
                       padding: const EdgeInsets.only(top: 2.0, bottom: 2.0),
                       child: Container(
@@ -78,50 +75,47 @@ class UpNextListState extends State<UpNextList> {
                         height: 40.0,
                         width: double.maxFinite,
                         child: Padding(
-                          padding: const EdgeInsets.only(left: 10.0, right: 8.0),
+                          padding: const EdgeInsets.only(left: 16.0, right: 16.0),
                           child: Row(
                             children: <Widget>[
-                              Padding(
-                                padding: const EdgeInsets.only(left: 8.0, right: 8.0),
-                                child: Container(
-                                  width: MediaQuery.of(context).size.width * 0.65,
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: <Widget>[
-                                      RichText(
-                                        textAlign: TextAlign.start,
-                                        overflow: TextOverflow.ellipsis,
-                                        maxLines: 1,
-                                        text: TextSpan(
-                                          text: (NowPlayingProvider.of(context).playQueue==null)?'':NowPlayingProvider.of(context).playQueue[NowPlayingProvider.of(context).getQueuePos()+index+1].name,
-                                          style: TextStyle(
-                                            fontSize: 16.0,
-                                            height: 1.0,
-                                            letterSpacing: 0.0,
-                                            fontWeight: FontWeight.bold,
-                                            color: Theme.of(context).primaryColor
-                                          ),
-                                        ),
-                                      ),    
-                                      RichText(
-                                        textAlign: TextAlign.start,
-                                        overflow: TextOverflow.ellipsis,
-                                        maxLines: 1,
-                                        text: TextSpan(
-                                          text: (NowPlayingProvider.of(context).playQueue==null)?'':NowPlayingProvider.of(context).playQueue[NowPlayingProvider.of(context).getQueuePos()+index+1].artistName,
-                                          style: TextStyle(
-                                            fontSize: 14.0,
-                                            height: 1.0,
-                                            letterSpacing: 0.0,
-                                            fontWeight: FontWeight.normal,
-                                            color: Theme.of(context).primaryColor
-                                          ),
+                              Container(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    RichText(
+                                      textAlign: TextAlign.start,
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 1,
+                                      text: TextSpan(
+                                        text: (NowPlayingProvider.of(context).playQueue==null)?'':NowPlayingProvider.of(context).playQueue[NowPlayingProvider.of(context).getQueuePos()+index+1].name,
+                                        style: TextStyle(
+                                          fontSize: 16.0,
+                                          height: 1.0,
+                                          letterSpacing: 0.0,
+                                          fontWeight: FontWeight.bold,
+                                          color: Theme.of(context).primaryColor
                                         ),
                                       ),
-                                    ],
-                                  ),
+                                    ),    
+                                    RichText(
+                                      textAlign: TextAlign.start,
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 1,
+                                      text: TextSpan(
+                                        text: (NowPlayingProvider.of(context).playQueue==null)?'':NowPlayingProvider.of(context).playQueue[NowPlayingProvider.of(context).getQueuePos()+index+1].artistName,
+                                        style: TextStyle(
+                                          fontSize: 14.0,
+                                          height: 1.0,
+                                          letterSpacing: 0.0,
+                                          fontWeight: FontWeight.normal,
+                                          color: Theme.of(context).primaryColor
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
+                              Expanded(child: Container(),),
                               RichText(
                                 overflow: TextOverflow.clip,
                                 text: TextSpan(

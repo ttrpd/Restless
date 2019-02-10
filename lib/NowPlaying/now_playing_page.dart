@@ -50,14 +50,20 @@ class NowPlayingState extends State<NowPlaying> with SingleTickerProviderStateMi
           color: Theme.of(context).accentColor,
           child: Stack(
             children: <Widget>[
-              
               Container(
-                padding: EdgeInsets.only(top: 0.0),
-                height: 360.0,
+                alignment: Alignment.topCenter,
                 child: PageView(
+                  physics: NeverScrollableScrollPhysics(),
                   controller: widget.pgCtrl,
                   children: <Widget>[
-                    buildTrackProgressArea(context),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 30.0),
+                      child: Container(
+                        alignment: Alignment.topCenter,
+                        height: MediaQuery.of(context).size.height * 0.5,
+                        child: buildTrackProgressArea(context)
+                      ),
+                    ),
                     buildTrackInfoArea(context,)
                   ],
                 ),
@@ -113,25 +119,22 @@ class NowPlayingState extends State<NowPlaying> with SingleTickerProviderStateMi
       height: 360.0,
       width: double.infinity,
       color: Theme.of(context).accentColor,
-      child:  Center(
-        
-        child: CircularSeekBar(
-          diameter: 140.0,
-          trackProgressPercent: NowPlayingProvider.of(context).currentTime.inMilliseconds / NowPlayingProvider.of(context).currentTime.inMilliseconds,
-          onSeekRequested: (double seekPercent) {
-            setState(() {
-              final seekMils = (NowPlayingProvider.of(context).endTime.inMilliseconds.toDouble() * seekPercent).round();//source of toDouble called on null error
-              widget.audioPlayer.seek(Duration(milliseconds: seekMils));
-              NowPlayingProvider.of(context).trackProgressPercent = seekMils.toDouble() / NowPlayingProvider.of(context).endTime.inMilliseconds.toDouble();
-              NowPlayingProvider.of(context).currentTime = Duration(milliseconds: seekMils);
-            });
-          },
-          child: Container(
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: NowPlayingProvider.of(context).track.albumArt,
-              )
-            ),
+      child:  CircularSeekBar(
+        diameter: 140.0,
+        trackProgressPercent: NowPlayingProvider.of(context).currentTime.inMilliseconds / NowPlayingProvider.of(context).currentTime.inMilliseconds,
+        onSeekRequested: (double seekPercent) {
+          setState(() {
+            final seekMils = (NowPlayingProvider.of(context).endTime.inMilliseconds.toDouble() * seekPercent).round();//source of toDouble called on null error
+            widget.audioPlayer.seek(Duration(milliseconds: seekMils));
+            NowPlayingProvider.of(context).trackProgressPercent = seekMils.toDouble() / NowPlayingProvider.of(context).endTime.inMilliseconds.toDouble();
+            NowPlayingProvider.of(context).currentTime = Duration(milliseconds: seekMils);
+          });
+        },
+        child: Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: NowPlayingProvider.of(context).track.albumArt,
+            )
           ),
         ),
       ),
@@ -141,7 +144,8 @@ class NowPlayingState extends State<NowPlaying> with SingleTickerProviderStateMi
   Widget buildTrackInfoArea(BuildContext context) {
     return ListView(
       children: <Widget>[
-        TagArea(tags: NowPlayingProvider.of(context).track.tags),
+        Container(height: 40.0,),
+        // TagArea(tags: NowPlayingProvider.of(context).track.tags),
         UpNextList(),
       ],
     );
