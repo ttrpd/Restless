@@ -200,7 +200,7 @@ class HomeState extends State<Home> {
           }
         }
         return HiddenDrawer(
-          sliverHeight: ((MediaQuery.of(context).size.height*30) / MediaQuery.of(context).size.width),
+          sliverHeight: ((MediaQuery.of(context).size.height*50) / MediaQuery.of(context).size.width),
           pgCtrl: PageController(),
         );
       },

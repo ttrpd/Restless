@@ -60,16 +60,17 @@ class ArtistPageState extends State<ArtistPage> {
           });
         },
       ),
-      body: SafeArea(
-        child: Stack(
-          alignment: Alignment.bottomCenter,
-          children: <Widget>[
-            Column(
-              children: <Widget>[
-                Container(
+      body: Stack(
+        alignment: Alignment.bottomCenter,
+        children: <Widget>[
+          Column(
+            children: <Widget>[
+              SafeArea(
+                child: Container(
                   color: Colors.transparent,
                   width: MediaQuery.of(context).size.width,
                   height: 60.0,
+                  alignment: Alignment.center,
                   child: Padding(
                     padding: const EdgeInsets.only(top: 0.0, left: 10.0, right: 10.0),
                     child: Row(
@@ -84,7 +85,7 @@ class ArtistPageState extends State<ArtistPage> {
                         ),
                         Expanded(child: Container(),),
                         IconButton(
-                          icon: Icon(Icons.menu),
+                          icon: Icon(Icons.sort_by_alpha),
                           iconSize: 30.0,
                           splashColor: Colors.grey,
                           color: Colors.grey,
@@ -93,78 +94,35 @@ class ArtistPageState extends State<ArtistPage> {
                       ],
                     ),
                   ),
-                ),                
-                Padding(
-                  padding: const EdgeInsets.only(top: 10.0, left: 30.0, right: 30.0),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.only(topLeft: Radius.circular(20.0), topRight: Radius.circular(20.0)),
-                    child: Container(
-                      padding: EdgeInsets.only(top: 20.0),
-                      width: double.infinity,
-                      height: MediaQuery.of(context).size.height * 0.85,
-                      color: Theme.of(context).primaryColor,
-                      child: ScrollConfiguration(
-                        behavior: MyScrollBehavior(),
-                        child: NotificationListener(
-                          onNotification: (notification) {//preserves the scroll position in list
-                            if(notification is ScrollNotification)
-                              widget.setOffset(notification.metrics.pixels);
-                          },
-                          child: ListView.builder(
-                            controller: _scrl,
-                            itemCount: MusicProvider.of(context).artists.length,
-                            itemBuilder: (BuildContext context, int index) {
-                              return Column(
-                                children: <Widget>[
-                                  _buildSliver(context, index),
-                                  Padding(
-                                    padding: const EdgeInsets.only(left: 16.0, right: 16.0),
-                                    child: Divider(
-                                      height: 1.0,
-                                      color: Theme.of(context).accentColor,
-                                    ),
-                                  ),
-                                ],
-                              );
-                            },
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
                 ),
-              ],
-            ),
-            //column: expanded, visualizer
-            // Column(
-            //   children: <Widget>[
-            //     Expanded(child: Container(),),
-            //     Visualizer(
-            //       width: MediaQuery.of(context).size.width,
-            //       height: 50.0,
-            //       currentTime: NowPlayingProvider.of(context).currentTime.inMilliseconds.toDouble(),
-            //       endTime: NowPlayingProvider.of(context).endTime.inMilliseconds.toDouble(),
-            //     ),
-            //     Container(
-            //       color: Theme.of(context).primaryColor,
-            //       width: double.infinity,
-            //       height: 40.0,
-            //     ),
-            //   ],
-            // ),
-            AlphabetArtistPicker(
-              opacityValue: opacityValue,
-              scrolltoLetter: (l) {
-                _scrl.jumpTo(
-                  MusicProvider.of(context).artists.indexOf(
-                      MusicProvider.of(context).artists.where((a) => a.name.trim().toUpperCase()[0] == l).first
-                  ) * widget.sliverHeight
-                );
-                opacityValue = 0.0;
-              },
-            ),
-          ],
-        ),
+              ),
+              Expanded(
+                child: ListView.builder(
+                  controller: _scrl,
+                  itemCount: MusicProvider.of(context).artists.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return Column(
+                      children: <Widget>[
+                        _buildSliver(context, index),
+                      ],
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
+          AlphabetArtistPicker(
+            opacityValue: opacityValue,
+            scrolltoLetter: (l) {
+              _scrl.jumpTo(
+                MusicProvider.of(context).artists.indexOf(
+                    MusicProvider.of(context).artists.where((a) => a.name.trim().toUpperCase()[0] == l).first
+                ) * widget.sliverHeight
+              );
+              opacityValue = 0.0;
+            },
+          ),
+        ],
       ),
     );
   }

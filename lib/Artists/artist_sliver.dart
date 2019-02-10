@@ -27,8 +27,8 @@ class ArtistSliverState extends State<ArtistSliver> {
   @override
   Widget build(BuildContext context)
   {
-    return InkWell(
-      splashColor: Colors.white70,
+    return Padding(
+      padding: const EdgeInsets.only(top: 10.0, bottom: 10.0, left: 20.0, right: 20.0),
       child: GestureDetector(
         onTap: () {//navigate to album page
           print(widget.artist);
@@ -41,38 +41,41 @@ class ArtistSliverState extends State<ArtistSliver> {
             ),
           );
         },
-        child: Container(
-          height: widget.height,
-          width: double.infinity,
-          color: Colors.transparent,
-          child: Padding(
-            padding: const EdgeInsets.only(left: 20.0, right: 20.0),
-            child: Stack(
-              children: <Widget>[
-                // Container(
-                //   foregroundDecoration: BoxDecoration(
-                //     gradient: LinearGradient(
-                //       begin: Alignment.topCenter,
-                //       end: Alignment.bottomCenter,
-                //       colors: [
-                //         Theme.of(context).primaryColor,
-                //         Colors.transparent,
-                //       ],
-                //       stops: [
-                //         0.3,
-                //         1.0,
-                //       ],
-                //     ),
-                //   ),
-                //   child: _albums(context),
-                // ),
-                Container(
-                  alignment: Alignment.bottomLeft,
+        child: Stack(
+          children: <Widget>[
+            ClipRRect(
+              borderRadius: BorderRadius.circular(10.0),
+              child: Container(
+                height: widget.height,
+                width: double.infinity,
+                color: Theme.of(context).primaryColor,
+                child: Container(
+                  alignment: Alignment.centerLeft,
                   child: _buildArtistName(context)
                 ),
-              ],
+              ),
             ),
-          ),
+            Container(
+              alignment: Alignment.centerRight,
+              child: Padding(
+                padding: const EdgeInsets.only(right: 10.0),
+                child: Transform(
+                  transform: Matrix4.translationValues(0.0, -10.0, 0.0),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(10.0),
+                    child: Material(
+                      elevation: 10.0,
+                      child: Container(
+                        width: 100.0,
+                        height: 100.0,
+                        child: _albums(context),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -80,19 +83,22 @@ class ArtistSliverState extends State<ArtistSliver> {
 
   Widget _buildArtistName(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(top: widget.height * 0.15, left: 10.0),
+      padding: EdgeInsets.only(left: 10.0),
       child: Container(
+        alignment: Alignment.center,
+        width: MediaQuery.of(context).size.width * 0.5,
         child: RichText(
-          maxLines: 1,
-          textAlign: TextAlign.start,
-          overflow: TextOverflow.clip,
+          maxLines: 2,
+          textAlign: TextAlign.center,
+          overflow: TextOverflow.ellipsis,
           text: TextSpan(
             text: widget.artist.name.replaceAll('"', '/').replaceAll('∕', '/').replaceAll('"', ''),
             style: TextStyle(
               color: Theme.of(context).accentColor,
               // background: Paint()..color = Theme.of(context).accentColor,
-              fontSize: 16.0,
-              fontWeight: FontWeight.bold,
+              fontSize: 30.0,
+              fontFamily: 'Oswald',
+              fontWeight: FontWeight.normal,
               letterSpacing: 2.0,
               height: 1.0
             ),
@@ -110,9 +116,6 @@ class ArtistSliverState extends State<ArtistSliver> {
           fit: BoxFit.cover,
           image: AssetImage('lib/assets/default.jpg'),
         )
-      ),
-      foregroundDecoration: BoxDecoration(
-        color: Theme.of(context).primaryColor.withAlpha(200)
       ),
       child: Stack(
         children: _buildAlbumArtStack(context, MediaQuery.of(context).size.width * 0.8),
