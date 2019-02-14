@@ -49,15 +49,15 @@ class VisualizerPainter extends CustomPainter
     Random rand = Random();
     Path path1 = Path();
     Path path2 = Path();
-    Paint paint1 = Paint()..color=Theme.of(context).primaryColorDark..style=PaintingStyle.fill..strokeWidth=10.0;
-    Paint paint2 = Paint()..color=Color.fromARGB(220, 25, 25, 25)..style=PaintingStyle.fill..strokeWidth=10.0;
+    Paint paint1 = Paint()..color=Theme.of(context).primaryColor.withAlpha(220)..style=PaintingStyle.fill..strokeWidth=10.0;
+    Paint paint2 = Paint()..color=Theme.of(context).primaryColor.withAlpha(230)..style=PaintingStyle.fill..strokeWidth=10.0;
 
-    path1.moveTo(0.0, 0.0);
+    path1.moveTo(0.0, 2.0);
     path1.lineTo(0.0, -(rand.nextDouble()*size.height)-(size.height/10));
     for (double i = size.width/6; i < size.width+1; i+=size.width/6) {
       path1.lineTo( i, -(rand.nextDouble()*size.height)-(size.height/10));
     }
-    path1.lineTo(size.width, 0.0);
+    path1.lineTo(size.width, 2.0);
     path1.close();
     canvas.drawPath(path1, paint1);
 

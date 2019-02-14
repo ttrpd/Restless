@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:restless/Artists/music_provider.dart';
-import 'package:restless/Albums/album_sliver.dart';
+import 'package:restless/Albums/album_card.dart';
 import 'package:restless/my_scroll_behavior.dart';
 
 typedef double GetOffsetMethod();
@@ -10,14 +10,18 @@ class AlbumsPage extends StatefulWidget
 {
   final GetOffsetMethod getOffset;
   final SetOffsetMethod setOffset;
-  final double sliverHeight;
+  final Function() onArrowTap;
+  final Function() onMenuTap;
+  final double cardWidth;
 
 
   AlbumsPage({
     Key key,
     @required this.getOffset,
     @required this.setOffset,
-    @required this.sliverHeight,
+    @required this.cardWidth,
+    @required this.onArrowTap,
+    @required this.onMenuTap,
   }) : super(key: key);
 
   @override
@@ -42,40 +46,55 @@ class AlbumPageState extends State<AlbumsPage> {
 
     return Scaffold(
       backgroundColor: Theme.of(context).accentColor,
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Theme.of(context).accentColor,
-        foregroundColor: Theme.of(context).primaryColor,
-        child: Icon(Icons.sort_by_alpha),
-        onPressed: () {
-          print(opacityValue);
-          setState(() {
-            opacityValue = (opacityValue > 0.0)?0.0:1.0;
-          });
-        },
-      ),
-      body: ScrollConfiguration(
-        behavior: MyScrollBehavior(),
-        child: Container(
-          color: Theme.of(context).accentColor,
-          child: NotificationListener(
-            onNotification: (notification) {//preserves the scroll position in list
-              if(notification is ScrollNotification)
-                widget.setOffset(notification.metrics.pixels);
-            },
-            child: ListView.builder(
+      body: Column(
+        children: <Widget>[
+          SafeArea(
+            child: Container(
+              color: Colors.transparent,
+              width: MediaQuery.of(context).size.width,
+              height: 60.0,
+              alignment: Alignment.center,
+              child: Padding(
+                padding: const EdgeInsets.only(top: 0.0, left: 10.0, right: 10.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: <Widget>[
+                    IconButton(
+                      icon: Icon(Icons.arrow_back_ios),
+                      iconSize: 30.0,
+                      splashColor: Colors.grey,
+                      color: Colors.grey,
+                      onPressed: widget.onArrowTap,
+                    ),
+                    Expanded(child: Container(),),
+                    IconButton(
+                      icon: Icon(Icons.sort_by_alpha),
+                      iconSize: 30.0,
+                      splashColor: Colors.grey,
+                      color: Colors.grey,
+                      onPressed: widget.onMenuTap,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          Expanded(
+            child: GridView.builder(
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
               controller: _scrl,
               itemCount: MusicProvider.of(context).getAlbums().length,
               itemBuilder: (BuildContext context, int index) {
                 String album = MusicProvider.of(context).getAlbums()[index].name;
-                AlbumSliver albumSliver = AlbumSliver(
+                AlbumCard albumSliver = AlbumCard(
                   album: MusicProvider.of(context).getAlbums()[index],
-                  height: widget.sliverHeight,
+                  length: widget.cardWidth,
                 );
                 return albumSliver;
               },
             ),
           ),
-        ),
+        ],
       ),
     );
   }

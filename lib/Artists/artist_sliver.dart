@@ -24,14 +24,33 @@ class ArtistSliver extends StatefulWidget
 }
 
 class ArtistSliverState extends State<ArtistSliver> {
+
+  double xOffset = 0.0;
+  double yOffset = 0.0;
+
   @override
   Widget build(BuildContext context)
   {
     return Padding(
       padding: const EdgeInsets.only(top: 10.0, bottom: 10.0, left: 20.0, right: 20.0),
       child: GestureDetector(
-        onTap: () {//navigate to album page
-          print(widget.artist);
+        onTapDown: (TapDownDetails t) {
+          setState(() {
+            yOffset = ((MediaQuery.of(context).size.width / 2) - t.globalPosition.dx) / MediaQuery.of(context).size.width;
+            xOffset = ((MediaQuery.of(context).size.height / 2) - t.globalPosition.dy) / MediaQuery.of(context).size.height;
+          });
+        },
+        onTapCancel: () {
+          setState(() {
+           xOffset = 0.0;
+           yOffset = 0.0; 
+          });
+        },
+        onTapUp: (TapUpDetails t) {//navigate to album page
+          setState(() {
+            xOffset = 0.0;
+            yOffset = 0.0;
+          });
           Navigator.of(context, rootNavigator: true).push(
             CupertinoPageRoute<void>(
               settings: RouteSettings(
@@ -41,41 +60,49 @@ class ArtistSliverState extends State<ArtistSliver> {
             ),
           );
         },
-        child: Stack(
-          children: <Widget>[
-            ClipRRect(
-              borderRadius: BorderRadius.circular(10.0),
-              child: Container(
-                height: widget.height,
-                width: double.infinity,
-                color: Theme.of(context).primaryColor,
-                child: Container(
-                  alignment: Alignment.centerLeft,
-                  child: _buildArtistName(context)
+        child: Transform(
+          alignment: Alignment.center,
+          transform: Matrix4.rotationX(xOffset)..rotateY(yOffset),
+          child: Stack(
+            children: <Widget>[
+              Material(
+                elevation: 20.0,
+                color: Colors.transparent,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(10.0),
+                  child: Container(
+                    height: widget.height,
+                    width: double.infinity,
+                    color: Theme.of(context).primaryColor,
+                    child: Container(
+                      alignment: Alignment.centerLeft,
+                      child: _buildArtistName(context)
+                    ),
+                  ),
                 ),
               ),
-            ),
-            Container(
-              alignment: Alignment.centerRight,
-              child: Padding(
-                padding: const EdgeInsets.only(right: 10.0),
-                child: Transform(
-                  transform: Matrix4.translationValues(0.0, -10.0, 0.0),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(10.0),
-                    child: Material(
-                      elevation: 10.0,
-                      child: Container(
-                        width: 100.0,
-                        height: 100.0,
-                        child: _albums(context),
+              Container(
+                alignment: Alignment.centerRight,
+                child: Padding(
+                  padding: const EdgeInsets.only(right: 10.0),
+                  child: Transform(
+                    transform: Matrix4.translationValues(0.0, -10.0, 0.0),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(10.0),
+                      child: Material(
+                        elevation: 10.0,
+                        child: Container(
+                          width: 100.0,
+                          height: 100.0,
+                          child: _albums(context),
+                        ),
                       ),
                     ),
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -110,7 +137,7 @@ class ArtistSliverState extends State<ArtistSliver> {
 
   Container _albums(BuildContext context) {
     return Container(
-      width: MediaQuery.of(context).size.width, //* 0.95,
+      width: 100.0, //* 0.95,
       decoration: BoxDecoration(
         image: DecorationImage(
           fit: BoxFit.cover,
@@ -118,7 +145,7 @@ class ArtistSliverState extends State<ArtistSliver> {
         )
       ),
       child: Stack(
-        children: _buildAlbumArtStack(context, MediaQuery.of(context).size.width * 0.8),
+        children: _buildAlbumArtStack(context, 100.0),
       ),
     );
   }

@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:restless/Albums/albums_page.dart';
 import 'package:restless/Artists/artist_page.dart';
 import 'package:restless/HiddenDrawer/item_screen.dart';
 import 'package:restless/HiddenDrawer/menu_item.dart';
@@ -99,7 +100,7 @@ class HiddenDrawerState extends State<HiddenDrawer> with TickerProviderStateMixi
               begin: Alignment.bottomLeft,
               end: Alignment.topRight,
               colors: [
-                Color.fromARGB(255, 220, 220, 220),
+                Theme.of(context).dividerColor,
                 Theme.of(context).accentColor,
               ],
             ),
@@ -117,6 +118,7 @@ class HiddenDrawerState extends State<HiddenDrawer> with TickerProviderStateMixi
                       setState(() {
                         selectedItem = 0;
                       });
+                      onItemScreenTap();
                     },
                     selected: (selectedItem == 0)?true:false,
                     enabled: true,
@@ -127,6 +129,7 @@ class HiddenDrawerState extends State<HiddenDrawer> with TickerProviderStateMixi
                       setState(() {
                         selectedItem = 1;                        
                       });
+                      onItemScreenTap();
                     },
                     selected: (selectedItem == 1)?true:false,
                     enabled: true,
@@ -137,6 +140,7 @@ class HiddenDrawerState extends State<HiddenDrawer> with TickerProviderStateMixi
                       setState(() {
                         selectedItem = 2;                        
                       });
+                      onItemScreenTap();
                     },
                     selected: (selectedItem == 2)?true:false,
                     enabled: (NowPlayingProvider.of(context).track != null)?true:false,
@@ -147,6 +151,7 @@ class HiddenDrawerState extends State<HiddenDrawer> with TickerProviderStateMixi
                       setState(() {
                         selectedItem = 3;                        
                       });
+                      onItemScreenTap();
                     },
                     selected: (selectedItem == 3)?true:false,
                     enabled: true,
@@ -157,6 +162,7 @@ class HiddenDrawerState extends State<HiddenDrawer> with TickerProviderStateMixi
                       setState(() {
                         selectedItem = 4;                        
                       });
+                      onItemScreenTap();
                     },
                     selected: (selectedItem == 4)?true:false,
                     enabled: true,
@@ -181,7 +187,13 @@ class HiddenDrawerState extends State<HiddenDrawer> with TickerProviderStateMixi
               onItemScreenTap: onItemScreenTap,
             ),
             ItemScreen(
-              child: Container(color: Colors.tealAccent,),
+              child: AlbumsPage(
+                getOffset: () => artistsListOffset,
+                setOffset: (offset) => artistsListOffset = offset,
+                cardWidth: MediaQuery.of(context).size.width * 0.45,
+                onArrowTap: onArrowTap,
+                onMenuTap: onMenuTap,
+              ),
               slidePercent: slidePercent,
               index: selectedItem - 1,
               onItemScreenTap: onItemScreenTap,

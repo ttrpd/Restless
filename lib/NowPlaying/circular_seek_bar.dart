@@ -41,14 +41,14 @@ class CircularSeekBarState extends State<CircularSeekBar> {
       _seeking = true;
       _thumbRadius *= 2;
     });
-    _startDragPercent = (_startDragCoord.angle / (2*pi)) - (pi/4);
+    _startDragPercent = (_startDragCoord.angle / (2*pi)) + 0.25;
   }
 
   void _onDragUpdate(PolarCoord coord) {
     final dragAngle = (coord.angle - _startDragCoord.angle);
-    final dragPercent = dragAngle / (2 * pi);
+    final dragPercent = (dragAngle / (2 * pi));
     print((_startDragPercent + dragPercent));
-    setState(() => _currentDragPercent = (_startDragPercent + dragPercent).clamp((3*pi)/4, (2*pi)+((3*pi)/4)));
+    setState(() => _currentDragPercent = (_startDragPercent + dragPercent).clamp(0, 1.0).toDouble());
   }
 
   void _onDragEnd() {
@@ -130,7 +130,7 @@ class CircularSeekBarPainter extends CustomPainter
   @override
   void paint(Canvas canvas, Size size) {
     double sweepAngle = ((percentComplete??0.0) * 2 * pi);
-    Paint trackPaint = Paint()..style=PaintingStyle.stroke..color=Color.fromARGB(80, 80, 80, 80)..strokeWidth=3.0;
+    Paint trackPaint = Paint()..style=PaintingStyle.stroke..color=Theme.of(context).dividerColor..strokeWidth=3.0;
     Paint progressPaint = Paint()..style=PaintingStyle.stroke..color=Theme.of(context).primaryColor..strokeWidth=4.0..strokeCap=StrokeCap.round;
     Paint thumbPaint = Paint()..style=PaintingStyle.fill..color=Theme.of(context).primaryColor;
 

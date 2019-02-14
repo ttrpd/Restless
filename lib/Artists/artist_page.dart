@@ -49,17 +49,6 @@ class ArtistPageState extends State<ArtistPage> {
 
     return Scaffold(
       backgroundColor: Theme.of(context).accentColor,
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Theme.of(context).accentColor,
-        foregroundColor: Theme.of(context).primaryColor,
-        child: Icon(Icons.sort_by_alpha),
-        onPressed: () {
-          print(opacityValue);
-          setState(() {
-            opacityValue = (opacityValue > 0.0)?0.0:1.0;
-          });
-        },
-      ),
       body: Stack(
         alignment: Alignment.bottomCenter,
         children: <Widget>[
@@ -79,16 +68,16 @@ class ArtistPageState extends State<ArtistPage> {
                         IconButton(
                           icon: Icon(Icons.arrow_back_ios),
                           iconSize: 30.0,
-                          splashColor: Colors.grey,
-                          color: Colors.grey,
+                          splashColor: Theme.of(context).primaryColorDark,
+                          color: Theme.of(context).primaryColorDark,
                           onPressed: widget.onArrowTap,
                         ),
                         Expanded(child: Container(),),
                         IconButton(
                           icon: Icon(Icons.sort_by_alpha),
                           iconSize: 30.0,
-                          splashColor: Colors.grey,
-                          color: Colors.grey,
+                          splashColor: Theme.of(context).primaryColorDark,
+                          color: Theme.of(context).primaryColorDark,
                           onPressed: widget.onMenuTap,
                         ),
                       ],
@@ -101,11 +90,7 @@ class ArtistPageState extends State<ArtistPage> {
                   controller: _scrl,
                   itemCount: MusicProvider.of(context).artists.length,
                   itemBuilder: (BuildContext context, int index) {
-                    return Column(
-                      children: <Widget>[
-                        _buildSliver(context, index),
-                      ],
-                    );
+                    return _buildSliver(context, index, _scrl.offset);
                   },
                 ),
               ),
@@ -127,7 +112,7 @@ class ArtistPageState extends State<ArtistPage> {
     );
   }
 
-  ArtistSliver _buildSliver(BuildContext context, int index) {
+  ArtistSliver _buildSliver(BuildContext context, int index, double offset) {
     String artist = MusicProvider.of(context).artists[index].name;
     if(!MusicProvider.of(context).artistSlivers.containsKey(artist))
     {

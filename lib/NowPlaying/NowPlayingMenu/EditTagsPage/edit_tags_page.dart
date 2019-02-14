@@ -20,7 +20,7 @@ class EditTagsPageState extends State<EditTagsPage> {
       body: Column(
         children: <Widget>[
           Card(
-            color: Theme.of(context).primaryColorLight,
+            color: Theme.of(context).primaryColorDark,
             margin: EdgeInsets.all(10.0),
             elevation: 10.0,
             child: Padding(
