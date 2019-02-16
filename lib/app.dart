@@ -27,9 +27,9 @@ class App extends StatelessWidget
             primaryColor: Color.fromARGB(255, 36, 36, 36),//Color.fromARGB(255, 255, 130, 76),
             primaryColorLight: Color.fromARGB(255, 44, 44, 44),//Color.fromARGB(255, 255, 188, 53),
             primaryColorDark: Color.fromARGB(255, 67, 67, 67),//Color.fromARGB(255, 145, 70, 33),
-            highlightColor: Color.fromARGB(255, 250, 250, 250),//Color.fromARGB(255, 215, 239, 220),
-            accentColor: Color.fromARGB(255, 240, 240, 240),//Color.fromARGB(255, 199, 239, 207),
-            dividerColor: Color.fromARGB(255, 210, 210, 210)//Color.fromARGB(255, 147, 186, 155),
+            highlightColor: Color.fromARGB(255, 250, 250, 250),//Color.fromARGB(255, 250, 250, 250),
+            accentColor: Color.fromARGB(255, 240, 240, 240),//Color.fromARGB(255, 240, 240, 240),
+            dividerColor: Color.fromARGB(255, 210, 210, 210),//Color.fromARGB(255, 210, 210, 210)
           ),
           title: 'Restless',
           debugShowCheckedModeBanner: false,

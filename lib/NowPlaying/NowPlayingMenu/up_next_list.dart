@@ -13,8 +13,11 @@ class UpNextList extends StatefulWidget {
 }
 
 class UpNextListState extends State<UpNextList> {
+  bool editing = false;
   @override
   Widget build(BuildContext context) {
+    int itemCount = (NowPlayingProvider.of(context).playQueue==null)?0:NowPlayingProvider.of(context).playQueue.sublist(
+                  NowPlayingProvider.of(context).getQueuePos()+1).length;
     return Column(
       children: <Widget>[
         Padding(
@@ -40,8 +43,8 @@ class UpNextListState extends State<UpNextList> {
               ),
               Expanded(child: Container(),),
               IconButton(
-                onPressed: (){},
-                icon: Icon(Icons.edit),
+                onPressed: ()=>setState((){editing = !editing;}),
+                icon: Icon((editing)?Icons.cancel:Icons.edit),
                 color: Theme.of(context).primaryColorDark,
               ),
             ],
@@ -55,11 +58,12 @@ class UpNextListState extends State<UpNextList> {
           width: MediaQuery.of(context).size.width,
           child: ListView.builder(
             physics: BouncingScrollPhysics(),
-            itemCount: (NowPlayingProvider.of(context).playQueue==null)?0:NowPlayingProvider.of(context).playQueue.sublist(
-                NowPlayingProvider.of(context).getQueuePos()+1
-              ).length,
+            itemCount: itemCount,
             itemBuilder: (BuildContext context, int index) {
-              return InkWell(
+              if(index == itemCount-1)
+                return Container(height: 120.0, color: Colors.transparent,);
+              else
+                return InkWell(
                 splashColor: Color.fromARGB(200, 255, 255, 255),
                 onTap: (){
                   NowPlayingProvider.of(context).track = NowPlayingProvider.of(context).playQueue.elementAt(NowPlayingProvider.of(context).getQueuePos()+index+1);
@@ -78,8 +82,10 @@ class UpNextListState extends State<UpNextList> {
                         child: Padding(
                           padding: const EdgeInsets.only(left: 16.0, right: 16.0),
                           child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.end,
                             children: <Widget>[
-                              Container(
+                              Flexible(
+                                fit: FlexFit.tight,
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: <Widget>[
@@ -116,19 +122,15 @@ class UpNextListState extends State<UpNextList> {
                                   ],
                                 ),
                               ),
-                              Expanded(child: Container(),),
-                              RichText(
-                                overflow: TextOverflow.clip,
-                                text: TextSpan(
-                                  text: '0:00',
-                                  style: TextStyle(
-                                    fontSize: 18.0,
-                                    height: 1.0,
-                                    letterSpacing: 0.0,
-                                    fontWeight: FontWeight.normal,
-                                    color: Theme.of(context).primaryColorDark
-                                  ),
-                                ),
+                              IconButton(
+                                icon: Icon((editing)?Icons.close:Icons.menu),
+                                onPressed: (){
+                                  if(editing)
+                                    setState(() {
+                                      NowPlayingProvider.of(context).playQueue.removeAt(index+1); 
+                                    });
+                                  
+                                },
                               ),
                             ],
                           ),

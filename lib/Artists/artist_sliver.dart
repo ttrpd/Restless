@@ -87,14 +87,18 @@ class ArtistSliverState extends State<ArtistSliver> {
                   padding: const EdgeInsets.only(right: 10.0),
                   child: Transform(
                     transform: Matrix4.translationValues(0.0, -10.0, 0.0),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(10.0),
-                      child: Material(
-                        elevation: 10.0,
-                        child: Container(
-                          width: 100.0,
-                          height: 100.0,
-                          child: _albums(context),
+                    child: Material(
+                      elevation: 10.0,
+                      color: Colors.transparent,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(10.0),
+                        child: Material(
+                          elevation: 10.0,
+                          child: Container(
+                            width: 100.0,
+                            height: 100.0,
+                            child: _albums(context),
+                          ),
                         ),
                       ),
                     ),
