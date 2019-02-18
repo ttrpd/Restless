@@ -78,7 +78,11 @@ class ArtistPageState extends State<ArtistPage> {
                           iconSize: 30.0,
                           splashColor: Theme.of(context).primaryColorDark,
                           color: Theme.of(context).primaryColorDark,
-                          onPressed: widget.onMenuTap,
+                          onPressed: (){
+                            setState(() {
+                              opacityValue = (opacityValue - 1.0).abs();
+                            });
+                          },
                         ),
                       ],
                     ),
@@ -86,26 +90,31 @@ class ArtistPageState extends State<ArtistPage> {
                 ),
               ),
               Expanded(
-                child: ListView.builder(
-                  controller: _scrl,
-                  itemCount: MusicProvider.of(context).artists.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return _buildSliver(context, index, _scrl.offset);
-                  },
+                child: Stack(
+                  children: <Widget>[
+                    ListView.builder(
+                      shrinkWrap: true,
+                      controller: _scrl,
+                      itemCount: MusicProvider.of(context).artists.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return _buildSliver(context, index, _scrl.offset);
+                      },
+                    ),
+                    AlphabetArtistPicker(
+                      opacityValue: opacityValue,
+                      scrolltoLetter: (l) {
+                        _scrl.jumpTo(
+                          MusicProvider.of(context).artists.indexOf(
+                              MusicProvider.of(context).artists.where((a) => a.name.trim().toUpperCase()[0] == l).first
+                          ) * widget.sliverHeight
+                        );
+                        opacityValue = 0.0;
+                      },
+                    ),
+                  ],
                 ),
               ),
             ],
-          ),
-          AlphabetArtistPicker(
-            opacityValue: opacityValue,
-            scrolltoLetter: (l) {
-              _scrl.jumpTo(
-                MusicProvider.of(context).artists.indexOf(
-                    MusicProvider.of(context).artists.where((a) => a.name.trim().toUpperCase()[0] == l).first
-                ) * widget.sliverHeight
-              );
-              opacityValue = 0.0;
-            },
           ),
         ],
       ),

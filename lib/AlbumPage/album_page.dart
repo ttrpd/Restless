@@ -103,9 +103,8 @@ class _AlbumPageState extends State<AlbumPage> {
                                             NowPlayingProvider.of(context).track
                                           );
                                           NowPlayingProvider.of(context).playQueue.addAll(
-                                            widget.artist.albums[i].songs.sublist(i+1)
+                                            widget.artist.albums[i].songs.sublist(j+1)
                                           );
-                                          print('Index ' + i.toString());
                                           setState(() {
                                             NowPlayingProvider.of(context).playCurrentTrack();
                                           });

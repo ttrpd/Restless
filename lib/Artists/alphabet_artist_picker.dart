@@ -70,7 +70,7 @@ class AlphabetArtistPickerState extends State<AlphabetArtistPicker> {
         child: Container(
           width: double.maxFinite,
           height: double.maxFinite,
-          color: Theme.of(context).primaryColor,
+          color: Theme.of(context).accentColor,
           child: Center(
             child: Padding(
               padding: const EdgeInsets.all(8.0),
@@ -94,7 +94,7 @@ class AlphabetArtistPickerState extends State<AlphabetArtistPicker> {
                               text: letters[index].letter,
                               style: TextStyle(
                                 letterSpacing: 0.0,
-                                color: (letters[index].available)?Theme.of(context).accentColor:Theme.of(context).primaryColorDark,
+                                color: (letters[index].available)?Theme.of(context).primaryColor:Theme.of(context).primaryColorDark,
                                 fontSize: 30.0,
                               ),
                             ),
