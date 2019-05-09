@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -35,9 +37,10 @@ class ArtistSliverState extends State<ArtistSliver> {
       padding: const EdgeInsets.only(top: 10.0, bottom: 10.0, left: 20.0, right: 20.0),
       child: GestureDetector(
         onTapDown: (TapDownDetails t) {
+          Offset offset = (context.findRenderObject() as RenderBox).globalToLocal(t.globalPosition);
           setState(() {
-            yOffset = ((MediaQuery.of(context).size.width / 2) - t.globalPosition.dx) / MediaQuery.of(context).size.width;
-            xOffset = ((MediaQuery.of(context).size.height / 2) - t.globalPosition.dy) / MediaQuery.of(context).size.height;
+            yOffset = ((MediaQuery.of(context).size.width / 2) - offset.dx) / (MediaQuery.of(context).size.width/2);
+            xOffset = ((MediaQuery.of(context).size.height / 2) - offset.dy) / (MediaQuery.of(context).size.height/2);
           });
         },
         onTapCancel: () {
@@ -62,7 +65,7 @@ class ArtistSliverState extends State<ArtistSliver> {
         },
         child: Transform(
           alignment: Alignment.center,
-          transform: Matrix4.rotationX(xOffset)..rotateY(yOffset),
+          transform: Matrix4.rotationX(xOffset * (pi/16))..rotateY(yOffset * -(pi/16)),
           child: Stack(
             children: <Widget>[
               Material(
@@ -87,14 +90,18 @@ class ArtistSliverState extends State<ArtistSliver> {
                   padding: const EdgeInsets.only(right: 10.0),
                   child: Transform(
                     transform: Matrix4.translationValues(0.0, -10.0, 0.0),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(10.0),
-                      child: Material(
-                        elevation: 10.0,
-                        child: Container(
-                          width: 100.0,
-                          height: 100.0,
-                          child: _albums(context),
+                    child: Material(
+                      elevation: 10.0,
+                      color: Colors.transparent,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(10.0),
+                        child: Material(
+                          elevation: 10.0,
+                          child: Container(
+                            width: 100.0,
+                            height: 100.0,
+                            child: _albums(context),
+                          ),
                         ),
                       ),
                     ),

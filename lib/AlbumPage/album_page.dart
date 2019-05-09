@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:restless/AlbumPage/song_sliver.dart';
 import 'package:restless/NowPlaying/now_playing_provider.dart';
 import 'package:restless/artist_data.dart';
-import 'package:restless/diamond_frame.dart';
 
 
 class AlbumPage extends StatefulWidget {

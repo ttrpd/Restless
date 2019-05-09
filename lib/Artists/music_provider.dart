@@ -96,9 +96,10 @@ class MusicProvider extends InheritedWidget
             artists.firstWhere( (a) => a.name.toUpperCase().trim() == track.artistName.toUpperCase().trim(), orElse: ()=>null)
             .albums.firstWhere( (al) => al.name.toUpperCase().trim() == track.albumName.toUpperCase().trim(), orElse:()=>null)
             .songs.add(track);
+            artistStreamCtrl.sink.add(track);
           }
 
-          artistStreamCtrl.sink.add(track);
+          
         }
       }
     }

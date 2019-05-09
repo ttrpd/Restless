@@ -6,6 +6,7 @@ import 'package:restless/HiddenDrawer/item_screen.dart';
 import 'package:restless/HiddenDrawer/menu_item.dart';
 import 'package:restless/NowPlaying/now_playing_page.dart';
 import 'package:restless/NowPlaying/now_playing_provider.dart';
+import 'package:restless/Playlists/playlist_page.dart';
 
 
 
@@ -225,7 +226,11 @@ class HiddenDrawerState extends State<HiddenDrawer> with TickerProviderStateMixi
               appBarOpacity: 0,
             ),
             ItemScreen(
-              child: Container(color: Colors.tealAccent,),
+              child: PlaylistPage(
+                sliverHeight: widget.sliverHeight,
+                onArrowTap: onArrowTap,
+                onMenuTap: (){},
+              ),
               slidePercent: slidePercent,
               index: selectedItem - 3,
               onItemScreenTap: onItemScreenTap,
