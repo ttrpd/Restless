@@ -26,7 +26,6 @@ class NowPlayingProvider extends InheritedWidget
   List<TrackData> playQueue = List<TrackData>();
   AudioPlayer audioPlayer = AudioPlayer();
 
-
   NowPlayingProvider({
     Key key,
     Widget child,

@@ -30,141 +30,119 @@ class _AlbumPageState extends State<AlbumPage> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Theme.of(context).accentColor,//Color.fromARGB(255, 220, 220, 220),
+      color: Theme.of(context).accentColor,
       child: PageView.builder(
+        physics: BouncingScrollPhysics(),
         itemCount: widget.artist.albums.length,
-        itemBuilder: (BuildContext context, int index) {
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              Padding(
-                padding: EdgeInsets.only(top: 90.0),
-                child: DiamondFrame(
-                  height: 140.0,
-                  padding: 5.0,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: widget.artist.albums.elementAt(index).albumArt,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 16.0, bottom: 10.0, left: 30.0, right: 30.0),
-                child: RichText(
-                  overflow: TextOverflow.ellipsis,
-                  textAlign: TextAlign.start,
-                  text: TextSpan(
-                    text: widget.artist.albums.elementAt(index).name,
-                    style: TextStyle(
-                      color: Theme.of(context).primaryColor,
-                      fontSize: 36.0,
-                      fontFamily: 'Inconsolata',
-                      fontStyle: FontStyle.normal
-                    ),
-                  ),
-                ),
-              ),
-              Flexible(
-                child: ListView.builder(
-                  physics: BouncingScrollPhysics(),
-                  shrinkWrap: true,
-                  itemCount: widget.artist.albums.elementAt(index).songs.length,
-                  itemBuilder: (BuildContext context, int i) {
-                    return Padding(
-                      padding: const EdgeInsets.only(top: 10.0, left: 30.0, right: 30.0),
+        itemBuilder: (BuildContext context, int i) {
+          return Container(
+            child: Stack(
+              alignment: Alignment.topCenter,
+              children: <Widget>[
+                Padding(
+                  padding: EdgeInsets.only(top: MediaQuery.of(context).size.height / 4, bottom: 20.0, left: 20.0, right: 20.0),
+                  child: Material(
+                    elevation: 10.0,
+                    color: Colors.transparent,
+                    borderRadius: BorderRadius.circular(20.0),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(20.0),
                       child: Container(
-                        height: 40.0,
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.all(Radius.circular(100.0)),
-                          child: Container(
-                            color: Theme.of(context).primaryColor,
-                            child: Padding(
-                              padding: const EdgeInsets.all(2.0),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.all(Radius.circular(100.0)),
-                                child: Container(
-                                  color: Theme.of(context).accentColor,
-                                  child: Material(
-                                    child: Row(
-                                      children: <Widget>[
-                                        IconButton(
-                                          splashColor: Colors.black12,
-                                          onPressed: (){
-                                            if(NowPlayingProvider.of(context).track == widget.artist.albums[index].songs[i])
-                                            {//if track is currently playing
-                                              if(NowPlayingProvider.of(context).playing)
-                                                NowPlayingProvider.of(context).audioPlayer.pause();
-                                              else
-                                                NowPlayingProvider.of(context).audioPlayer.resume();
-
-                                              setState(() {
-                                                NowPlayingProvider.of(context).playing = !NowPlayingProvider.of(context).playing;
-                                              });
-                                            }
-                                            else
-                                            {
-                                              NowPlayingProvider.of(context).pause();
-                                              NowPlayingProvider.of(context).track = widget.artist.albums[index].songs[i];
-                                              NowPlayingProvider.of(context).playQueue.clear();
-                                              NowPlayingProvider.of(context).playQueue.add(
-                                                NowPlayingProvider.of(context).track
-                                              );
-                                              NowPlayingProvider.of(context).playQueue.addAll(
-                                                widget.artist.albums[index].songs.sublist(i+1)
-                                              );
-                                              setState(() {
-                                                NowPlayingProvider.of(context).playCurrentTrack();
-                                              });
-                                            }
-                                          },
-                                          iconSize: 20.0,
-                                          icon: (NowPlayingProvider.of(context).track == widget.artist.albums.elementAt(index).songs.elementAt(i) && NowPlayingProvider.of(context).playing)?Icon(Icons.pause):Icon(Icons.play_arrow),
-                                        ),
-                                        Expanded(
-                                          child: RichText(
-                                            overflow: TextOverflow.ellipsis,
-                                            text: TextSpan(
-                                              text: widget.artist.albums.elementAt(index).songs.elementAt(i).name,
-                                              style: TextStyle(
-                                                fontSize: 20.0,
-                                                fontFamily: 'Inconsolata',
-                                                fontStyle: FontStyle.normal,
-                                                color: Theme.of(context).primaryColor,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.only(right: 15.0),
-                                          child: RichText(
-                                            text: TextSpan(
-                                              text: '0:00',
-                                              style: TextStyle(
-                                                fontSize: 20.0,
-                                                fontFamily: 'Inconsolata',
-                                                fontStyle: FontStyle.normal,
-                                                color: Theme.of(context).primaryColor,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
+                        padding: EdgeInsets.only(top: 70.0),
+                        color: Theme.of(context).primaryColor,
+                        child: Column(
+                          children: <Widget>[
+                            Container(
+                              height: 40.0,
+                              child: RichText(
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                text: TextSpan(
+                                  text: widget.artist.albums[i].name,
+                                  style: TextStyle(
+                                    fontFamily: 'Oswald',
+                                    fontSize: 20.0,
+                                    fontWeight: FontWeight.normal,
+                                    color: Theme.of(context).accentColor,
                                   ),
                                 ),
                               ),
                             ),
-                          ),
+                            Flexible(
+                              child: Padding(
+                                padding: const EdgeInsets.only(bottom: 25.0),
+                                child: ListView.builder(
+                                  shrinkWrap: true,
+                                  physics: BouncingScrollPhysics(),
+                                  itemCount: widget.artist.albums[i].songs.length,
+                                  itemBuilder: (BuildContext context, int j) {
+                                    return SongSliver(
+                                      index: j,
+                                      album: widget.artist.albums[i],
+                                      track: widget.artist.albums[i].songs[j],
+                                      onClick: (){
+                                        if(NowPlayingProvider.of(context).track == widget.artist.albums[i].songs[j])
+                                        {//if track is currently playing
+                                          if(NowPlayingProvider.of(context).playing)
+                                            NowPlayingProvider.of(context).audioPlayer.pause();
+                                          else
+                                            NowPlayingProvider.of(context).audioPlayer.resume();
+
+                                          setState(() {
+                                            NowPlayingProvider.of(context).playing = !NowPlayingProvider.of(context).playing;
+                                          });
+                                        }
+                                        else
+                                        {
+                                          NowPlayingProvider.of(context).pause();
+                                          setState(() {
+                                            NowPlayingProvider.of(context).track = widget.artist.albums[i].songs[j];
+                                          });
+                                          NowPlayingProvider.of(context).playQueue.clear();
+                                          NowPlayingProvider.of(context).playQueue.add(
+                                            NowPlayingProvider.of(context).track
+                                          );
+                                          NowPlayingProvider.of(context).playQueue.addAll(
+                                            widget.artist.albums[i].songs.sublist(j+1)
+                                          );
+                                          setState(() {
+                                            NowPlayingProvider.of(context).playCurrentTrack();
+                                          });
+                                        }
+                                      },
+                                    );
+                                  },
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                    );
-                  },
+                    ),
+                  ),
                 ),
-              ),
-            ],
+                Padding(
+                  padding: EdgeInsets.only(top: MediaQuery.of(context).size.height / 8),
+                  child: Material(
+                    elevation: 10.0,
+                    color: Colors.transparent,
+                    borderRadius: BorderRadius.circular(20.0),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(10.0),
+                      child: Container(
+                        width: 150.0,
+                        height: 150.0,
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                            image: widget.artist.albums[i].albumArt
+                          )
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           );
         },
       ),
@@ -173,4 +151,3 @@ class _AlbumPageState extends State<AlbumPage> {
 
   
 }
-
