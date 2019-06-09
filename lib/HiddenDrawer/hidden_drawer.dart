@@ -1,8 +1,12 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:restless/Albums/albums_page.dart';
+import 'package:restless/Artists/artist_page.dart';
 import 'package:restless/HiddenDrawer/item_screen.dart';
 import 'package:restless/HiddenDrawer/menu_item.dart';
+import 'package:restless/NowPlaying/now_playing_page.dart';
 import 'package:restless/NowPlaying/now_playing_provider.dart';
+import 'package:restless/Playlists/playlist_page.dart';
 
 
 
@@ -10,19 +14,16 @@ class HiddenDrawer extends StatefulWidget {
   const HiddenDrawer({
     Key key,
     this.maxSlidePercent = 0.8,
-    @required this.artists,
-    @required this.albums,
-    @required this.nowPlaying,
-    @required this.playlists,
-    @required this.settings,
+    @required this.sliverHeight,
+    @required this.pgCtrl,
   }) : super(key: key);
 
   final double maxSlidePercent;
-  final Widget artists;
-  final Widget albums;
-  final Widget nowPlaying;
-  final Widget playlists;
-  final Widget settings;
+  // final Widget nowPlaying;
+
+  final double sliverHeight;
+  final PageController pgCtrl;
+
 
   @override
   HiddenDrawerState createState() {
@@ -38,48 +39,37 @@ class HiddenDrawerState extends State<HiddenDrawer> with TickerProviderStateMixi
   double finishSlideStart;
   double finishSlideEnd;
   AnimationController finishSlideController;
+  double artistsListOffset = 0.0;
+  
 
   int selectedItem = 0;
 
-  horizontalDragStart(DragStartDetails details)
+  onItemScreenTap()
   {
-    startDrag = details.globalPosition;
-    startDragPercentSlide = slidePercent;
+    print("onItemScreenTap: " + slidePercent.toString());
+    if(slidePercent == 1.0)
+    {
+      finishSlideStart = 1.0;
+      finishSlideEnd = 0.0;
+      finishSlideController.forward(from: 0.0);
+    }
   }
 
-  horizontalDragUpdate(DragUpdateDetails details)
+  onArrowTap()
   {
-    final currentSlide = details.globalPosition;
-    final slideDistance = currentSlide.dx - startDrag.dx;
-    final fullSlidePercent = slideDistance / (widget.maxSlidePercent * MediaQuery.of(context).size.width);
+    print("onArrowTap: " + slidePercent.toString());
 
-    setState(() {
-      slidePercent = (startDragPercentSlide + fullSlidePercent).clamp(0.0, widget.maxSlidePercent);   
-    });
+    if(slidePercent == 0.0)
+    {
+      finishSlideStart = 0.0;
+      finishSlideEnd = 1.0;
+      finishSlideController.forward(from: 0.0);
+    }
   }
 
-  horizontalDragEnd(DragEndDetails details)
+  onMenuTap()
   {
-    finishSlideStart = slidePercent;
-    finishSlideEnd = slidePercent.roundToDouble() * (widget.maxSlidePercent);
-    finishSlideController.forward(from: 0.0);
-
-    setState(() {
-      startDrag = null;
-      startDragPercentSlide = null;      
-    });
-  }
-
-  onTap()
-  {
-    finishSlideStart = slidePercent;
-    finishSlideEnd = 0.0;
-    finishSlideController.forward(from: 0.0);
-
-    setState(() {
-      startDrag = null;
-      startDragPercentSlide = null;      
-    });
+    
   }
 
 
@@ -111,8 +101,8 @@ class HiddenDrawerState extends State<HiddenDrawer> with TickerProviderStateMixi
               begin: Alignment.bottomLeft,
               end: Alignment.topRight,
               colors: [
-                Color.fromARGB(255, 30, 30, 30),
-                Color.fromARGB(255, 80, 80, 80),
+                Theme.of(context).dividerColor,
+                Theme.of(context).accentColor,
               ],
             ),
           ),
@@ -127,8 +117,9 @@ class HiddenDrawerState extends State<HiddenDrawer> with TickerProviderStateMixi
                     text: 'Artists',
                     onPressed: (){
                       setState(() {
-                        selectedItem = 0;                        
+                        selectedItem = 0;
                       });
+                      onItemScreenTap();
                     },
                     selected: (selectedItem == 0)?true:false,
                     enabled: true,
@@ -139,6 +130,7 @@ class HiddenDrawerState extends State<HiddenDrawer> with TickerProviderStateMixi
                       setState(() {
                         selectedItem = 1;                        
                       });
+                      onItemScreenTap();
                     },
                     selected: (selectedItem == 1)?true:false,
                     enabled: true,
@@ -149,6 +141,7 @@ class HiddenDrawerState extends State<HiddenDrawer> with TickerProviderStateMixi
                       setState(() {
                         selectedItem = 2;                        
                       });
+                      onItemScreenTap();
                     },
                     selected: (selectedItem == 2)?true:false,
                     enabled: (NowPlayingProvider.of(context).track != null)?true:false,
@@ -159,6 +152,7 @@ class HiddenDrawerState extends State<HiddenDrawer> with TickerProviderStateMixi
                       setState(() {
                         selectedItem = 3;                        
                       });
+                      onItemScreenTap();
                     },
                     selected: (selectedItem == 3)?true:false,
                     enabled: true,
@@ -169,6 +163,7 @@ class HiddenDrawerState extends State<HiddenDrawer> with TickerProviderStateMixi
                       setState(() {
                         selectedItem = 4;                        
                       });
+                      onItemScreenTap();
                     },
                     selected: (selectedItem == 4)?true:false,
                     enabled: true,
@@ -181,62 +176,73 @@ class HiddenDrawerState extends State<HiddenDrawer> with TickerProviderStateMixi
         Stack(
           children: <Widget>[
             ItemScreen(
-              child: widget.artists,
-              dragStart: horizontalDragStart,
-              dragUpdate: horizontalDragUpdate,
-              dragEnd: horizontalDragEnd,
+              child: ArtistPage(
+                getOffset: () => artistsListOffset,
+                setOffset: (offset) => artistsListOffset = offset,
+                sliverHeight: widget.sliverHeight,
+                onArrowTap: onArrowTap,
+                onMenuTap: onMenuTap,
+              ),
               slidePercent: slidePercent,
               index: selectedItem - 0,
-              onTap: onTap,
+              onItemScreenTap: onItemScreenTap,
             ),
             ItemScreen(
-              child: widget.albums,
-              dragStart: horizontalDragStart,
-              dragUpdate: horizontalDragUpdate,
-              dragEnd: horizontalDragEnd,
+              child: AlbumsPage(
+                getOffset: () => artistsListOffset,
+                setOffset: (offset) => artistsListOffset = offset,
+                cardWidth: MediaQuery.of(context).size.width * 0.45,
+                onArrowTap: onArrowTap,
+                onMenuTap: onMenuTap,
+              ),
               slidePercent: slidePercent,
               index: selectedItem - 1,
-              onTap: onTap,
+              onItemScreenTap: onItemScreenTap,
             ),
             (NowPlayingProvider.of(context).track != null)?ItemScreen(
-              child: widget.nowPlaying,
-              dragStart: horizontalDragStart,
-              dragUpdate: horizontalDragUpdate,
-              dragEnd: horizontalDragEnd,
+              child: ClipRect(
+                child: NowPlaying(
+                  audioPlayer: NowPlayingProvider.of(context).audioPlayer,
+                  pgCtrl: widget.pgCtrl,
+                  onArrowTap: onArrowTap,
+                  onMenuTap: () {//onMenuTap
+                    widget.pgCtrl.animateToPage(
+                      widget.pgCtrl.page==0?1:0,
+                      curve: Curves.ease,
+                      duration: Duration(milliseconds: 300)
+                    );
+                  },
+                )
+              ),
               slidePercent: slidePercent,
               index: selectedItem - 2,
-              onTap: onTap,
+              onItemScreenTap: onItemScreenTap,
+              appBarOpacity: 0,
             ):ItemScreen(
               child: Container(color: Colors.black,),
-              dragStart: horizontalDragStart,
-              dragUpdate: horizontalDragUpdate,
-              dragEnd: horizontalDragEnd,
               slidePercent: slidePercent,
               index: selectedItem - 2,
-              onTap: onTap,
+              onItemScreenTap: onItemScreenTap,
+              appBarOpacity: 0,
             ),
             ItemScreen(
-              child: widget.playlists,
-              dragStart: horizontalDragStart,
-              dragUpdate: horizontalDragUpdate,
-              dragEnd: horizontalDragEnd,
+              child: PlaylistPage(
+                sliverHeight: widget.sliverHeight,
+                onArrowTap: onArrowTap,
+                onMenuTap: (){},
+              ),
               slidePercent: slidePercent,
               index: selectedItem - 3,
-              onTap: onTap,
+              onItemScreenTap: onItemScreenTap,
             ),
             ItemScreen(
-              child: widget.settings,
-              dragStart: horizontalDragStart,
-              dragUpdate: horizontalDragUpdate,
-              dragEnd: horizontalDragEnd,
+              child: Container(color: Colors.tealAccent,),
               slidePercent: slidePercent,
               index: selectedItem - 4,
-              onTap: onTap,
+              onItemScreenTap: onItemScreenTap,
             ),
           ],
-          // children: this.itemScreensList,
         ),
-
       ],
     );
   }

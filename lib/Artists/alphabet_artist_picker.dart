@@ -1,5 +1,5 @@
 
-import 'package:restless/Artists/artists_page_provider.dart';
+import 'package:restless/Artists/music_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:restless/artist_data.dart';
 
@@ -55,7 +55,7 @@ class AlphabetArtistPickerState extends State<AlphabetArtistPicker> {
   @override
   Widget build(BuildContext context) {
 
-    for(ArtistData artist in ArtistsPageProvider.of(context).artists)
+    for(ArtistData artist in MusicProvider.of(context).artists)
     {
       if(letters.singleWhere((l) => l.letter == artist.name.trim().toUpperCase()[0]) == null)
         letters.singleWhere((l) => l.letter == '*').available = true;
@@ -70,7 +70,7 @@ class AlphabetArtistPickerState extends State<AlphabetArtistPicker> {
         child: Container(
           width: double.maxFinite,
           height: double.maxFinite,
-          color: Theme.of(context).primaryColor,
+          color: Theme.of(context).accentColor,
           child: Center(
             child: Padding(
               padding: const EdgeInsets.all(8.0),
@@ -94,7 +94,7 @@ class AlphabetArtistPickerState extends State<AlphabetArtistPicker> {
                               text: letters[index].letter,
                               style: TextStyle(
                                 letterSpacing: 0.0,
-                                color: (letters[index].available)?Theme.of(context).accentColor:Theme.of(context).primaryColorDark,
+                                color: (letters[index].available)?Theme.of(context).primaryColor:Theme.of(context).primaryColorDark,
                                 fontSize: 30.0,
                               ),
                             ),

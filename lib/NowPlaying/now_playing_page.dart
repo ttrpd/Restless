@@ -1,6 +1,11 @@
 
 import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
+import 'package:restless/NowPlaying/NowPlayingMenu/tag_area.dart';
+import 'package:restless/NowPlaying/NowPlayingMenu/up_next_list.dart';
+import 'package:restless/NowPlaying/Visualizer/visualizer.dart';
+import 'package:restless/NowPlaying/circular_seek_bar.dart';
+import 'package:restless/diamond_frame.dart';
 
 import 'package:restless/my_scroll_behavior.dart';
 import 'package:restless/NowPlaying/NowPlayingMenu/now_playing_menu.dart';
@@ -10,10 +15,15 @@ import 'package:restless/NowPlaying/now_playing_provider.dart';
 class NowPlaying extends StatefulWidget
 {
   final AudioPlayer audioPlayer;
-
+  final PageController pgCtrl;
+  final Function() onArrowTap;
+  final Function() onMenuTap;
   NowPlaying({
     Key key,
     @required this.audioPlayer,
+    @required this.pgCtrl,
+    @required this.onArrowTap,
+    @required this.onMenuTap,
   }) : super(key: key);
 
   @override
@@ -22,11 +32,7 @@ class NowPlaying extends StatefulWidget
 
 class NowPlayingState extends State<NowPlaying> with SingleTickerProviderStateMixin
 {
-
-  String stringBeautify(String s)
-  {
-    return s.replaceAll('"', '/').replaceAll('∕', '/').replaceAll('"', '');
-  }
+  
 
   @override
   void initState() {
@@ -37,22 +43,69 @@ class NowPlayingState extends State<NowPlaying> with SingleTickerProviderStateMi
   Widget build(BuildContext context) {
 
     return Container(
+      height: double.infinity,
       child: ScrollConfiguration(
         behavior: MyScrollBehavior(),
         child: Container(
-          color: Theme.of(context).primaryColor,
+          color: Theme.of(context).accentColor,
           child: Stack(
             children: <Widget>[
-              buildMovingBackground(context),
-              ListView(// info/control layer
-                physics: ScrollPhysics(),
+              Container(
+                alignment: Alignment.topCenter,
+                child: PageView(
+                  physics: NeverScrollableScrollPhysics(),
+                  controller: widget.pgCtrl,
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.only(top: 30.0),
+                      child: Container(
+                        alignment: Alignment.topCenter,
+                        height: MediaQuery.of(context).size.height * 0.5,
+                        child: buildTrackProgressArea(context)
+                      ),
+                    ),
+                    buildTrackInfoArea(context,)
+                  ],
+                ),
+              ),
+              Column(
                 children: <Widget>[
-                  buildTrackInfoArea(context),
+                  Container(
+                    color: Colors.transparent,
+                    width: MediaQuery.of(context).size.width,
+                    height: 100.0,
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 30.0, left: 10.0, right: 10.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: <Widget>[
+                          IconButton(
+                            icon: Icon(Icons.arrow_back_ios),
+                            iconSize: 30.0,
+                            splashColor: Theme.of(context).primaryColorDark,
+                            color: Theme.of(context).primaryColorDark,
+                            onPressed: widget.onArrowTap,
+                          ),
+                          Expanded(child: Container(),),
+                          IconButton(
+                            icon: Icon(Icons.menu),
+                            iconSize: 30.0,
+                            splashColor: Theme.of(context).primaryColorDark,
+                            color: Theme.of(context).primaryColorDark,
+                            onPressed: widget.onMenuTap,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Expanded(child: Container(),),
+                  Visualizer(height: 60.0, width: MediaQuery.of(context).size.width, currentTime: 0.0, endTime: 0.0,),
                   NowPlayingMenu(
                     audioPlayer: widget.audioPlayer,
                   ),
                 ],
               ),
+              
             ],
           ),
         ),
@@ -60,132 +113,42 @@ class NowPlayingState extends State<NowPlaying> with SingleTickerProviderStateMi
     );
   }
 
-  Container buildTrackInfoArea(BuildContext context) {
+  Widget buildTrackProgressArea(BuildContext context) {
     return Container(
-      height: 500.0,
-      width: 500.0,
-      color: Colors.transparent,
-      child:  Padding(
-        padding: const EdgeInsets.only(top: 40.0, left: 20.0),
-        child: Column(
-          children: <Widget>[
-            Align(
-              alignment: Alignment.topLeft,
-              child: RichText(
-                maxLines: 2,
-                text: TextSpan(
-                  text: stringBeautify(NowPlayingProvider.of(context).track.name),
-                  style: TextStyle(
-                    color: Theme.of(context).accentColor,
-                    fontSize: 32.0,
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: 2.0,
-                    height: 1.0,
-                  ),
-                ),
-              ),
-            ),
-            Align(
-              alignment: Alignment.topLeft,
-              child: Padding(
-                padding: const EdgeInsets.only(top: 20.0),
-                child: RichText(
-                  maxLines: 2,
-                  text: TextSpan(
-                    text: stringBeautify(NowPlayingProvider.of(context).track.albumName) ?? '(Album)',
-                    style: TextStyle(
-                      color: Theme.of(context).accentColor,
-                      fontSize: 20.0,
-                      fontWeight: FontWeight.normal,
-                      letterSpacing: 4.0,
-                      height: 1.0
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            Align(
-              alignment: Alignment.topLeft,
-              child: RichText(
-                maxLines: 2,
-                text: TextSpan(
-                  text: stringBeautify(NowPlayingProvider.of(context).track.artistName) ?? '(Artist)',
-                  style: TextStyle(
-                    color: Theme.of(context).accentColor,
-                    fontSize: 14.0,
-                    fontWeight: FontWeight.normal,
-                    letterSpacing: 4.0,
-                    height: 3.0
-                  ),
-                ),
-              ),
-            ),
-          ]
+      alignment: Alignment.topCenter,
+      height: 360.0,
+      width: double.infinity,
+      color: Theme.of(context).accentColor,
+      child:  CircularSeekBar(
+        diameter: 140.0,
+        trackProgressPercent: NowPlayingProvider.of(context).currentTime.inMilliseconds / NowPlayingProvider.of(context).currentTime.inMilliseconds,
+        onSeekRequested: (double seekPercent) {
+          setState(() {
+            final seekMils = (NowPlayingProvider.of(context).endTime.inMilliseconds.toDouble() * seekPercent).round();//source of toDouble called on null error
+            widget.audioPlayer.seek(Duration(milliseconds: seekMils));
+            NowPlayingProvider.of(context).trackProgressPercent = seekMils.toDouble() / NowPlayingProvider.of(context).endTime.inMilliseconds.toDouble();
+            NowPlayingProvider.of(context).currentTime = Duration(milliseconds: seekMils);
+          });
+        },
+        child: Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: NowPlayingProvider.of(context).track.albumArt,
+            )
+          ),
         ),
       ),
     );
   }
 
-  Stack buildMovingBackground(BuildContext context) {
-    return Stack(
+  Widget buildTrackInfoArea(BuildContext context) {
+    return ListView(
       children: <Widget>[
-        Transform(
-          alignment: Alignment.topLeft,
-          transform: Matrix4.translationValues(
-            -(NowPlayingProvider.of(context).trackProgressPercent * 
-              (MediaQuery.of(context).size.height - MediaQuery.of(context).size.width)
-             ),
-            0.0,
-            0.0,
-          ),
-          child: OverflowBox(
-            maxWidth: double.infinity,
-            alignment: Alignment.topLeft,
-            child: Container(
-              alignment: Alignment.topLeft,
-              height: MediaQuery.of(context).size.height,
-              width: MediaQuery.of(context).size.height,
-              decoration: BoxDecoration(
-                image: DecorationImage(// use FutureBuilder here
-                  image: NowPlayingProvider.of(context).track.albumArt ?? AssetImage('lib/assets/default.jpg'),
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ),
-          ),
-        ),
-        Container(
-          height: double.infinity,
-          width: double.infinity,
-          color: Color.fromARGB(100, 0, 0, 0),
-        ),
+        Container(height: 40.0,),
+        // TagArea(tags: NowPlayingProvider.of(context).track.tags),
+        UpNextList(),
       ],
     );
   }
 }
 
-
-// GestureDetector(// TrackInfoArea
-//   onVerticalDragUpdate: (DragUpdateDetails details) {
-//     //TODO: add animation curve based on scroll
-//     setState(() {
-//       if(NowPlayingProvider.of(context).blurValue > 0.0 && details.delta.dy < 0)NowPlayingProvider.of(context).blurValue -= 0.75;
-//       if(NowPlayingProvider.of(context).blurValue < 15 && details.delta.dy > 0)NowPlayingProvider.of(context).blurValue += 0.75;
-//     });
-//   },
-//   onVerticalDragEnd: (DragEndDetails details) {
-//     setState(() {
-//       if(NowPlayingProvider.of(context).blurValue < 8)
-//         NowPlayingProvider.of(context).blurValue = 0.0;
-//       else
-//         NowPlayingProvider.of(context).blurValue = 15.0;
-//     });
-//   },
-//   child: TrackInfoArea(
-//     blurValue: NowPlayingProvider.of(context).blurValue,
-//     name: (NowPlayingProvider.of(context).track==null)?'':NowPlayingProvider.of(context).track.name,
-//     album: (NowPlayingProvider.of(context).track==null)?'':NowPlayingProvider.of(context).track.albumName,
-//     artist: (NowPlayingProvider.of(context).track==null)?'':NowPlayingProvider.of(context).track.artistName, 
-//     path: (NowPlayingProvider.of(context).track==null)?'':NowPlayingProvider.of(context).track.path,//'/storage/emulated/0/Music/TestMusic/Carousel Casualties/Madison/Bright Red Lights.mp3',
-//   ),
-// ),
