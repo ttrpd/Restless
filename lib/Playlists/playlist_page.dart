@@ -3,37 +3,32 @@ import 'package:restless/Artists/alphabet_artist_picker.dart';
 import 'package:restless/Artists/music_provider.dart';
 
 import 'package:restless/Artists/artist_sliver.dart';
-import 'package:restless/NowPlaying/Visualizer/visualizer.dart';
 import 'package:restless/NowPlaying/now_playing_provider.dart';
 import 'package:restless/my_scroll_behavior.dart';
 
 typedef double GetOffsetMethod();
 typedef void SetOffsetMethod(double offset);
 
-class ArtistPage extends StatefulWidget
+class PlaylistPage extends StatefulWidget
 {
-  final GetOffsetMethod getOffset;
-  final SetOffsetMethod setOffset;
   final double sliverHeight;
   final Function() onArrowTap;
   final Function() onMenuTap;
 
-  ArtistPage({
+  PlaylistPage({
     Key key,
-    @required this.getOffset,
-    @required this.setOffset,
     @required this.sliverHeight,
     @required this.onArrowTap,
     @required this.onMenuTap,
   }) : super(key: key);
 
   @override
-  ArtistPageState createState() {
-    return new ArtistPageState();
+  PlaylistPageState createState() {
+    return PlaylistPageState();
   }
 }
 
-class ArtistPageState extends State<ArtistPage> {
+class PlaylistPageState extends State<PlaylistPage> {
 
   ScrollController _scrl;
   double opacityValue = 0.0;
@@ -41,7 +36,6 @@ class ArtistPageState extends State<ArtistPage> {
   @override
   void initState() {
     super.initState();
-    _scrl = ScrollController(initialScrollOffset: widget.getOffset());
   }
 
   @override
@@ -90,28 +84,13 @@ class ArtistPageState extends State<ArtistPage> {
                 ),
               ),
               Expanded(
-                child: Stack(
-                  children: <Widget>[
-                    ListView.builder(
-                      shrinkWrap: true,
-                      controller: _scrl,
-                      itemCount: MusicProvider.of(context).artists.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return _buildSliver(context, index, _scrl.offset);
-                      },
-                    ),
-                    AlphabetArtistPicker(
-                      opacityValue: opacityValue,
-                      scrolltoLetter: (l) {
-                        _scrl.jumpTo(
-                          MusicProvider.of(context).artists.indexOf(
-                              MusicProvider.of(context).artists.where((a) => a.name.trim().toUpperCase()[0] == l).first
-                          ) * widget.sliverHeight
-                        );
-                        opacityValue = 0.0;
-                      },
-                    ),
-                  ],
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  controller: _scrl,
+                  itemCount: MusicProvider.of(context).artists.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return Container(color: Colors.transparent, height: 100.0,);
+                  },
                 ),
               ),
             ],
@@ -120,23 +99,4 @@ class ArtistPageState extends State<ArtistPage> {
       ),
     );
   }
-
-  ArtistSliver _buildSliver(BuildContext context, int index, double offset) {
-    String artist = MusicProvider.of(context).artists[index].name;
-    if(!MusicProvider.of(context).artistSlivers.containsKey(artist))
-    {
-      ArtistSliver artistSliver = ArtistSliver(
-        artist: MusicProvider.of(context).artists[index],
-        height: widget.sliverHeight,
-      );
-      MusicProvider.of(context).artistSlivers.putIfAbsent(artist, ()=>artistSliver );
-      return artistSliver;
-    }
-    else
-    {
-      return MusicProvider.of(context).artistSlivers[artist];
-    }
-  }
 }
-
-

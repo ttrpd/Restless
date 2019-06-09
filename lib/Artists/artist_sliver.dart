@@ -1,8 +1,11 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 
 import 'package:restless/artist_data.dart';
 import 'package:restless/AlbumPage/album_page.dart';
+import 'package:restless/diamond_frame.dart';
 
 
 class ArtistSliver extends StatefulWidget
@@ -23,72 +26,113 @@ class ArtistSliver extends StatefulWidget
 }
 
 class ArtistSliverState extends State<ArtistSliver> {
+
+  double xOffset = 0.0;
+  double yOffset = 0.0;
+
   @override
   Widget build(BuildContext context)
   {
-    return GestureDetector(
-      onTap: () {//navigate to album page
-        print(widget.artist);
-        Navigator.of(context, rootNavigator: true).push(
-          CupertinoPageRoute<void>(
-            builder: (BuildContext context) => AlbumPage(artist: widget.artist,),
-          ),
-        );
-      },
-      child: Container(
-        alignment: Alignment.center,
-        height: widget.height,
-        width: MediaQuery.of(context).size.width * 0.95,
-        color: Theme.of(context).primaryColor,
-        child: Column(
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.only(left: 8.0, right: 8.0),
-              child: Divider(
-                color: Theme.of(context).accentColor,
+    return Padding(
+      padding: const EdgeInsets.only(top: 10.0, bottom: 10.0, left: 20.0, right: 20.0),
+      child: GestureDetector(
+        onTapDown: (TapDownDetails t) {
+          Offset offset = (context.findRenderObject() as RenderBox).globalToLocal(t.globalPosition);
+          setState(() {
+            yOffset = ((MediaQuery.of(context).size.width / 2) - offset.dx) / (MediaQuery.of(context).size.width/2);
+            xOffset = ((MediaQuery.of(context).size.height / 2) - offset.dy) / (MediaQuery.of(context).size.height/2);
+          });
+        },
+        onTapCancel: () {
+          setState(() {
+           xOffset = 0.0;
+           yOffset = 0.0; 
+          });
+        },
+        onTapUp: (TapUpDetails t) {//navigate to album page
+          setState(() {
+            xOffset = 0.0;
+            yOffset = 0.0;
+          });
+          Navigator.of(context, rootNavigator: true).push(
+            CupertinoPageRoute<void>(
+              settings: RouteSettings(
+                isInitialRoute: true,
               ),
+              builder: (BuildContext context) => AlbumPage( artist: widget.artist,),
             ),
-            Padding(
-              padding: const EdgeInsets.only(left: 0.0, right: 0.0, top: 3.0, bottom: 3.0),
-              child: Row(
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.only(left:16.0, right:8.0),
+          );
+        },
+        child: Transform(
+          alignment: Alignment.center,
+          transform: Matrix4.rotationX(xOffset * (pi/16))..rotateY(yOffset * -(pi/16)),
+          child: Stack(
+            children: <Widget>[
+              Material(
+                elevation: 20.0,
+                color: Colors.transparent,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(10.0),
+                  child: Container(
+                    height: widget.height,
+                    width: double.infinity,
+                    color: Theme.of(context).primaryColor,
                     child: Container(
-                      width: widget.height * 0.8,
-                      height: widget.height * 0.8,
-                      child: ClipOval(
-                        child: _albums(context)
+                      alignment: Alignment.centerLeft,
+                      child: _buildArtistName(context)
+                    ),
+                  ),
+                ),
+              ),
+              Container(
+                alignment: Alignment.centerRight,
+                child: Padding(
+                  padding: const EdgeInsets.only(right: 10.0),
+                  child: Transform(
+                    transform: Matrix4.translationValues(0.0, -10.0, 0.0),
+                    child: Material(
+                      elevation: 10.0,
+                      color: Colors.transparent,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(10.0),
+                        child: Material(
+                          elevation: 10.0,
+                          child: Container(
+                            width: 100.0,
+                            height: 100.0,
+                            child: _albums(context),
+                          ),
+                        ),
                       ),
                     ),
                   ),
-                  Flexible(child: _buildArtistName(context)),
-                ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
   }
 
-  Container _buildArtistName(BuildContext context) {
-    return Container(
-      constraints: BoxConstraints(
-
-      ),
-      child: Padding(
-        padding: const EdgeInsets.only(top: 12.5, left: 10.0, right: 5.0, bottom: 5.0),
+  Widget _buildArtistName(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(left: 10.0),
+      child: Container(
+        alignment: Alignment.center,
+        width: MediaQuery.of(context).size.width * 0.5,
         child: RichText(
-          textAlign: TextAlign.start,
+          maxLines: 2,
+          textAlign: TextAlign.center,
           overflow: TextOverflow.ellipsis,
           text: TextSpan(
             text: widget.artist.name.replaceAll('"', '/').replaceAll('∕', '/').replaceAll('"', ''),
             style: TextStyle(
               color: Theme.of(context).accentColor,
-              background: Paint()..color = Theme.of(context).primaryColor,
-              fontSize: 26.0,
-              fontWeight: FontWeight.bold,
+              // background: Paint()..color = Theme.of(context).accentColor,
+              fontSize: 30.0,
+              fontFamily: 'Oswald',
+              fontWeight: FontWeight.normal,
               letterSpacing: 2.0,
               height: 1.0
             ),
@@ -100,8 +144,7 @@ class ArtistSliverState extends State<ArtistSliver> {
 
   Container _albums(BuildContext context) {
     return Container(
-      alignment: Alignment.center,
-      width: MediaQuery.of(context).size.width, //* 0.95,
+      width: 100.0, //* 0.95,
       decoration: BoxDecoration(
         image: DecorationImage(
           fit: BoxFit.cover,
@@ -109,14 +152,13 @@ class ArtistSliverState extends State<ArtistSliver> {
         )
       ),
       child: Stack(
-        children: _buildAlbumArtStack(context, widget.height * 0.8),
+        children: _buildAlbumArtStack(context, 100.0),
       ),
     );
   }
 
   List<Widget> _buildAlbumArtStack(BuildContext context, double height)
   {
-    double width = height;// * 0.95;
 
     List<Widget> artStack = List<Widget>();
     if(widget.artist.albums == null)
@@ -124,8 +166,7 @@ class ArtistSliverState extends State<ArtistSliver> {
 
     artStack.add(
       Container(
-        alignment: Alignment.center,
-        width: width,
+        width: height,
         height: height,
         decoration: BoxDecoration(
           image: DecorationImage(
@@ -142,10 +183,10 @@ class ArtistSliverState extends State<ArtistSliver> {
         ClipPath(//Clipped Art
           clipper: RhombusClipper(
               divideOffset: 100.0 / widget.artist.albums.length,
-              slashPos: i * (width / widget.artist.albums.length)
+              slashPos: i * (height / widget.artist.albums.length)
           ),
           child: Container(
-            width: width,
+            width: height,
             height: height,
             decoration: BoxDecoration(
               image: DecorationImage(
@@ -160,6 +201,7 @@ class ArtistSliverState extends State<ArtistSliver> {
     return artStack;
   }
 }
+
 
 
 class RhombusClipper extends CustomClipper<Path>
@@ -190,3 +232,4 @@ class RhombusClipper extends CustomClipper<Path>
   }
 
 }
+

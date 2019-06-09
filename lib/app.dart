@@ -2,7 +2,7 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 
 import 'package:restless/home.dart';
-import 'package:restless/Artists/artists_page_provider.dart';
+import 'package:restless/Artists/music_provider.dart';
 import 'package:restless/NowPlaying/now_playing_provider.dart';
 import 'package:simple_permissions/simple_permissions.dart';
 
@@ -12,7 +12,7 @@ class App extends StatelessWidget
   Widget build(BuildContext context)
   {
     SimplePermissions.requestPermission(Permission.ReadExternalStorage);
-    return ArtistsPageProvider(
+    return MusicProvider(
       artistSlivers: {'':null},
       child: NowPlayingProvider(
         playing: false,
@@ -24,9 +24,12 @@ class App extends StatelessWidget
         audioPlayer: AudioPlayer(),
         child: MaterialApp(
           theme: ThemeData(
-            primaryColor: Color.fromARGB(255, 25, 25, 25),
-            primaryColorDark: Color.fromARGB(255, 103, 103, 103),
-            accentColor: Color.fromARGB(255, 240, 240, 240),
+            primaryColorLight: Color.fromARGB(255, 70, 150, 150),//Color.fromARGB(255, 255, 188, 53),
+            primaryColor: Color.fromARGB(255, 36, 36, 36),//Color.fromARGB(255, 255, 130, 76),
+            primaryColorDark: Color.fromARGB(255, 100, 100, 100),//Color.fromARGB(255, 145, 70, 33),
+            highlightColor: Color.fromARGB(255, 250, 250, 250),//Color.fromARGB(255, 250, 250, 250),
+            accentColor: Color.fromARGB(255, 240, 240, 240),//Color.fromARGB(255, 240, 240, 240),
+            dividerColor: Color.fromARGB(255, 210, 210, 210),//Color.fromARGB(255, 210, 210, 210)
           ),
           title: 'Restless',
           debugShowCheckedModeBanner: false,
