@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
-import 'package:restless/artist_data.dart';
+import 'package:restless/MusicLibrary/artist_data.dart';
 
 enum TrackFlow {
   natural,
@@ -25,6 +25,7 @@ class NowPlayingProvider extends InheritedWidget
   TrackData track;
   List<TrackData> playQueue = List<TrackData>();
   AudioPlayer audioPlayer = AudioPlayer();
+
 
   NowPlayingProvider({
     Key key,

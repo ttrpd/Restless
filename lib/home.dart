@@ -1,17 +1,12 @@
-import 'dart:convert';
 import 'dart:core';
-import 'dart:io';
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:dart_tags/dart_tags.dart';
 import 'package:flutter/material.dart';
-import 'package:restless/Albums/albums_page.dart';
-import 'package:restless/Artists/artist_page.dart';
 import 'package:restless/HiddenDrawer/hidden_drawer.dart';
-import 'package:restless/NowPlaying/now_playing_page.dart';
 import 'package:restless/NowPlaying/now_playing_provider.dart';
-import 'package:restless/artist_data.dart';
-import 'package:restless/Artists/music_provider.dart';
+import 'package:restless/MusicLibrary/artist_data.dart';
+import 'package:restless/music_provider.dart';
 
 
 class Home extends StatefulWidget
@@ -45,7 +40,6 @@ class HomeState extends State<Home> {
   @override
   Widget build(BuildContext context)
   {
-    print('building');
     NowPlayingProvider.of(context).audioPlayer.durationHandler = (Duration d) {
       if(NowPlayingProvider.of(context).endTime != null)
       setState(() {
@@ -132,8 +126,7 @@ class HomeState extends State<Home> {
           }
         }
         return HiddenDrawer(
-          sliverHeight: ((MediaQuery.of(context).size.height*50) / MediaQuery.of(context).size.width),
-          pgCtrl: PageController(),
+          
         );
       },
     );

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:restless/artist_data.dart';
+import 'package:restless/MusicLibrary/artist_data.dart';
 
 class TagArea extends StatelessWidget {
   const TagArea({
@@ -18,10 +18,10 @@ class TagArea extends StatelessWidget {
     {
       tagChips.add(
         Chip(
-          backgroundColor: Theme.of(context).primaryColor,
+          backgroundColor: Theme.of(context).accentColor,
           label: Text(
             tag.content, 
-            style: TextStyle(color: Theme.of(context).accentColor),
+            style: TextStyle(color: Theme.of(context).primaryColor),
           ),
         ),
       );
@@ -31,7 +31,7 @@ class TagArea extends StatelessWidget {
       padding: const EdgeInsets.only(top: 20.0),
       child: Container(
         width: double.maxFinite,
-        height: 60.0,
+        height: 186.0,
         child: Column(
           children: <Widget>[
             Row(
@@ -44,7 +44,7 @@ class TagArea extends StatelessWidget {
                       text: TextSpan(
                         text: 'Tags',
                         style: TextStyle(
-                          color: Theme.of(context).primaryColor,
+                          color: Theme.of(context).accentColor,
                           fontSize: 24.0,
                           fontWeight: FontWeight.bold,
                         ),
@@ -57,16 +57,14 @@ class TagArea extends StatelessWidget {
                 ),
                 IconButton(
                   onPressed: (){},
-                  color: Theme.of(context).primaryColor,
+                  color: Theme.of(context).accentColor,
                   icon: Icon(Icons.edit),
                 ),
               ],
             ),
-            Container(
-              height: 40.0,
-              width: MediaQuery.of(context).size.width,
-              child: ListView(
-                scrollDirection: Axis.horizontal,
+            Flexible(
+              child: Wrap(
+                spacing: 3.0,
                 children: tagChips.toList(),
               ),
             ),

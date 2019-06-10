@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:restless/Artists/alphabet_artist_picker.dart';
-import 'package:restless/Artists/music_provider.dart';
+import 'package:restless/music_provider.dart';
 
 import 'package:restless/Artists/artist_sliver.dart';
 import 'package:restless/NowPlaying/now_playing_provider.dart';

@@ -1,11 +1,8 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 
-import 'package:restless/artist_data.dart';
+import 'package:restless/MusicLibrary/artist_data.dart';
 import 'package:restless/AlbumPage/album_page.dart';
-import 'package:restless/diamond_frame.dart';
 
 
 class ArtistSliver extends StatefulWidget
@@ -27,8 +24,6 @@ class ArtistSliver extends StatefulWidget
 
 class ArtistSliverState extends State<ArtistSliver> {
 
-  double xOffset = 0.0;
-  double yOffset = 0.0;
 
   @override
   Widget build(BuildContext context)
@@ -36,24 +31,7 @@ class ArtistSliverState extends State<ArtistSliver> {
     return Padding(
       padding: const EdgeInsets.only(top: 10.0, bottom: 10.0, left: 20.0, right: 20.0),
       child: GestureDetector(
-        onTapDown: (TapDownDetails t) {
-          Offset offset = (context.findRenderObject() as RenderBox).globalToLocal(t.globalPosition);
-          setState(() {
-            yOffset = ((MediaQuery.of(context).size.width / 2) - offset.dx) / (MediaQuery.of(context).size.width/2);
-            xOffset = ((MediaQuery.of(context).size.height / 2) - offset.dy) / (MediaQuery.of(context).size.height/2);
-          });
-        },
-        onTapCancel: () {
-          setState(() {
-           xOffset = 0.0;
-           yOffset = 0.0; 
-          });
-        },
         onTapUp: (TapUpDetails t) {//navigate to album page
-          setState(() {
-            xOffset = 0.0;
-            yOffset = 0.0;
-          });
           Navigator.of(context, rootNavigator: true).push(
             CupertinoPageRoute<void>(
               settings: RouteSettings(
@@ -63,52 +41,41 @@ class ArtistSliverState extends State<ArtistSliver> {
             ),
           );
         },
-        child: Transform(
-          alignment: Alignment.center,
-          transform: Matrix4.rotationX(xOffset * (pi/16))..rotateY(yOffset * -(pi/16)),
-          child: Stack(
-            children: <Widget>[
-              Material(
-                elevation: 20.0,
-                color: Colors.transparent,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(10.0),
-                  child: Container(
-                    height: widget.height,
-                    width: double.infinity,
-                    color: Theme.of(context).primaryColor,
-                    child: Container(
-                      alignment: Alignment.centerLeft,
-                      child: _buildArtistName(context)
-                    ),
-                  ),
-                ),
-              ),
-              Container(
-                alignment: Alignment.centerRight,
-                child: Padding(
-                  padding: const EdgeInsets.only(right: 10.0),
-                  child: Transform(
-                    transform: Matrix4.translationValues(0.0, -10.0, 0.0),
+        child: Container(
+          width: MediaQuery.of(context).size.width,
+          height: widget.height,
+          child: Material(
+            elevation: 20.0,
+            color: Colors.transparent,
+            child: Row(
+              children: <Widget>[
+                Container(
+                  alignment: Alignment.centerRight,
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 10.0),
                     child: Material(
                       elevation: 10.0,
                       color: Colors.transparent,
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(10.0),
-                        child: Material(
-                          elevation: 10.0,
-                          child: Container(
-                            width: 100.0,
-                            height: 100.0,
-                            child: _albums(context),
-                          ),
+                      child: Material(
+                        elevation: 10.0,
+                        child: Container(
+                          width: 100.0,
+                          height: 100.0,
+                          child: _albums(context),
                         ),
                       ),
                     ),
                   ),
                 ),
-              ),
-            ],
+                Expanded(
+                  child: Container(
+                    color: Theme.of(context).primaryColor,
+                    alignment: Alignment.centerLeft,
+                    child: _buildArtistName(context)
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -119,24 +86,46 @@ class ArtistSliverState extends State<ArtistSliver> {
     return Padding(
       padding: EdgeInsets.only(left: 10.0),
       child: Container(
-        alignment: Alignment.center,
+        alignment: Alignment.centerLeft,
         width: MediaQuery.of(context).size.width * 0.5,
-        child: RichText(
-          maxLines: 2,
-          textAlign: TextAlign.center,
-          overflow: TextOverflow.ellipsis,
-          text: TextSpan(
-            text: widget.artist.name.replaceAll('"', '/').replaceAll('∕', '/').replaceAll('"', ''),
-            style: TextStyle(
-              color: Theme.of(context).accentColor,
-              // background: Paint()..color = Theme.of(context).accentColor,
-              fontSize: 30.0,
-              fontFamily: 'Oswald',
-              fontWeight: FontWeight.normal,
-              letterSpacing: 2.0,
-              height: 1.0
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            RichText(
+              maxLines: 2,
+              textAlign: TextAlign.left,
+              overflow: TextOverflow.ellipsis,
+              text: TextSpan(
+                text: widget.artist.name.replaceAll('"', '/').replaceAll('∕', '/').replaceAll('"', ''),
+                style: TextStyle(
+                  color: Theme.of(context).accentColor,
+                  // background: Paint()..color = Theme.of(context).accentColor,
+                  fontSize: 20.0,
+                  fontFamily: 'Oswald',
+                  fontWeight: FontWeight.normal,
+                  letterSpacing: 2.0,
+                  height: 1.0
+                ),
+              ),
             ),
-          ),
+            RichText(
+              maxLines: 2,
+              textAlign: TextAlign.left,
+              overflow: TextOverflow.ellipsis,
+              text: TextSpan(
+                text: widget.artist.albums.length.toString()+' Album'+((widget.artist.albums.length>1)?'s':''),
+                style: TextStyle(
+                  color: Theme.of(context).primaryColorDark,
+                  // background: Paint()..color = Theme.of(context).accentColor,
+                  fontSize: 16.0,
+                  fontFamily: 'Oswald',
+                  fontWeight: FontWeight.normal,
+                  letterSpacing: 1.0,
+                  height: 1.0
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );

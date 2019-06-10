@@ -5,7 +5,7 @@ import 'dart:io';
 import 'package:dart_tags/dart_tags.dart';
 import 'package:flutter/material.dart';
 import 'package:restless/Artists/artist_sliver.dart';
-import 'package:restless/artist_data.dart';
+import 'package:restless/MusicLibrary/artist_data.dart';
 
 class MusicProvider extends InheritedWidget
 {
@@ -25,6 +25,8 @@ class MusicProvider extends InheritedWidget
     artistStreamCtrl.stream.listen((data)=>data);
     _getMusicData(_musicDirectoryPath);
   }
+
+  List<ArtistData> getArtists() => artists;
 
   List<AlbumData> getAlbums()
   {
@@ -49,7 +51,7 @@ class MusicProvider extends InheritedWidget
       }
       else if(entity is Directory)
       {
-        _getMusicData(entity.path);// recurse
+        _getMusicData(entity.path);
       }
       else if(entity.path.contains('.mp3'))
       {
