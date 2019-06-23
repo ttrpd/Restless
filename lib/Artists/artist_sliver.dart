@@ -29,7 +29,7 @@ class ArtistSliverState extends State<ArtistSliver> {
   Widget build(BuildContext context)
   {
     return Padding(
-      padding: const EdgeInsets.only(top: 10.0, bottom: 10.0, left: 20.0, right: 20.0),
+      padding: const EdgeInsets.only(top: 5.0, bottom: 5.0, left: 18.0, right: 20.0),
       child: GestureDetector(
         onTapUp: (TapUpDetails t) {//navigate to album page
           Navigator.of(context, rootNavigator: true).push(
@@ -42,40 +42,28 @@ class ArtistSliverState extends State<ArtistSliver> {
           );
         },
         child: Container(
+          color: Colors.transparent,
           width: MediaQuery.of(context).size.width,
-          height: widget.height,
-          child: Material(
-            elevation: 20.0,
-            color: Colors.transparent,
-            child: Row(
-              children: <Widget>[
-                Container(
+          height: widget.height*0.8,
+          child: Row(
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.only(right: 10.0),
+                child: Container(
+                  width: widget.height * 0.8,
+                  height: widget.height * 0.8,
                   alignment: Alignment.centerRight,
-                  child: Padding(
-                    padding: const EdgeInsets.only(right: 10.0),
-                    child: Material(
-                      elevation: 10.0,
-                      color: Colors.transparent,
-                      child: Material(
-                        elevation: 10.0,
-                        child: Container(
-                          width: 100.0,
-                          height: 100.0,
-                          child: _albums(context),
-                        ),
-                      ),
-                    ),
+                  child: Material(
+                    elevation: 10.0,
+                    color: Colors.transparent,
+                    child: _albums(context, widget.height * 0.8),
                   ),
                 ),
-                Expanded(
-                  child: Container(
-                    color: Theme.of(context).primaryColor,
-                    alignment: Alignment.centerLeft,
-                    child: _buildArtistName(context)
-                  ),
-                ),
-              ],
-            ),
+              ),
+              Expanded(
+                child: _buildArtistName(context),
+              ),
+            ],
           ),
         ),
       ),
@@ -131,9 +119,8 @@ class ArtistSliverState extends State<ArtistSliver> {
     );
   }
 
-  Container _albums(BuildContext context) {
+  Widget _albums(BuildContext context, double sideLength) {
     return Container(
-      width: 100.0, //* 0.95,
       decoration: BoxDecoration(
         image: DecorationImage(
           fit: BoxFit.cover,
@@ -141,7 +128,7 @@ class ArtistSliverState extends State<ArtistSliver> {
         )
       ),
       child: Stack(
-        children: _buildAlbumArtStack(context, 100.0),
+        children: _buildAlbumArtStack(context, sideLength),
       ),
     );
   }

@@ -6,6 +6,7 @@ import 'package:restless/HiddenDrawer/item_screen.dart';
 import 'package:restless/HiddenDrawer/menu_item.dart';
 import 'package:restless/NowPlaying/now_playing_page.dart';
 import 'package:restless/NowPlaying/now_playing_provider.dart';
+import 'package:restless/Playlists/playlist_page.dart';
 
 
 
@@ -175,8 +176,7 @@ class HiddenDrawerState extends State<HiddenDrawer> with TickerProviderStateMixi
               child: ArtistPage(
                 getOffset: () => artistsListOffset,
                 setOffset: (offset) => artistsListOffset = offset,
-                sliverHeight: ((MediaQuery.of(context).size.height*50) / MediaQuery.of(context).size.width),
-                dragMenu: (DragUpdateDetails d){},
+                sliverHeight: ((MediaQuery.of(context).size.height*85) / MediaQuery.of(context).size.width),
               ),
               dragStart: horizontalDragStart,
               dragUpdate: horizontalDragUpdate,
@@ -216,7 +216,11 @@ class HiddenDrawerState extends State<HiddenDrawer> with TickerProviderStateMixi
               onTap: onTap,
             ),
             ItemScreen(
-              child: Container(color: Colors.blue[100],),
+              child: PlaylistPage(
+                getOffset: () => artistsListOffset,
+                setOffset: (offset) => artistsListOffset = offset,
+                sliverHeight: ((MediaQuery.of(context).size.height*85) / MediaQuery.of(context).size.width),
+              ),
               dragStart: horizontalDragStart,
               dragUpdate: horizontalDragUpdate,
               dragEnd: horizontalDragEnd,

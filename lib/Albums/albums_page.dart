@@ -187,7 +187,7 @@ class AlbumPageState extends State<AlbumsPage> {
                             
                             itemCount: MusicProvider.of(context).getAlbums().length,
                             itemBuilder: (BuildContext context, int index) {
-                              // String album = MusicProvider.of(context).getAlbums()[index].name;
+                              String album = MusicProvider.of(context).getAlbums()[index].name;
                               AlbumCard albumSliver = AlbumCard(
                                 album: MusicProvider.of(context).getAlbums()[index],
                                 height: widget.cardWidth*2,
