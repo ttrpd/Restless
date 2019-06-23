@@ -40,7 +40,7 @@ class AlbumCardState extends State<AlbumCard> {
               settings: RouteSettings(
                 isInitialRoute: true,
               ),
-              builder: (BuildContext context) => AlbumPage(artist: MusicProvider.of(context).artists.singleWhere((a)=>a.name==widget.album.songs.first.artistName),),
+              builder: (BuildContext context) => AlbumPage(artist: MusicProvider.of(context).getArtists().firstWhere((a)=>a.name?.toLowerCase()==widget.album.artistName?.toLowerCase())),
             ),
           );
         },

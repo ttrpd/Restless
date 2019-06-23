@@ -125,9 +125,7 @@ class HomeState extends State<Home> {
             artists[i].albums[j].songs.sort( (a, b) => int.parse(a.tags.firstWhere((a)=>a.name == 'number').content) - int.parse(b.tags.firstWhere((a)=>a.name == 'number').content));
           }
         }
-        return HiddenDrawer(
-          
-        );
+        return HiddenDrawer();
       },
     );
   }

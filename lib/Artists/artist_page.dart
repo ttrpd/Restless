@@ -15,7 +15,6 @@ class ArtistPage extends StatefulWidget
   final GetOffsetMethod getOffset;
   final SetOffsetMethod setOffset;
   final double sliverHeight;
-  final Function(DragUpdateDetails) dragMenu;
 
 
   ArtistPage({
@@ -23,7 +22,6 @@ class ArtistPage extends StatefulWidget
     @required this.getOffset,
     @required this.setOffset,
     @required this.sliverHeight,
-    @required this.dragMenu,
   }) : super(key: key);
 
   @override

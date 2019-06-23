@@ -28,14 +28,48 @@ class MusicProvider extends InheritedWidget
 
   List<ArtistData> getArtists() => artists;
 
-  List<AlbumData> getAlbums()
+  List<AlbumData> getAlbums([String artist])
   {
+    if(artist!=null)
+      return artists.firstWhere((a)=>a.name==artist).albums;
+
     List<AlbumData> albums = List<AlbumData>();
     for(ArtistData artist in artists)
     {//unsorted at the moment
       albums.addAll(artist.albums);
     }
     return albums;
+  }
+
+  List<TrackData> getTracks([String artist, String album])
+  {
+    List<TrackData> tracks = List<TrackData>();
+
+    if(artist != null)
+    {
+      for(AlbumData album in artists.firstWhere((a)=>a.name==artist).albums)
+      {
+        tracks.addAll(album.songs);
+      }
+    }
+
+    if(album != null)
+    {
+      if(tracks.isEmpty)
+      {
+        for(ArtistData artist in artists)
+        {
+          for(AlbumData album in artist.albums)
+          {
+            tracks.addAll(album.songs);
+          }
+        }
+      }
+
+      tracks.removeWhere((t)=>t.albumName!=album);
+    }
+
+    return tracks;
   }
 
   Future _getMusicData(String directoryPath) async
@@ -123,4 +157,6 @@ class MusicProvider extends InheritedWidget
   static MusicProvider of(BuildContext context) {
     return (context.inheritFromWidgetOfExactType(MusicProvider) as MusicProvider);
   }
+
+  
 }
