@@ -2,7 +2,6 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 
 import 'package:restless/home.dart';
-import 'package:restless/MusicLibrary/music_library.dart';
 import 'package:restless/NowPlaying/now_playing_provider.dart';
 import 'package:restless/music_provider.dart';
 import 'package:simple_permissions/simple_permissions.dart';
