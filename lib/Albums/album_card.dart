@@ -1,20 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:restless/Artists/music_provider.dart';
+import 'package:restless/music_provider.dart';
 
-import 'package:restless/artist_data.dart';
+import 'package:restless/MusicLibrary/artist_data.dart';
 import 'package:restless/AlbumPage/album_page.dart';
 
 
 class AlbumCard extends StatefulWidget
 {
   final AlbumData album;
-  final double length;
+  final double height;
+  final double width;
 
   AlbumCard({
     Key key,
     @required this.album,
-    @required this.length,
+    @required this.height,
+    @required this.width,
   }) : super(key: key);
 
   @override
@@ -24,107 +26,116 @@ class AlbumCard extends StatefulWidget
 }
 
 class AlbumCardState extends State<AlbumCard> {
-  double xOffset = 0.0;
-  double yOffset = 0.0;
   
   @override
   Widget build(BuildContext context)
   {
-    return GestureDetector(
-      onTapDown: (TapDownDetails t) {
-        setState(() {
-          yOffset = ((MediaQuery.of(context).size.width / 2) - t.globalPosition.dx) / MediaQuery.of(context).size.width;
-          xOffset = ((MediaQuery.of(context).size.height / 2) - t.globalPosition.dy) / MediaQuery.of(context).size.height;
-        });
-      },
-      onTapCancel: () {
-        setState(() {
-          xOffset = 0.0;
-          yOffset = 0.0; 
-        });
-      },
-      onTapUp: (TapUpDetails t) {//navigate to album page
-        setState(() {
-          xOffset = 0.0;
-          yOffset = 0.0;
-        });
-        Navigator.of(context, rootNavigator: true).push(
-          CupertinoPageRoute<void>(
-            settings: RouteSettings(
-              isInitialRoute: true,
+    return Container(
+      width: double.maxFinite,
+      height: double.maxFinite,
+      child: GestureDetector(
+        onTapUp: (TapUpDetails t) {//navigate to album page
+          Navigator.of(context, rootNavigator: true).push(
+            CupertinoPageRoute<void>(
+              settings: RouteSettings(
+                isInitialRoute: true,
+              ),
+              builder: (BuildContext context) => AlbumPage(artist: MusicProvider.of(context).getArtists().firstWhere((a)=>a.name?.toLowerCase()==widget.album.artistName?.toLowerCase())),
             ),
-            builder: (BuildContext context) => AlbumPage(artist: MusicProvider.of(context).artists.singleWhere((a)=>a.name==widget.album.songs.first.artistName),),
-          ),
-        );
-      },
-      child: Transform(
-        alignment: Alignment.center,
-        transform: Matrix4.rotationX(xOffset)..rotateY(yOffset),
-        child: Center(
-          child: Stack(
-            children: <Widget>[
-              Center(
-                child: Material(
-                  elevation: 15.0,
-                  color: Colors.transparent,
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(10.0),
-                    child: Container(
-                      width: widget.length * 0.9,
-                      height: widget.length * 0.9,
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                          image: AssetImage('lib/assets/default.jpg'),
-                        ),
-                      ),
-                      foregroundDecoration: BoxDecoration(
-                        image: DecorationImage(
-                          image: widget.album.albumArt,
-                        ),
-                      ),
+          );
+        },
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.only(left: 10.0, right: 10.0, top: 2.0),
+              child: Container(
+                width: widget.width,
+                  height: widget.width,
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage('lib/assets/default.jpg'),
                     ),
                   ),
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(left: widget.length * 0.05, top: widget.length * 0.2),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(5.0),
-                  child: Container(
-                    color: Theme.of(context).primaryColor,
-                    width: widget.length * 0.7,
-                    height: widget.length * 0.2,
-                    child: _buildAlbumName(context),
+                  foregroundDecoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: widget.album.albumArt,
+                    ),
                   ),
-                ),
               ),
-            ],
-          ),
+            ),
+            _buildAlbumName(context)
+
+          ],
         ),
+        // child: Column(
+        //   children: <Widget>[
+        //     Padding(
+        //       padding: const EdgeInsets.all(10.0),
+        //       child: Material(
+        //         elevation: 15.0,
+        //         color: Colors.transparent,
+        //         child: Container(
+        //           width: widget.width,
+        //           height: widget.height,
+        //           decoration: BoxDecoration(
+        //             image: DecorationImage(
+        //               image: AssetImage('lib/assets/default.jpg'),
+        //             ),
+        //           ),
+        //           foregroundDecoration: BoxDecoration(
+        //             image: DecorationImage(
+        //               image: widget.album.albumArt,
+        //             ),
+        //           ),
+        //         ),
+        //       ),
+        //     ),
+        //     // Container(
+        //     //   color: Theme.of(context).primaryColor,
+        //     //   child: _buildAlbumName(context),
+        //     // ),
+        //   ],
+        // ),
       ),
     );
   }
 
-  Container _buildAlbumName(BuildContext context) {
-    return Container(
-      alignment: Alignment.center,
-      child: Padding(
-        padding: const EdgeInsets.all(2.0),
-        child: RichText(
-          maxLines: 1,
-          textAlign: TextAlign.start,
-          overflow: TextOverflow.ellipsis,
-          text: TextSpan(
-            text: widget.album.name.replaceAll('"', '/').replaceAll('∕', '/').replaceAll('"', ''),
-            style: TextStyle(
-              color: Theme.of(context).accentColor,
-              fontSize: 16.0,
-              fontWeight: FontWeight.bold,
-              letterSpacing: 2.0,
-              height: 1.0
+  Widget _buildAlbumName(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 0.0, left: 12.0, right: 12.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          RichText(
+            maxLines: 1,
+            textAlign: TextAlign.left,
+            overflow: TextOverflow.ellipsis,
+            text: TextSpan(
+              text: widget.album.name.replaceAll('"', '/').replaceAll('∕', '/').replaceAll('"', ''),
+              style: TextStyle(
+                color: Theme.of(context).accentColor,
+                fontSize: 14.0,
+                letterSpacing: 1.0,
+                height: 0.75
+              ),
             ),
           ),
-        ),
+          RichText(
+            maxLines: 1,
+            textAlign: TextAlign.left,
+            overflow: TextOverflow.ellipsis,
+            text: TextSpan(
+              text: widget.album.songs.first.artistName.replaceAll('"', '/').replaceAll('∕', '/').replaceAll('"', ''),
+              style: TextStyle(
+                color: Theme.of(context).primaryColorDark,
+                fontSize: 10.0,
+                letterSpacing: 1.0,
+                height: 1.0
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -132,7 +143,7 @@ class AlbumCardState extends State<AlbumCard> {
   Container _albums(BuildContext context) {
     return Container(
       alignment: Alignment.center,
-      width: widget.length, //* 0.95,
+      width: widget.width,
       decoration: BoxDecoration(
         image: DecorationImage(
           fit: BoxFit.cover,

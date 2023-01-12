@@ -1,6 +1,15 @@
-
-
 import 'package:flutter/material.dart';
+
+class PlayList
+{
+  String name;
+  List<TrackData> songs;
+
+  PlayList({
+    @required this.name,
+    this.songs
+  }){songs = new List<TrackData>();}
+}
 
 class ArtistData
 {
@@ -16,11 +25,13 @@ class ArtistData
 class AlbumData
 {
   String name;
+  String artistName;
   ImageProvider albumArt;
   List<TrackData> songs;
 
   AlbumData({
     @required this.name,
+    this.artistName,
     this.albumArt,
     this.songs,
   }){songs = new List<TrackData>();}
@@ -32,6 +43,7 @@ class TrackData
   String path;
   String artistName;
   String albumName;
+  int number;
   ImageProvider albumArt = AssetImage('lib/assets/default.jpg');
   Set<TrackTag> tags = Set<TrackTag>();
 
@@ -41,6 +53,7 @@ class TrackData
     this.tags,
     this.artistName = '',
     this.albumName = '',
+    this.number = 0,
     this.albumArt,
   });
 

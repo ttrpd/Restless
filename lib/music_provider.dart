@@ -5,7 +5,7 @@ import 'dart:io';
 import 'package:dart_tags/dart_tags.dart';
 import 'package:flutter/material.dart';
 import 'package:restless/Artists/artist_sliver.dart';
-import 'package:restless/artist_data.dart';
+import 'package:restless/MusicLibrary/artist_data.dart';
 
 class MusicProvider extends InheritedWidget
 {
@@ -26,14 +26,50 @@ class MusicProvider extends InheritedWidget
     _getMusicData(_musicDirectoryPath);
   }
 
-  List<AlbumData> getAlbums()
+  List<ArtistData> getArtists() => artists;
+
+  List<AlbumData> getAlbums([String artist])
   {
+    if(artist!=null)
+      return artists.firstWhere((a)=>a.name==artist).albums;
+
     List<AlbumData> albums = List<AlbumData>();
     for(ArtistData artist in artists)
     {//unsorted at the moment
       albums.addAll(artist.albums);
     }
     return albums;
+  }
+
+  List<TrackData> getTracks([String artist, String album])
+  {
+    List<TrackData> tracks = List<TrackData>();
+
+    if(artist != null)
+    {
+      for(AlbumData album in artists.firstWhere((a)=>a.name==artist).albums)
+      {
+        tracks.addAll(album.songs);
+      }
+    }
+
+    if(album != null)
+    {
+      if(tracks.isEmpty)
+      {
+        for(ArtistData artist in artists)
+        {
+          for(AlbumData album in artist.albums)
+          {
+            tracks.addAll(album.songs);
+          }
+        }
+      }
+
+      tracks.removeWhere((t)=>t.albumName!=album);
+    }
+
+    return tracks;
   }
 
   Future _getMusicData(String directoryPath) async
@@ -49,7 +85,7 @@ class MusicProvider extends InheritedWidget
       }
       else if(entity is Directory)
       {
-        _getMusicData(entity.path);// recurse
+        _getMusicData(entity.path);
       }
       else if(entity.path.contains('.mp3'))
       {
@@ -121,4 +157,6 @@ class MusicProvider extends InheritedWidget
   static MusicProvider of(BuildContext context) {
     return (context.inheritFromWidgetOfExactType(MusicProvider) as MusicProvider);
   }
+
+  
 }

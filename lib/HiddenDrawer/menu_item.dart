@@ -27,12 +27,12 @@ class MenuItemState extends State<MenuItem> {
 
   @override
   Widget build(BuildContext context) {
-    textColor = Theme.of(context).primaryColor;
+    textColor = Theme.of(context).accentColor;
     if(widget.selected)
       textColor = Theme.of(context).primaryColorLight;
     
     if(!widget.enabled)
-      textColor = Theme.of(context).primaryColorDark;
+      textColor = Theme.of(context).primaryColor;
 
     return Padding(
       padding: const EdgeInsets.only(top: 5.0, bottom: 5.0),

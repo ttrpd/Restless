@@ -1,11 +1,8 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 
-import 'package:restless/artist_data.dart';
+import 'package:restless/MusicLibrary/artist_data.dart';
 import 'package:restless/AlbumPage/album_page.dart';
-import 'package:restless/diamond_frame.dart';
 
 
 class ArtistSliver extends StatefulWidget
@@ -27,33 +24,14 @@ class ArtistSliver extends StatefulWidget
 
 class ArtistSliverState extends State<ArtistSliver> {
 
-  double xOffset = 0.0;
-  double yOffset = 0.0;
 
   @override
   Widget build(BuildContext context)
   {
     return Padding(
-      padding: const EdgeInsets.only(top: 10.0, bottom: 10.0, left: 20.0, right: 20.0),
+      padding: const EdgeInsets.only(top: 5.0, bottom: 5.0, left: 18.0, right: 20.0),
       child: GestureDetector(
-        onTapDown: (TapDownDetails t) {
-          Offset offset = (context.findRenderObject() as RenderBox).globalToLocal(t.globalPosition);
-          setState(() {
-            yOffset = ((MediaQuery.of(context).size.width / 2) - offset.dx) / (MediaQuery.of(context).size.width/2);
-            xOffset = ((MediaQuery.of(context).size.height / 2) - offset.dy) / (MediaQuery.of(context).size.height/2);
-          });
-        },
-        onTapCancel: () {
-          setState(() {
-           xOffset = 0.0;
-           yOffset = 0.0; 
-          });
-        },
         onTapUp: (TapUpDetails t) {//navigate to album page
-          setState(() {
-            xOffset = 0.0;
-            yOffset = 0.0;
-          });
           Navigator.of(context, rootNavigator: true).push(
             CupertinoPageRoute<void>(
               settings: RouteSettings(
@@ -63,50 +41,27 @@ class ArtistSliverState extends State<ArtistSliver> {
             ),
           );
         },
-        child: Transform(
-          alignment: Alignment.center,
-          transform: Matrix4.rotationX(xOffset * (pi/16))..rotateY(yOffset * -(pi/16)),
-          child: Stack(
+        child: Container(
+          color: Colors.transparent,
+          width: MediaQuery.of(context).size.width,
+          height: widget.height*0.8,
+          child: Row(
             children: <Widget>[
-              Material(
-                elevation: 20.0,
-                color: Colors.transparent,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(10.0),
-                  child: Container(
-                    height: widget.height,
-                    width: double.infinity,
-                    color: Theme.of(context).primaryColor,
-                    child: Container(
-                      alignment: Alignment.centerLeft,
-                      child: _buildArtistName(context)
-                    ),
+              Padding(
+                padding: const EdgeInsets.only(right: 10.0),
+                child: Container(
+                  width: widget.height * 0.8,
+                  height: widget.height * 0.8,
+                  alignment: Alignment.centerRight,
+                  child: Material(
+                    elevation: 10.0,
+                    color: Colors.transparent,
+                    child: _albums(context, widget.height * 0.8),
                   ),
                 ),
               ),
-              Container(
-                alignment: Alignment.centerRight,
-                child: Padding(
-                  padding: const EdgeInsets.only(right: 10.0),
-                  child: Transform(
-                    transform: Matrix4.translationValues(0.0, -10.0, 0.0),
-                    child: Material(
-                      elevation: 10.0,
-                      color: Colors.transparent,
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(10.0),
-                        child: Material(
-                          elevation: 10.0,
-                          child: Container(
-                            width: 100.0,
-                            height: 100.0,
-                            child: _albums(context),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
+              Expanded(
+                child: _buildArtistName(context),
               ),
             ],
           ),
@@ -119,32 +74,53 @@ class ArtistSliverState extends State<ArtistSliver> {
     return Padding(
       padding: EdgeInsets.only(left: 10.0),
       child: Container(
-        alignment: Alignment.center,
+        alignment: Alignment.centerLeft,
         width: MediaQuery.of(context).size.width * 0.5,
-        child: RichText(
-          maxLines: 2,
-          textAlign: TextAlign.center,
-          overflow: TextOverflow.ellipsis,
-          text: TextSpan(
-            text: widget.artist.name.replaceAll('"', '/').replaceAll('∕', '/').replaceAll('"', ''),
-            style: TextStyle(
-              color: Theme.of(context).accentColor,
-              // background: Paint()..color = Theme.of(context).accentColor,
-              fontSize: 30.0,
-              fontFamily: 'Oswald',
-              fontWeight: FontWeight.normal,
-              letterSpacing: 2.0,
-              height: 1.0
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            RichText(
+              maxLines: 2,
+              textAlign: TextAlign.left,
+              overflow: TextOverflow.ellipsis,
+              text: TextSpan(
+                text: widget.artist.name.replaceAll('"', '/').replaceAll('∕', '/').replaceAll('"', ''),
+                style: TextStyle(
+                  color: Theme.of(context).accentColor,
+                  // background: Paint()..color = Theme.of(context).accentColor,
+                  fontSize: 20.0,
+                  fontFamily: 'Oswald',
+                  fontWeight: FontWeight.normal,
+                  letterSpacing: 2.0,
+                  height: 1.0
+                ),
+              ),
             ),
-          ),
+            RichText(
+              maxLines: 2,
+              textAlign: TextAlign.left,
+              overflow: TextOverflow.ellipsis,
+              text: TextSpan(
+                text: widget.artist.albums.length.toString()+' Album'+((widget.artist.albums.length>1)?'s':''),
+                style: TextStyle(
+                  color: Theme.of(context).primaryColorDark,
+                  // background: Paint()..color = Theme.of(context).accentColor,
+                  fontSize: 16.0,
+                  fontFamily: 'Oswald',
+                  fontWeight: FontWeight.normal,
+                  letterSpacing: 1.0,
+                  height: 1.0
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
   }
 
-  Container _albums(BuildContext context) {
+  Widget _albums(BuildContext context, double sideLength) {
     return Container(
-      width: 100.0, //* 0.95,
       decoration: BoxDecoration(
         image: DecorationImage(
           fit: BoxFit.cover,
@@ -152,7 +128,7 @@ class ArtistSliverState extends State<ArtistSliver> {
         )
       ),
       child: Stack(
-        children: _buildAlbumArtStack(context, 100.0),
+        children: _buildAlbumArtStack(context, sideLength),
       ),
     );
   }

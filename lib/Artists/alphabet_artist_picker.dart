@@ -1,17 +1,17 @@
 
-import 'package:restless/Artists/music_provider.dart';
+import 'package:restless/music_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:restless/artist_data.dart';
+import 'package:restless/MusicLibrary/artist_data.dart';
 
 typedef void ScrolltoLetter(String letter);
 
 class AlphabetArtistPicker extends StatefulWidget {
-  double opacityValue;
+  bool visible;
   final ScrolltoLetter scrolltoLetter;
 
   AlphabetArtistPicker({
     Key key,
-    @required this.opacityValue,
+    @required this.visible,
     @required this.scrolltoLetter,
   }) : super(key: key);
 
@@ -64,13 +64,13 @@ class AlphabetArtistPickerState extends State<AlphabetArtistPicker> {
     }
 
     return IgnorePointer(
-      ignoring: widget.opacityValue == 0.0,
+      ignoring: !widget.visible,
       child: Opacity(
-        opacity: widget.opacityValue,
+        opacity: widget.visible?1.0:0.0,
         child: Container(
           width: double.maxFinite,
           height: double.maxFinite,
-          color: Theme.of(context).accentColor,
+          color: Theme.of(context).primaryColor,
           child: Center(
             child: Padding(
               padding: const EdgeInsets.all(8.0),
@@ -85,7 +85,7 @@ class AlphabetArtistPickerState extends State<AlphabetArtistPicker> {
                         onPressed: () {
                           widget.scrolltoLetter(letters[index].letter);
                           setState(() {
-                            widget.opacityValue = 0.0;
+                            widget.visible = false;
                           });
                         },
                         child: Center(
@@ -94,7 +94,7 @@ class AlphabetArtistPickerState extends State<AlphabetArtistPicker> {
                               text: letters[index].letter,
                               style: TextStyle(
                                 letterSpacing: 0.0,
-                                color: (letters[index].available)?Theme.of(context).primaryColor:Theme.of(context).primaryColorDark,
+                                color: (letters[index].available)?Theme.of(context).accentColor:Theme.of(context).primaryColorDark,
                                 fontSize: 30.0,
                               ),
                             ),
